@@ -41,4 +41,4 @@ The default prefix for the Kanban Bot is %.
     
 });
 
-client.login(config.token);
+client.login(config.token); 
