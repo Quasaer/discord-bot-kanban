@@ -1,6 +1,8 @@
 const fs = require('fs');
-const { prefix, token } = require('./config.json');
+//const { prefix, token } = require('./config.json');
+const config = require('dotenv');
 const Discord = require('discord.js');
+require('dotenv').config();
 const path = require('path');
 
 const client = new Discord.Client();
@@ -26,14 +28,8 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args, client));
 	}
 }
-client.on('message', message => {
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-	const args = message.content.slice(prefix.length).trim().split(/ +/);
-	const command = args.shift().toLowerCase();
-});
-
-client.login(token); 
+client.login(process.env.LOGIN_TOKEN); 
 
 
 
