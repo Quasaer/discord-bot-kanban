@@ -79,4 +79,4 @@ node_modules
 package.json
 package-lock.json
 token.js
-config.json
+src/config.json
