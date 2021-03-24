@@ -1,6 +1,4 @@
 const fs = require('fs');
-//const { prefix, token } = require('./config.json');
-const config = require('dotenv');
 const Discord = require('discord.js');
 require('dotenv').config();
 const path = require('path');
