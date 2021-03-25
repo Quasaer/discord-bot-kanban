@@ -2,11 +2,11 @@ const fs = require('fs');
 const Discord = require('discord.js'); 
 require('dotenv').config(); 
 const path = require('path'); 
-// line1: gathers all commands as a collection and it also executes the events
-// line2: directory module built into node.js
-// line3: get discord.js
-// line4: gets data from .env file
-// line5: paths the relative paths
+// index.js: gathers all commands as a collection and it also executes the events
+// line1: directory module built into node.js
+// line2: get discord.js
+// line3: gets data from .env file
+// line4: paths the relative paths
 
 
 const client = new Discord.Client();
