@@ -7,7 +7,7 @@ module.exports = {
 		const command = args.shift().toLowerCase();
 		if (!client.commands.has(command)) return;
 		try {
-			client.commands.get(command).execute(message, args);
+			client.commands.get(command).execute(message, client);
 		} catch (error) {
 			console.log(error);
 			message.reply('There was an error trying to execute that command');
