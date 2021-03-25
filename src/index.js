@@ -29,4 +29,4 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(process.env.LOGIN_TOKEN); 
+client.login(process.env.LOGIN_TOKEN); //conencts to bot with token id
