@@ -1,15 +1,36 @@
+// module.exports = (sequelize, DataTypes) => {
+// 	return sequelize.define("User", {
+// 		id: DataTypes.INTEGER,
+
+// 		discord_username: {
+// 		type: DataTypes.STRING,
+// 		allowNull: false,
+// 		},
+
+// 		created_at_date_stamp: {
+// 		type: DataTypes.INTEGER,
+// 		timestamps: true,
+// 		allowNull: false,
+// 		},
+// 	});
+// };
+
 module.exports = (sequelize, DataTypes) => {
-	return sequelize.define('users', {
-		user_id: {
-			type: DataTypes.STRING,
-			primaryKey: true,
+	return sequelize.define("Users", {
+		id: {
+			type: DataTypes.INTEGAR,
+			primaryKey: true, //ps says primary key true required
 		},
-		balance: {
-			type: DataTypes.INTEGER,
-			defaultValue: 0,
+
+		discord_username: {
+			type: DataTypes.STRING,
 			allowNull: false,
 		},
-	}, {
-		timestamps: false,
+
+		created_at_date_stamp: {
+			type: DataTypes.INTEGER,
+			timestamps: true,
+			allowNull: false,
+		},
 	});
 };
