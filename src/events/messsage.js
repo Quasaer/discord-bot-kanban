@@ -8,7 +8,7 @@ module.exports = {
 		if (!client.commands.has(command)) return; // finds if the command exists, if not do nothing
 		//if (process.env.CHANNEL_BIND_ID == FALSE)
 		//if (message.channel.id != process.env.CHANNEL_BIND_ID) return;
-		if (process.env.CHANNEL_BIND_ID == FALSE || message.channel.id === process.env.CHANNEL_BIND_ID){
+		if (process.env.CHANNEL_BIND == FALSE || message.channel.id === process.env.CHANNEL_BIND_ID){
 			try {
 				client.commands.get(command).execute(message, args); // try to execute it
 			} catch (error) { // if not return error msg
