@@ -60,7 +60,7 @@ Reflect.defineProperty(currency, 'getBalance', {
 });
 
 
-// 
+// practise code
 
 // client.on('message', async message => {
 // 	if (message.author.bot) return;
