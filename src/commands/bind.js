@@ -2,11 +2,12 @@ module.exports = { // makes code visible to node.js and discord.js, use this on 
 	name: 'bind',
 	description: 'Bind!',
 	execute(message, args) {
-        if (process.env.CHANNEL_BIND_ID == NULL){
+        if (process.env.CHANNEL_BIND === FALSE){
             process.env.CHANNEL_BIND_ID = message.channel.id;
+            process.env.CHANNEL_BIND = TRUE;
             message.channel.send('Channel Binded!');
         }
-        else if (message.channel.id === process.env.CHANNEL_BIND_ID){
+        else if (process.env.CHANNEL_BIND === TRUE){
             message.channel.send('Channel Already Binded!');
         }
         else{
