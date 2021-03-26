@@ -1,3 +1,4 @@
+require('dotenv').config();
 module.exports = {
 	name: 'message',
 	execute(message, client) {
@@ -6,9 +7,10 @@ module.exports = {
 		const args = message.content.slice(prefix.length).trim().split(/ +/); // regex for cutting space
 		const command = args.shift().toLowerCase(); // turns all text to lowercase to avoid case issues
 		if (!client.commands.has(command)) return; // finds if the command exists, if not do nothing
-		//if (process.env.CHANNEL_BIND_ID == FALSE)
-		//if (message.channel.id != process.env.CHANNEL_BIND_ID) return;
-		if (process.env.CHANNEL_BIND == FALSE || message.channel.id === process.env.CHANNEL_BIND_ID){
+		
+		// if there has been no channel bind set or if it has been and the channel id is matched, then run commands
+		// else, the channel bind is set and the channel messaging doesnt equal the one set the .env file
+		if (process.env.CHANNEL_BIND == FALSE || message.channel.id === process.env.CHANNEL_BIND_ID){ 
 			try {
 				client.commands.get(command).execute(message, args); // try to execute it
 			} catch (error) { // if not return error msg
