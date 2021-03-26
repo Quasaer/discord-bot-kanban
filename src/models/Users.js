@@ -1,14 +1,27 @@
 module.exports = (sequelize, DataTypes) => {
-	return sequelize.define('users', {
+	return sequelize.define('Users', {
 		user_id: {
-			type: DataTypes.STRING,
+			type: DataTypes.INTEGER,
 			primaryKey: true,
 		},
-		balance: {
-			type: DataTypes.INTEGER,
-			defaultValue: 0,
+		discord_username: {
+			type: DataTypes.STRING,
 			allowNull: false,
 		},
+
+		created_at_date_stamp: {
+			type: DataTypes.INTEGER,
+			timestamps: true,
+			allowNull: false,
+		},
+		// createdAt: {
+		// 	type: DataTypes.REAL,
+		// 	allowNull: false,
+		// },
+		// updateAt: {
+		// 	type: DataTypes.REAL,
+		// 	allowNull: false,
+		// },
 	}, {
 		timestamps: false,
 	});

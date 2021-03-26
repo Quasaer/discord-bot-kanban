@@ -1,10 +1,7 @@
-const { currency } = require('../index.js');
-
 module.exports = {
 	name: 'message',
 	execute(message, client) {
 		if (message.author.bot) return;
-		currency.add(message.author.id, 1);
 		const prefix = '%';
 		if (!message.content.startsWith(prefix) || message.author.bot) return;
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
