@@ -1,4 +1,4 @@
-const { Users } = require('../dbObjects.js');
+const { Users } = require('../dbCommands.js');
 
 module.exports = {
 	name: 'ready',

@@ -5,7 +5,7 @@ require('dotenv').config();
 const path = require('path');
 
 // database
-const { Users, CurrencyShop } = require('./dbObjects');
+const { Users, CurrencyShop } = require('./dbCommands');
 const { Op } = require('sequelize');
 const currency = new Discord.Collection();
 //

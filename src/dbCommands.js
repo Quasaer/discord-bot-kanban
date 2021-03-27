@@ -16,6 +16,12 @@ const Columns = require('./models/Columns')(sequelize, Sequelize.DataTypes);
 const Config = require('./models/Config')(sequelize, Sequelize.DataTypes);
 const Task_Assignment = require('./models/Task_Assignment')(sequelize, Sequelize.DataTypes);
 
+function addUser(user) {
+	// Users.prototype.addUsers = async function(user) {
+	// 	return user.create({ user_id: this.user_id});
+	// };
+	// console.log("success "+user);
+	return `Successfully added ${user}`;
+};
 
-
-module.exports = { Users, Boards};
+module.exports = { Users, addUser }; //only export function calls
