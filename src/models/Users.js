@@ -13,17 +13,8 @@ module.exports = (sequelize, DataTypes) => {
 		created_at_date_stamp: {
 			type: DataTypes.INTEGER,
 			timestamps: true,
-			// createdAt: 'created_at_date_time_stamp',
 			allowNull: false,
 		},
-		// createdAt: {
-		// 	type: DataTypes.REAL,
-		// 	allowNull: false,
-		// },
-		// updateAt: {
-		// 	type: DataTypes.REAL,
-		// 	allowNull: false,
-		// },
 	}, {
 		timestamps: false,
 	});

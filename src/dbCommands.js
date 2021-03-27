@@ -17,24 +17,10 @@ const Config = require('./models/Config')(sequelize, Sequelize.DataTypes);
 const Task_Assignment = require('./models/Task_Assignment')(sequelize, Sequelize.DataTypes);
 
 async function addUser(username) {
-	// Users.prototype.addUsers = async function(user) {
-	// 	return user.create({ user_id: this.user_id});
-	// };
-	// console.log("success "+user);
-	// try {
-		//add user to db
-
 		const created_at = Math.floor(+new Date() / 1000); 
-		const newuser = await Users.create({ discord_username: username, created_at_date_stamp: created_at}).catch(error => {
+		await Users.create({ discord_username: username, created_at_date_stamp: created_at}).catch(error => {
 			console.log(error);
 		});
-		console.log(newuser.user_id);
-		// console.log(a);
-		// return 1; //return the stored row id
-	// } catch (error) {
-		// return false;
-	// }
-	// return `Successfully added `;
 };
 
 module.exports = { Users, addUser }; //only export function calls
