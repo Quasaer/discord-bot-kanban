@@ -1,14 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
 	return sequelize.define('Column_track', {
-		column_track_id:DataTypes.INTEGER,
-		primaryKey: true,
+		column_track_id:{
+			type: DataTypes.INTEGER,
+			primaryKey: true,
+		},
 
         column_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
         
-
 		column_status_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
