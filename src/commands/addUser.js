@@ -6,6 +6,9 @@ module.exports = {
 		const target = message.mentions.users.first() || message.author;
 		const find = dbCmd.findUser(target.tag);
 		const user = target.tag.split('#');
+		if (!message.mentions.users.size) {
+			return message.reply('you need to tag a user in order to add them!');
+		}
 		if(find){
 			message.channel.send(`${user[0]} already exists in the DB`);
 		} else{
