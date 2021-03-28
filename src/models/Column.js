@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define("Columns", {
+    return sequelize.define("Column", {
         column_id: DataTypes.INTEGER,
         primaryKey: true,
 
