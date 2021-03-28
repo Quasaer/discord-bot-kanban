@@ -30,5 +30,4 @@ async function findUser(username) { //function to find user
 	return finduser;
 };
 
-
 module.exports = { Users, addUser, findUser }; //only export function calls
