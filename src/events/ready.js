@@ -1,5 +1,3 @@
-const { Users } = require('../dbCommands.js');
-
 module.exports = {
 	name: 'ready',
 	once: true,
