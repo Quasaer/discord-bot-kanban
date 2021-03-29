@@ -25,13 +25,11 @@ module.exports = (sequelize, DataTypes) => {
 
         deadline_date_time_stamp: {
             type: DataTypes.INTEGER,
-            timestamps: true,
             allowNull: false,
         },
 
         created_at_date_time_stamp: {
             type: DataTypes.INTEGER,
-            timestamps: true,
             allowNull: false,
         },
 
@@ -42,7 +40,6 @@ module.exports = (sequelize, DataTypes) => {
 
         updated_at_date_time_stamp: {
             type: DataTypes.INTEGER,
-            timestamps: true,
             allowNull: false,
         },
 

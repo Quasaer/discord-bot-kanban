@@ -17,13 +17,11 @@ module.exports = (sequelize, DataTypes) => {
 
     created_at_date_time_stamp: {
       type: DataTypes.INTEGER,
-      timestamps: true,
       allowNull: false,
     },
 
     updated_at_date_time_stamp: {
       type: DataTypes.INTEGER,
-      timestamps: true,
       allowNull: false,
     },
 

@@ -11,25 +11,21 @@ module.exports = (sequelize, DataTypes) => {
 
         start_date_time_stamp: {
             type: DataTypes.INTEGER,
-            timestamps: true,
             allowNull: false,
         },
 
         end_date_time_stamp: {
             type: DataTypes.INTEGER,
-            timestamps: true,
             allowNull: false,
         },
 
         created_at_date_time_stamp: {
             type: DataTypes.INTEGER,
-            timestamps: true,
             allowNull: false,
         },
 
         updated_at_date_time_stamp: {
             type: DataTypes.INTEGER,
-            timestamps: true,
             allowNull: false,
         },
 
