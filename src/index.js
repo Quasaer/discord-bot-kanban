@@ -1,4 +1,5 @@
 const fs = require('fs');
+const config = require('dotenv');
 const Discord = require('discord.js');
 require('dotenv').config();
 const path = require('path');
@@ -27,4 +28,4 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(process.env.LOGIN_TOKEN); 
+client.login(process.env.LOGIN_TOKEN); //conencts to bot with token id
