@@ -8,7 +8,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 });
 
 const Users = require('./models/Users')(sequelize, Sequelize.DataTypes);
-const Boards = require('./models/Board')(sequelize, Sequelize.DataTypes);
+const Board = require('./models/Board')(sequelize, Sequelize.DataTypes);
 const Tasks = require('./models/Tasks')(sequelize, Sequelize.DataTypes);
 const Column_Status = require('./models/Column_Status')(sequelize, Sequelize.DataTypes);
 const Column_Track = require('./models/Column_Track')(sequelize, Sequelize.DataTypes);
@@ -16,6 +16,13 @@ const Columns = require('./models/Column')(sequelize, Sequelize.DataTypes);
 const Config = require('./models/Config')(sequelize, Sequelize.DataTypes);
 const Task_Assignment = require('./models/Task_Assignment')(sequelize, Sequelize.DataTypes);
 
+
+const test_created_at = Math.floor(+new Date() / 1000); //calculates date as integer
+Board.create({ name: 'test', start_date_time_stamp: '15', end_date_time_stamp: '', created_at_date_time_stamp: test_created_at, updated_at_date_time_stamp: test_created_at, created_by_user_id: '1', updated_by_user_id: '1'});
+
+
+
+//users
 async function addUser(username) { //function to add user
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
 	await Users.create({ discord_username: username, created_at_date_stamp: created_at}).catch(error => { //adds to database
@@ -24,10 +31,34 @@ async function addUser(username) { //function to add user
 };
 
 async function findUser(username) { //function to find user
-	const finduser = await Users.findOne({
+	const foundUser = await Users.findOne({
 		where: { discord_username: username }, //attempts to match username paramter (target.tag) to column name discord_username
 	});
-	return finduser;
+	return foundUser;
 };
 
-module.exports = { addUser, findUser }; //only export function calls
+//boards
+async function addBoard(boardName, startDateInput, deadlineDateInput) { //function to add user
+	if(startDateInput){
+		startDate = startDateInput;
+	} else {
+		startDate = '';
+	}
+	if(deadlineDateInput) {
+		deadlineDate = deadlineDateInput;
+	} else {
+		deadlineDate = '';
+	}
+	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
+	await Board.create({ name: boardName, start_date_time_stamp: startDate, end_date_time_stamp: deadlineDate, created_at_date_time_stamp: created_at}).catch(error => { //adds to database
+		console.log(error);
+	});
+};
+
+async function findBoardByName(boardName) { //function to find user
+	const foundBoardByName = await Board.findOne({
+		where: { name: boardName }, });
+	return foundBoardByName;
+};
+
+module.exports = { addUser, findUser, addBoard, findBoardByName}; //only export function calls
