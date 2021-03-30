@@ -5,6 +5,10 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	dialect: 'sqlite',
 	logging: false,
 	storage: './src/KanbanDB.db',
+	define: {
+		timestamps: false,
+		freezeTableName: true,
+	}
 });
 // models
 const Users = require('./models/Users')(sequelize, Sequelize.DataTypes);
@@ -30,17 +34,23 @@ async function findUser(username) { //function to find user
 	return finduser;
 };
 
-async function addBindID(channel_ID) { //function to add BindID to db
-	await Config.create({ channel_bind_id: channel_ID}).catch(error => { //adds to config table in database
+async function addBindId(channelId, serverId) { //function to add BindID to db
+	await Config.create({ channel_bind_id: channelId, server_id: serverId, prefix: '%'}).catch(error => { //adds to config table in database
+		console.log(error);
+	});
+};
+
+async function updateBindId(channelId, serverId) { //function to update BindID to db
+	await Config.update({ channel_bind_id: channelId, server_id: serverId, prefix: '%'}).catch(error => { //updates config table in database
 		console.log(error);
 	});
 }; 
 
-async function findBindID(channel_ID) { //function to find user
-	const findbind = await Config.findOne({
-		where: { channel_bind_id: channel_ID }, //attempts to match username paramter (target.tag) to column name discord_username
+async function findBindIdByServerId(serverId) { //function to find server id
+	const findBind = await Config.findOne({
+		where: { server_id: serverId }, //attempts to match channel id in db to the channel id of the current message
 	});
-	return findbind;
+	return findBind;
 };
 
-module.exports = { addUser, findUser, addBindID, findBindID }; //only export function calls
+module.exports = { addUser, findUser, addBindId, findBindIdByServerId, updateBindId }; //only export function calls

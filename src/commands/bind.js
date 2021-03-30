@@ -3,13 +3,14 @@ module.exports = {
 	name: 'bind',
 	description: 'Bind!',
 	execute(message, args) {
-		const target = message.channel.id;
-		const find = dbCmd.findBindID(target.tag).then((val) =>{
-			console.log(find);
+		const channelId = message.channel.id;
+		const guildId = message.guild.id;
+		const find = dbCmd.findBindIdByServerId(guildId).then((val) =>{
 			if(val !== null){
-				message.channel.send(`The channel is already binded!`);
+				const resp  = dbCmd.updateBindId(channelId); // updates if already set
+				message.channel.send(`The channel bind has been updated!`);
 			} else {
-				const resp  = dbCmd.addBindID(target.tag);
+				const resp  = dbCmd.addBindId(channelId, guildId);
 				if(resp){
 					message.channel.send(`Channel has successfully been binded!`);
 				} else {
