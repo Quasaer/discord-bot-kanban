@@ -7,7 +7,7 @@ module.exports = {
 		const guildId = message.guild.id;
 		const find = dbCmd.findBindIdByServerId(guildId).then((val) =>{
 			if(val !== null){
-				const resp  = dbCmd.updateBindId(channelId); // updates if already set
+				const resp  = dbCmd.updateBindId(channelId, guildId); // updates if already set
 				message.channel.send(`The channel bind has been updated!`);
 			} else {
 				const resp  = dbCmd.addBindId(channelId, guildId);

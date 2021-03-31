@@ -41,16 +41,23 @@ async function addBindId(channelId, serverId) { //function to add BindID to db
 };
 
 async function updateBindId(channelId, serverId) { //function to update BindID to db
-	await Config.update({ channel_bind_id: channelId, server_id: serverId, prefix: '%'}).catch(error => { //updates config table in database
+	await Config.update({channel_bind_id: channelId, prefix: '%'}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
 		console.log(error);
 	});
 }; 
 
 async function findBindIdByServerId(serverId) { //function to find server id
 	const findBind = await Config.findOne({
-		where: { server_id: serverId }, //attempts to match channel id in db to the channel id of the current message
+		where: { server_id: serverId }, //attempts to match server id in db to the server id of the current message
 	});
 	return findBind;
 };
 
-module.exports = { addUser, findUser, addBindId, findBindIdByServerId, updateBindId }; //only export function calls
+async function findBindIdByChannelId(channelId) { //function to find channel id
+	const findBindId = await Config.findOne({
+		where: { channel_bind_id: channelId },//attempts to match channel id in db to the channel id of the current message
+	});
+	return findBindId;
+};
+
+module.exports = { addUser, findUser, addBindId, findBindIdByServerId, updateBindId, findBindIdByChannelId }; //only export function calls
