@@ -1,0 +1,2 @@
+modiying board table
+- making start date and deadline (end date stamp) nullable
