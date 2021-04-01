@@ -1,6 +1,6 @@
 module.export={
 name: 'help',
-description:'Help!'
+description:'Help!',
 execute(message, args) {
 message.channel.send(`
 These are my supported commands:
