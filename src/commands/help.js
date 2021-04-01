@@ -1,7 +1,7 @@
 module.export={
 name: 'help',
 description:'Help!'
-execute(message,args){
+execute(message){
 message.channel.send(`
 These are my supported commands:
 **%help** - Displays the help menu
