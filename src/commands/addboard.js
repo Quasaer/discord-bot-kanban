@@ -1,5 +1,27 @@
 let dbCmd  = require('../dbCommands.js');
-const p = "%" //temporary
+
+let data = {
+	board:{
+		id: '',
+		name:'',
+		deadLine:'',
+		startDate:'',
+		columns:[{
+			1:{
+				'name':'Backlog',
+				'orderNumber':1
+			},
+			2:{
+				'name':'Active',
+				'orderNumber':2
+			},
+			3:{
+				'name':'Done',
+				'orderNumber':3
+			}
+		}],
+	}
+};
 
 function boardConfigs(message, name){
 	
@@ -35,19 +57,20 @@ function boardConfigs(message, name){
 				if(val !== null){
 					message.channel.send(`${name} already exists in the DB`);
 				} else {
-					dbCmd.findUser(user).then((userModel) =>{
-						const resp = dbCmd.addBoard(userModel, name);
-						// const boardModel = getBoardModel(name);
-						// console.log(boardModel);
-						dbCmd.findBoardByName(name).then((boardModel) =>{
-							const columnResp = dbCmd.addColumn(userModel, name, boardModel);
-						});
-						if(resp){
-							message.channel.send(`${name} has successfully been added to DB`);
-						} else {
-							console.log('error saving board to database');
-						}
-					});
+					// dbCmd.findUser(user).then((userModel) =>{
+					// 	const resp = dbCmd.addBoard(userModel, name);
+					// 	// const boardModel = getBoardModel(name);
+					// 	// console.log(boardModel);
+					// 	dbCmd.findBoardByName(name).then((boardModel) =>{
+					// 		const columnResp = dbCmd.addColumn(userModel, name, boardModel);
+					// 	});
+					// 	if(resp){
+					// 		message.channel.send(`${name} has successfully been added to DB`);
+					// 	} else {
+					// 		console.log('error saving board to database');
+					// 	}
+					// });
+					data.name = name;
 				}
 			});
 			
@@ -59,6 +82,11 @@ function boardConfigs(message, name){
 				message.reply('No answer after 30 seconds, operation canceled.');
 	});
 };
+
+function populateDatabase(){
+	//go through data json object and make records
+
+}
 
 function handleStartDate(message, name){
 	message.reply('Would you like to add a start date?\n'
