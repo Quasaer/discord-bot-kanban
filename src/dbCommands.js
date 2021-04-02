@@ -17,7 +17,7 @@ const Board = require('./models/Board')(sequelize, Sequelize.DataTypes);
 const Tasks = require('./models/Tasks')(sequelize, Sequelize.DataTypes);
 const Column_Status = require('./models/Column_Status')(sequelize, Sequelize.DataTypes);
 const Column_Track = require('./models/Column_Track')(sequelize, Sequelize.DataTypes);
-const Columns = require('./models/Column')(sequelize, Sequelize.DataTypes);
+const Column = require('./models/Column')(sequelize, Sequelize.DataTypes);
 const Config = require('./models/Config')(sequelize, Sequelize.DataTypes);
 const Task_Assignment = require('./models/Task_Assignment')(sequelize, Sequelize.DataTypes);
 
@@ -77,7 +77,7 @@ async function addColumn(userModel, ColumnName, boardModel) { //function to add 
 	boardID = boardModel.board_id;
 	
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	await Board.create({ 
+	await Column.create({ 
 		name: ColumnName, 
 		board_id: boardID,
 		created_at_date_time_stamp: created_at,
