@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
 
         task_limit: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
 
         board_id: {
@@ -20,12 +19,6 @@ module.exports = (sequelize, DataTypes) => {
 
         column_order_number: {
             type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-
-        deadline_date_time_stamp: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
         },
 
         created_at_date_time_stamp: {
@@ -40,12 +33,10 @@ module.exports = (sequelize, DataTypes) => {
 
         updated_at_date_time_stamp: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
 
         updated_by_user_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
     }, {
 		timestamps: false,

@@ -37,6 +37,11 @@ function boardConfigs(message, name){
 				} else {
 					dbCmd.findUser(user).then((userModel) =>{
 						const resp = dbCmd.addBoard(userModel, name);
+						// const boardModel = getBoardModel(name);
+						// console.log(boardModel);
+						dbCmd.findBoardByName(name).then((boardModel) =>{
+							const columnResp = dbCmd.addColumn(userModel, name, boardModel);
+						});
 						if(resp){
 							message.channel.send(`${name} has successfully been added to DB`);
 						} else {
@@ -54,6 +59,7 @@ function boardConfigs(message, name){
 				message.reply('No answer after 30 seconds, operation canceled.');
 	});
 };
+
 function handleStartDate(message, name){
 	message.reply('Would you like to add a start date?\n'
 				+ 'Confirm with `yes` or deny with `no`.\n'

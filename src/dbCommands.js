@@ -48,7 +48,8 @@ async function addBoard(userModel, boardName, startDateInput, deadlineDateInput)
 	userId = userModel.user_id;
 	
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	await Board.create({ name: boardName, 
+	await Board.create({ 
+		name: boardName, 
 		start_date_time_stamp: startDateInput,
 		end_date_time_stamp: deadlineDateInput, 
 		created_at_date_time_stamp: created_at,
@@ -69,5 +70,21 @@ async function findBoardByName(boardName) { //function to find user
 //column track
 
 //column
+async function addColumn(userModel, ColumnName, boardModel) { //function to add user
+	// console.log(username);
+	userId = userModel.user_id;
+	// console.log(boardModel);
+	boardID = boardModel.board_id;
+	
+	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
+	await Board.create({ 
+		name: ColumnName, 
+		board_id: boardID,
+		created_at_date_time_stamp: created_at,
+		created_by_user_id: userId, 
+	}).catch(error => { //adds to database (not doing userid)
+		console.log(error);
+	});
+};
 
-module.exports = { addUser, findUser, addBoard, findBoardByName}; //only export function calls
+module.exports = { addUser, findUser, addBoard, findBoardByName, addColumn}; //only export function calls
