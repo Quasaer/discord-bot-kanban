@@ -6,10 +6,14 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	dialect: 'sqlite',
 	logging: false,
 	storage: './src/KanbanDB.db',
+	define: {
+		timestamps: false,
+		freezeTableName: true,
+	}
 });
 
 const Users = require('./models/Users')(sequelize, Sequelize.DataTypes);
-const Boards = require('./models/Board')(sequelize, Sequelize.DataTypes);
+const Board = require('./models/Board')(sequelize, Sequelize.DataTypes);
 const Tasks = require('./models/Tasks')(sequelize, Sequelize.DataTypes);
 const Column_Status = require('./models/Column_Status')(sequelize, Sequelize.DataTypes);
 const Column_Track = require('./models/Column_Track')(sequelize, Sequelize.DataTypes);
@@ -42,24 +46,11 @@ async function findUser(username) { //function to find user
 async function addBoard(userModel, boardName, startDateInput, deadlineDateInput) { //function to add user
 	// console.log(username);
 	userId = userModel.user_id;
-	let startDate;
-	let deadlineDate;
-	
-	if(startDateInput){
-		startDate = startDateInput;
-	} else {
-		startDate = '';
-	}
-	if(deadlineDateInput) {
-		deadlineDate = deadlineDateInput;
-	} else {
-		deadlineDate = '';
-	}
 	
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	await Boards.create({ name: boardName, 
-		start_date_time_stamp: startDate,
-		end_date_time_stamp: deadlineDate, 
+	await Board.create({ name: boardName, 
+		start_date_time_stamp: startDateInput,
+		end_date_time_stamp: deadlineDateInput, 
 		created_at_date_time_stamp: created_at,
 		created_by_user_id: userId, 
 	}).catch(error => { //adds to database (not doing userid)
@@ -68,9 +59,15 @@ async function addBoard(userModel, boardName, startDateInput, deadlineDateInput)
 };
 
 async function findBoardByName(boardName) { //function to find user
-	const foundBoardByName = await Boards.findOne({
+	const foundBoardByName = await Board.findOne({
 		where: { name: boardName }, });
 	return foundBoardByName;
 };
+
+//column status
+
+//column track
+
+//column
 
 module.exports = { addUser, findUser, addBoard, findBoardByName}; //only export function calls

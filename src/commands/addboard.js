@@ -7,11 +7,11 @@ function boardConfigs(message, name){
 
 	message.reply(`These are the default settings for ${name}\n`
 			+ 'Columns: (`Backlog`, `Active`, `Done`)\n'
-			+ 'Optional tart date is `null`\n'
+			+ 'Optional start date is `null`\n'
 			+ 'Optional Deadline date is `null`\n'
 			+ 'Would you like to change these settings?\n'
 			+ '`yes` to change settings or `no` to create board with default settings.\n'
-			+ 'You have 30 seconds or else baord will not be made.\n');
+			+ 'You have 30 seconds or else board will not be made.\n');
 
 	// First argument is a filter function - which is made of conditions
 	// m is a 'Message' object
@@ -57,7 +57,7 @@ function boardConfigs(message, name){
 function handleStartDate(message, name){
 	message.reply('Would you like to add a start date?\n'
 				+ 'Confirm with `yes` or deny with `no`.\n'
-				+ 'You have 30 seconds or else baord will not be made.\n');
+				+ 'You have 30 seconds or else board will not be made.\n');
 
 	// First argument is a filter function - which is made of conditions
 	// m is a 'Message' object
@@ -104,7 +104,7 @@ function handleStartDateInput(message, name){ //gets input for start date
 function handleDeadlineDate(message, name, startDate){
 	message.reply('Would you like to add a start date?\n'
 				+ 'Confirm with `yes` or deny with `no`.\n'
-				+ 'You have 30 seconds or else baord will not be made.\n');
+				+ 'You have 30 seconds or else board will not be made.\n');
 
 	// First argument is a filter function - which is made of conditions
 	// m is a 'Message' object
@@ -154,10 +154,10 @@ function finalConfirmation(message, name, startDate, deadlineDate){
 
 	console.log(startDate);
 	console.log(deadlineDate);
-	message.reply(`Changes Successfully made`
+	message.reply(`Changes Successfully made\n`
 			+ 'Would you like to continuw with these settings?\n'
 			+ '`yes` to create board with default settings or `no` to cancel changes.\n'
-			+ 'You have 30 seconds or else baord will not be made.\n');
+			+ 'You have 30 seconds or else board will not be made.\n');
 
 	// First argument is a filter function - which is made of conditions
 	// m is a 'Message' object

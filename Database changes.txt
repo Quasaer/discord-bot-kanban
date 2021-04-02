@@ -1,8 +1,8 @@
 Database changes
-#whatever you chang in the database you most liekly will have to update the corresponding models
+#whatever you change in the database you most likely will have to update the corresponding models
 
 
 Board
-- start date and end date deadline) are optional so no longer Not Null
+- start date and end date deadline) are optional so no longer Not Null and updated
 
 have changed the board back to boards to fix recurring error (that i couldnt find)
