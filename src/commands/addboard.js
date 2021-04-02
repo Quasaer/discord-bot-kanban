@@ -174,21 +174,58 @@ function finalConfirmation(message){
 function populateDatabase(message){
 	//go through data json object and make records
 	const user = message.author.tag;
+	// let columnName ='';
+	// let columnOrderNumber ='';
 
-	console.log(data);
-	console.log('success');
+
 	boardName = data.board.name; 
 	startDate = data.board.startDate; 
 	deadlineDate = data.board.deadlineDate; 
 
+	
+
 	dbCmd.findUser(user).then((userModel) =>{
 		const resp = dbCmd.addBoard(userModel, boardName, startDate, deadlineDate);
-		if(resp){
+		if(resp !== null){
 			message.channel.send(`${boardName} has successfully been added to DB`);
+			dbCmd.findBoardByName(boardName).then((boardModel) =>{
+				// console.log(boardModel.board_id);
+				data.board.id = boardModel.board_id;
+
+				// db command get status => returning array of two model objects
+				//column stuff
+				/*
+					for loop for columns
+					inside for loop db add column (2 one for name and one for ).then()
+					.then => for loop to loop through column status and add column track record 
+
+				*/
+				dbCmd.findAllColumnStatus().then(() => {
+					for (let i = 1; i <= Object.keys(data.board.columns[0]).length; i++) {
+						let columnName = data.board.columns[0][i].name;
+						let columnOrderNumber = data.board.columns[0][i].orderNumber;
+						dbCmd.addColumn(userModel, columnName, data.board.id, columnOrderNumber).then(() => {
+							dbCmd.findColumnByColumnOrderNumberAndBoardId(columnOrderNumber, data.board.id).then((val) => {
+								console.log(val);
+							});
+						});
+					}
+				});
+
+				
+
+				// console.log(data);
+				// console.log('success');
+				// console.log(data.board.columns[0][i].name);
+
+
+			});
 		} else {
 			console.log('error saving board to database');
 		}
 	});
+
+	
 }
 
 module.exports = {

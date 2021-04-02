@@ -1,7 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define("Column", {
-        column_id: DataTypes.INTEGER,
-        primaryKey: true,
+        column_id:  {
+			type: DataTypes.INTEGER,
+			primaryKey: true,
+		},
+
 
         name: {
             type: DataTypes.STRING,
@@ -19,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 
         column_order_number: {
             type: DataTypes.INTEGER,
+            allowNull: false,
         },
 
         created_at_date_time_stamp: {

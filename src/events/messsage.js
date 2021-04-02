@@ -2,7 +2,7 @@ module.exports = {
 	name: 'message',
 	execute(message, client) {
 		if (message.author.bot) return;
-		const prefix = '%';
+		const prefix = '$';
 		if (!message.content.startsWith(prefix) || message.author.bot) return;
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
 		const commandName = args.shift().toLowerCase();
