@@ -185,44 +185,51 @@ function populateDatabase(message){
 	
 
 	dbCmd.findUser(user).then((userModel) =>{
-		const resp = dbCmd.addBoard(userModel, boardName, startDate, deadlineDate);
-		if(resp !== null){
-			message.channel.send(`${boardName} has successfully been added to DB`);
-			dbCmd.findBoardByName(boardName).then((boardModel) =>{
+		dbCmd.addBoard(userModel, boardName, startDate, deadlineDate).then((boardModel) => {
+			// console.log(boardModel);
+		
+			if(boardModel !== null){
+				message.channel.send(`${boardName} has successfully been added to DB`);
 				// console.log(boardModel.board_id);
 				data.board.id = boardModel.board_id;
-
+	
 				// db command get status => returning array of two model objects
 				//column stuff
 				/*
 					for loop for columns
 					inside for loop db add column (2 one for name and one for ).then()
 					.then => for loop to loop through column status and add column track record 
-
+	
 				*/
-				dbCmd.findAllColumnStatus().then(() => {
+				dbCmd.findAllColumnStatus().then((statusModels) => {
 					for (let i = 1; i <= Object.keys(data.board.columns[0]).length; i++) {
 						let columnName = data.board.columns[0][i].name;
 						let columnOrderNumber = data.board.columns[0][i].orderNumber;
-						dbCmd.addColumn(userModel, columnName, data.board.id, columnOrderNumber).then(() => {
-							dbCmd.findColumnByColumnOrderNumberAndBoardId(columnOrderNumber, data.board.id).then((val) => {
-								console.log(val);
-							});
+						dbCmd.addColumn(userModel, columnName, data.board.id, columnOrderNumber).then((columnModel) => {
+							// console.log(columnModel);
+							// console.log(status.column_status_id);
+							// console.log(status[0]);
+							// console.log(status[0].column_status_id);
+							for (let j = 0; j<statusModels.length; j++){
+								// console.log(statusModels[j].column_status_id);		
+								dbCmd.addColumnTrackRecord(userModel, columnModel, statusModels[j]).then((columnTrackRecord) => {
+									console.log(columnTrackRecord);
+								});
+							}
 						});
 					}
 				});
-
+	
 				
-
+	
 				// console.log(data);
 				// console.log('success');
 				// console.log(data.board.columns[0][i].name);
-
-
-			});
-		} else {
-			console.log('error saving board to database');
-		}
+	
+			} else {
+				console.log('error saving board to database');
+			}
+		});
 	});
 
 	

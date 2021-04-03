@@ -30,9 +30,10 @@ const TaskAssignment = require('./models/Task_Assignment')(sequelize, Sequelize.
 //users
 async function addUser(username) { //function to add user
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	await Users.create({ discord_username: username, created_at_date_stamp: created_at}).catch(error => { //adds to database
+	const user = await Users.create({ discord_username: username, created_at_date_stamp: created_at}).catch(error => { //adds to database
 		console.log(error);
 	});
+	return user;
 };
 
 async function findUser(username) { //function to find user
@@ -48,7 +49,7 @@ async function addBoard(userModel, boardName, startDateInput, deadlineDateInput)
 	userId = userModel.user_id;
 	
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	await Board.create({ 
+	const board = await Board.create({ 
 		name: boardName, 
 		start_date_time_stamp: startDateInput,
 		end_date_time_stamp: deadlineDateInput, 
@@ -57,6 +58,7 @@ async function addBoard(userModel, boardName, startDateInput, deadlineDateInput)
 	}).catch(error => { //adds to database (not doing userid)
 		console.log(error);
 	});
+	return board;
 };
 
 async function findBoardByName(boardName) { //function to find user
@@ -68,24 +70,29 @@ async function findBoardByName(boardName) { //function to find user
 //column status
 async function findAllColumnStatus(){
 	const allStatus = await ColumnStatus.findAll({
-		attributes: ['column_status_id'] });
+		attributes: ['column_status_id'] 
+	});
 	return allStatus;
 };
 
 //column track
-async function addColumnTrackRecord(userModel, columnId, columnStatusId) { //function to add user
+async function addColumnTrackRecord(userModel, columnModel, columnStatusModel) { //function to add user
 	// console.log(username);
 	userId = userModel.user_id;
-	// console.log(boardModel);	
+	columnId = columnModel.column_id;
+	// console.log(columnStatusModel);
+	statusId = columnStatusModel.column_status_id;
+	// console.log(statusId);
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	await Column.create({ 
+	const columnTrackRecord = await ColumnTrack.create({ 
 		column_id: columnId, 
-		column_status_id: columnStatusId,
+		column_status_id: statusId,
 		created_at_date_time_stamp: created_at,
 		created_by_user_id: userId, 
 	}).catch(error => { //adds to database (not doing userid)
 		console.log(error);
 	});
+	return columnTrackRecord;
 };
 
 //column
@@ -96,7 +103,7 @@ async function addColumn(userModel, ColumnName, boardId, columnOrderNumber) { //
 
 	
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	await Column.create({ 
+	const column = await Column.create({ 
 		name: ColumnName, 
 		board_id: boardId,
 		column_order_number: columnOrderNumber,
@@ -105,6 +112,7 @@ async function addColumn(userModel, ColumnName, boardId, columnOrderNumber) { //
 	}).catch(error => { //adds to database (not doing userid)
 		console.log(error);
 	});
+	return column;
 };
 
 async function findColumnByColumnOrderNumberAndBoardId(columnOrderNumber, boardId) { //function to find user
@@ -121,4 +129,5 @@ module.exports = {
 	findAllColumnStatus, 
 	addColumn,
 	findColumnByColumnOrderNumberAndBoardId,
+	addColumnTrackRecord
 }; //only export function calls
