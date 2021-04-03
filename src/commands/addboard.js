@@ -189,9 +189,10 @@ function populateDatabase(message){
 			// console.log(boardModel);
 		
 			if(boardModel !== null){
-				message.channel.send(`${boardName} has successfully been added to DB`);
+				
 				// console.log(boardModel.board_id);
 				data.board.id = boardModel.board_id;
+				console.log(data);
 	
 				// db command get status => returning array of two model objects
 				//column stuff
@@ -206,26 +207,39 @@ function populateDatabase(message){
 						let columnName = data.board.columns[0][i].name;
 						let columnOrderNumber = data.board.columns[0][i].orderNumber;
 						dbCmd.addColumn(userModel, columnName, data.board.id, columnOrderNumber).then((columnModel) => {
-							// console.log(columnModel);
-							// console.log(status.column_status_id);
-							// console.log(status[0]);
-							// console.log(status[0].column_status_id);
+							// console.log(columnModels);
 							for (let j = 0; j<statusModels.length; j++){
 								// console.log(statusModels[j].column_status_id);		
-								dbCmd.addColumnTrackRecord(userModel, columnModel, statusModels[j]).then((columnTrackRecord) => {
-									console.log(columnTrackRecord);
+								dbCmd.addColumnTrackRecord(userModel, columnModel, statusModels[j]).then(() => {
+									message.channel.send(`${boardName} has successfully been added to DB`);
+									data = { //reset data array
+										board:{
+											id: '',
+											name:'',
+											deadlineDate:'',
+											startDate:'',
+											columns:[{
+												1:{
+													'name':'Backlog',
+													'orderNumber':1
+												},
+												2:{
+													'name':'Active',
+													'orderNumber':2
+												},
+												3:{
+													'name':'Done',
+													'orderNumber':3
+												}
+											}],
+										}
+									};
+									// console.log(data);
 								});
 							}
 						});
 					}
-				});
-	
-				
-	
-				// console.log(data);
-				// console.log('success');
-				// console.log(data.board.columns[0][i].name);
-	
+				});	
 			} else {
 				console.log('error saving board to database');
 			}
