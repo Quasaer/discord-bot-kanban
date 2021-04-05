@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 
 		channel_bind_id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
 
