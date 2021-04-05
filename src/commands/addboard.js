@@ -176,7 +176,7 @@ function populateDatabase(message){
 	const user = message.author.tag;
 	// let columnName ='';
 	// let columnOrderNumber ='';
-
+	message.channel.send(`${boardName} has successfully been added to DB`);
 
 	boardName = data.board.name; 
 	startDate = data.board.startDate; 
@@ -211,7 +211,7 @@ function populateDatabase(message){
 							for (let j = 0; j<statusModels.length; j++){
 								// console.log(statusModels[j].column_status_id);		
 								dbCmd.addColumnTrackRecord(userModel, columnModel, statusModels[j]).then(() => {
-									message.channel.send(`${boardName} has successfully been added to DB`);
+									
 									data = { //reset data array
 										board:{
 											id: '',
