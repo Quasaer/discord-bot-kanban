@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 		config_id: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
+            autoIncrement: true,
 		},
 
 		channel_bind_id: {
