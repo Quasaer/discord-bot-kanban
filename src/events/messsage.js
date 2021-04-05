@@ -5,6 +5,7 @@ module.exports = {
 		if (message.author.bot) return;
 		const prefix = '%';
 		const bind = 'bind';
+		// stores bind command, used to check if user typed it to update the channel bind (see line 27)
 		bindCommand = prefix.concat(bind);
 		if (!message.content.startsWith(prefix) || message.author.bot) return;
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
@@ -13,42 +14,36 @@ module.exports = {
 		const channelId = message.channel.id;
 		const find = dbCmd.findConfigByServerId(guildId).then((configModel) =>{
 		// if null, create config record, configmodel.create config
-			// console.log(configModel);
 			if(configModel == null){
 				dbCmd.createConfig(guildId);
 				launchCommand(message, client, command);
-			} 
+			} // no bind has been set
 			else if(configModel.channel_bind_id == null){
 				launchCommand(message, client, command);
 			}
+			// bind has been set
 			else if(configModel.channel_bind_id != null){
+				// does the bind id in the config record equal the one in the message or does the content's message mention the bind command
 				if(configModel.channel_bind_id == channelId || message.content == bindCommand){
 					launchCommand(message, client, command);
-				} else{
-					//bindedId = Math.trunc(configModel.channel_bind_id);
-					//console.log(configModel.channel_bind_id); // config stored channel id
-					//console.log(message.channel.id); // message channel id
-					let errorMsg = sendErrorMessage(message, configModel.channel_bind_id);
+				} else{ // if the channel id of the message doesnt equal the bind id in the config record, then don't allow the user to communicate with the bot
+					let errorMsg = sendBindErrorMessage(message, configModel.channel_bind_id);
 					message.reply(errorMsg);
-					// console.log(errorMsg);
 				}
 			} else{
-				let errorMsg = sendErrorMessage(message, configModel.channel_bind_id);
+				let errorMsg = sendBindErrorMessage(message, configModel.channel_bind_id);
 				console.log(errorMsg);
-				//message.reply(sendErrorMessage(message, configModel.channel_bind_id));
 			}
 		});
 		
 	},
 };
- function sendErrorMessage(message, channelId){
-	 let channelName = message.guild.channels.cache.get(channelId);//message.channel.name; // let channel = message.guild.channels.cache.get(channelid)
+// call this to send bind error message, will tell user which channel is currently binded
+ function sendBindErrorMessage(message, channelId){
+	 let channelName = message.guild.channels.cache.get(channelId);
 	 let redirectMsg = 'Channel is binded at: ';
 	 redirectMsg = redirectMsg.concat(channelName);
 
-	 console.log(channelId);
-	 console.log(channelName);
-	 
 	 return redirectMsg;
  }
 

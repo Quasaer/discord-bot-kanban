@@ -44,7 +44,13 @@ async function updateBindId(channelId, serverId) { //function to update BindID t
 	await Config.update({channel_bind_id: channelId}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
 		console.log(error);
 	});
-}; 
+};
+
+async function updatePrefix(prefixName, serverId) { //function to update prefix to db
+	await Config.update({prefix: prefixName}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
+		console.log(error);
+	});
+};
 
 async function findConfigByServerId(serverId) { //function to find server id
 	const configModel = await Config.findOne({
@@ -53,4 +59,4 @@ async function findConfigByServerId(serverId) { //function to find server id
 	return configModel;
 };
 
-module.exports = { addUser, findUser, createConfig, findConfigByServerId, updateBindId }; //only export function calls
+module.exports = { addUser, findUser, createConfig, findConfigByServerId, updateBindId, updatePrefix }; //only export function calls

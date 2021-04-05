@@ -5,8 +5,8 @@ module.exports = {
 	execute(message, args) {
 		const channelId = message.channel.id;
 		const guildId = message.guild.id;
-		const find = dbCmd.findConfigByServerId(guildId).then((val) =>{
-			if(val !== null){
+		const find = dbCmd.findConfigByServerId(guildId).then((configModel) =>{
+			if(configModel !== null){
 				const resp  = dbCmd.updateBindId(channelId, guildId); // updates if already set
 				message.channel.send(`The channel bind has been updated!`);
 			} else {
