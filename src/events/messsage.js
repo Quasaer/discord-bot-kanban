@@ -12,8 +12,7 @@ module.exports = {
 		const guildId = message.guild.id;
 		const channelId = message.channel.id;
 		const find = dbCmd.findConfigByServerId(guildId).then((configModel) =>{
-		// if null, create config record, configmodel.create config
-			// console.log(configModel);
+
 			if(configModel == null){
 				dbCmd.createConfig(guildId);
 				launchCommand(message, client, command);
@@ -25,17 +24,12 @@ module.exports = {
 				if(configModel.channel_bind_id == channelId || message.content == bindCommand){
 					launchCommand(message, client, command);
 				} else{
-					//bindedId = Math.trunc(configModel.channel_bind_id);
-					//console.log(configModel.channel_bind_id); // config stored channel id
-					//console.log(message.channel.id); // message channel id
 					let errorMsg = sendErrorMessage(message, configModel.channel_bind_id);
 					message.reply(errorMsg);
-					// console.log(errorMsg);
 				}
 			} else{
 				let errorMsg = sendErrorMessage(message, configModel.channel_bind_id);
 				console.log(errorMsg);
-				//message.reply(sendErrorMessage(message, configModel.channel_bind_id));
 			}
 		});
 		
@@ -45,9 +39,6 @@ module.exports = {
 	 let channelName = message.guild.channels.cache.get(channelId);//message.channel.name; // let channel = message.guild.channels.cache.get(channelid)
 	 let redirectMsg = 'Channel is binded at: ';
 	 redirectMsg = redirectMsg.concat(channelName);
-
-	 console.log(channelId);
-	 console.log(channelName);
 	 
 	 return redirectMsg;
  }
