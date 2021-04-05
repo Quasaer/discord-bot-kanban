@@ -176,7 +176,7 @@ function populateDatabase(message){
 	const user = message.author.tag;
 	// let columnName ='';
 	// let columnOrderNumber ='';
-	message.channel.send(`${boardName} has successfully been added to DB`);
+	
 
 	boardName = data.board.name; 
 	startDate = data.board.startDate; 
@@ -187,7 +187,7 @@ function populateDatabase(message){
 	dbCmd.findUser(user).then((userModel) =>{
 		dbCmd.addBoard(userModel, boardName, startDate, deadlineDate).then((boardModel) => {
 			// console.log(boardModel);
-		
+			message.channel.send(`${boardName} has successfully been added to DB`);
 			if(boardModel !== null){
 				
 				// console.log(boardModel.board_id);
