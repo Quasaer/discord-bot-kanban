@@ -46,7 +46,7 @@ module.exports = {
 function launchCommand(message, client, commandName, args){
 	if (!client.commands.has(commandName)) return;
 		try {
-			client.commands.get(commandName).execute(message, client);
+			client.commands.get(commandName).execute(message, client, args);
 		} catch (error) {
 			console.log(error);
 			message.reply('There was an error trying to execute that command');
