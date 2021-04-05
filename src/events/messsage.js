@@ -15,14 +15,14 @@ module.exports = {
 
 			if(configModel == null){
 				dbCmd.createConfig(guildId);
-				launchCommand(message, client, command);
+				launchCommand(message, client, command, args);
 			} 
 			else if(configModel.channel_bind_id == null){
-				launchCommand(message, client, command);
+				launchCommand(message, client, command, args);
 			}
 			else if(configModel.channel_bind_id != null){
 				if(configModel.channel_bind_id == channelId || message.content == bindCommand){
-					launchCommand(message, client, command);
+					launchCommand(message, client, command, args);
 				} else{
 					let errorMsg = sendErrorMessage(message, configModel.channel_bind_id);
 					message.reply(errorMsg);
@@ -43,7 +43,7 @@ module.exports = {
 	 return redirectMsg;
  }
 
-function launchCommand(message, client, commandName){
+function launchCommand(message, client, commandName, args){
 	if (!client.commands.has(commandName)) return;
 		try {
 			client.commands.get(commandName).execute(message, client);
