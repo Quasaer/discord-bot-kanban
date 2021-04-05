@@ -133,4 +133,15 @@ async function findConfigByServerId(serverId) { //function to find server id
 	return configModel;
 };
 
-module.exports = { addUser, findUser, createConfig, findConfigByServerId, updateBindId }; //only export function calls
+module.exports = { 
+	addUser,
+	findUser,
+	createConfig,
+	findConfigByServerId,
+	updateBindId ,
+	findBoardByName,
+	addBoard,
+	addColumn,
+	addColumnTrackRecord,
+	findAllColumnStatus,
+}; //only export function calls
