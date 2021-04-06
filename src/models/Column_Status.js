@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 		column_status_id:{
 			type: DataTypes.INTEGER,
 			primaryKey: true,
+			autoIncrement: true,
 		},
 
         name: {
