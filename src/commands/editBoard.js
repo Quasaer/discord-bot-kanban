@@ -30,7 +30,7 @@ function editName(message){ //gets input for deadline date
 	message.reply(`State new name for your board. Current is: ${data.board.name}`);
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
-		const newNameInput = collected.first().content.toLowerCase();
+		const newNameInput = collected.first().content;
 		if ( newNameInput !== '') {
 			data.board.name = newNameInput;
 			finalConfirmation(message);
@@ -180,7 +180,6 @@ module.exports = {
 					message.channel.send(`${nameInput} doesn't exist in the DB`);
 				}
 			});
-			
 		}
 	},
 };

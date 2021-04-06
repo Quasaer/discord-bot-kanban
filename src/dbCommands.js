@@ -139,13 +139,25 @@ async function updateBoard(board){
 		console.log(error);
 	});
 	return boardModel;
-}
+};
 
-async function findColumnNameByBoardId(boardId) { //function to find server id
-	const configModel = await Column.findOne({
-		where: { server_id: serverId }, //attempts to match server id in db to the server id of the current message
+async function findColumnNameByBoardIdAndName(boardId, columnName) { //function to find server id
+	const columnModel = await Column.findOne({
+		where: { name: columnName, board_id: boardId }, //attempts to match server id in db to the server id of the current message
 	});
-	return configModel;
+	return columnModel;
+};
+
+async function updateColumn(board){
+	const updated_at = Math.floor(+new Date() / 1000); //calculates date as integer
+	const columnModel = await Column.update({
+		name: board.columnInputName,
+		updated_at_date_time_stamp: updated_at,
+		updated_by_user_id: board.userId,
+	}, {where: { name: board.column, board_id: board.id}}).catch(error => { //updates config table in database
+		console.log(error);
+	});
+	return columnModel;
 };
 
 
@@ -161,5 +173,6 @@ module.exports = {
 	addColumnTrackRecord,
 	findAllColumnStatus,
 	updateBoard,
-	findColumnNameByBoardId,
+	findColumnNameByBoardIdAndName,
+	updateColumn,
 }; //only export function calls
