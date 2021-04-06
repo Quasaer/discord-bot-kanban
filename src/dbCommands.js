@@ -120,11 +120,31 @@ async function createConfig(serverId) { //function to add config record to db
 	});
 };
 
-async function updateBindId(channelId, serverId) { //function to update BindID to db
-	await Config.update({channel_bind_id: channelId}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
+// async function updateBindId(channelId, serverId) { //function to update BindID to db
+// 	await Config.update({channel_bind_id: channelId}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
+// 		console.log(error);
+// 	});
+// };
+
+async function updateConfig(config) { //function to update BindID to db
+	const configModel = await Config.update({
+		config_id: config.id,
+		prefix: config.prefix,
+		server_id: config.serverId,
+		channel_bind_id: config.channelBindId,
+	},
+	{where: {server_id: config.serverId}}).catch(error => { //adds to database (not doing userid)
 		console.log(error);
 	});
-}; 
+
+	return configModel;
+};
+
+// async function updatePrefix(prefixName, serverId) { //function to update prefix to db
+// 	await Config.update({prefix: prefixName}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
+// 		console.log(error);
+// 	});
+// };
 
 async function findConfigByServerId(serverId) { //function to find server id
 	const configModel = await Config.findOne({
@@ -138,10 +158,10 @@ module.exports = {
 	findUser,
 	createConfig,
 	findConfigByServerId,
-	updateBindId ,
 	findBoardByName,
 	addBoard,
 	addColumn,
 	addColumnTrackRecord,
 	findAllColumnStatus,
+	updateConfig,
 }; //only export function calls

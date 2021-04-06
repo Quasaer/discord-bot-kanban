@@ -6,33 +6,28 @@ module.exports = {
 		const guildId = message.guild.id;
 		const channelId = message.channel.id;
 		const find = dbCmd.findConfigByServerId(guildId).then((configModel) =>{
-			const prefix = configModel.prefix;
-			const bind = 'bind';
-			// stores bind command, used to check if user typed it to update the channel bind (see line 27)
-			bindCommand = prefix.concat(bind);
-			if (!message.content.startsWith(prefix) || message.author.bot) return;
-			const args = message.content.slice(prefix.length).trim().split(/ +/);
-			const command = args.shift().toLowerCase();
-			// if null, create config record, configmodel.create config
 			if(configModel == null){
 				dbCmd.createConfig(guildId);
-				launchCommand(message, client, command);
-			} // no bind has been set
-			else if(configModel.channel_bind_id == null){
-				launchCommand(message, client, command); 
+				message.reply('You are ready to go!');
+				return;
 			}
-			// bind has been set
-			else if(configModel.channel_bind_id != null){
-				// does the bind id in the config record equal the one in the message or does the content's message mention the bind command
-				if(configModel.channel_bind_id == channelId || message.content == bindCommand){
-					launchCommand(message, client, command);
-				} else{ // if the channel id of the message doesnt equal the bind id in the config record, then don't allow the user to communicate with the bot
-					let errorMsg = sendBindErrorMessage(message, configModel.channel_bind_id);
-					message.reply(errorMsg);
-				}
+			if (!message.content.startsWith(configModel.prefix) || message.author.bot) return;
+			const args = message.content.slice(configModel.prefix.length).trim().split(/ +/);
+			const command = args.shift().toLowerCase();
+			const bind = 'bind';
+			bindCommand = configModel.prefix.concat(bind);
+			let launchCommands = false;
+			if(configModel.channel_bind_id == null){
+				launchCommands = true;
+			}
+			if(configModel.channel_bind_id != null && configModel.channel_bind_id == channelId || message.content == bindCommand){
+				launchCommands = true;
 			} else{
 				let errorMsg = sendBindErrorMessage(message, configModel.channel_bind_id);
-				console.log(errorMsg);
+				message.reply(errorMsg);
+			}
+			if(launchCommands === true){
+				launchCommand(message, client, command, args);
 			}
 		});
 		

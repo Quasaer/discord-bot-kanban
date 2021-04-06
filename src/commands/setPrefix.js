@@ -1,4 +1,12 @@
-let dbCmd  = require('../dbCommands.js'); 
+let dbCmd  = require('../dbCommands.js');
+let data = {
+	config:{
+		id:'',
+		prefix:'',
+		serverId:'',
+		channelBindId:''
+	}
+};  
 module.exports = {
 	name: 'setprefix',
 	description: 'setprefix <prefix>',
@@ -12,7 +20,11 @@ module.exports = {
                 if(newPrefix == prefix){
                     message.channel.send(`That prefix is already set!`);
                 } else{
-                    const resp  = dbCmd.updatePrefix(newPrefix, guildId); 
+					data.config.id = configModel.config_id; 
+					data.config.prefix = newPrefix;
+					data.config.serverId = configModel.server_id;
+					data.config.channelBindId = configModel.channel_bind_id;
+                    const resp  = dbCmd.updateConfig(data.config); //updatePrefix(newPrefix, guildId);
 				    message.channel.send(`The prefix has been updated!`);
                 }
 			} else {

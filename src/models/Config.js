@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         },
 
         server_id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
 
