@@ -62,7 +62,7 @@ function finalConfirmation(message){
 
 //update database
 function updateDatabase(message){
-	dbCmd.updateColumn(data.board).then((ColumnModel) =>{ //capital ColumnModelsince they're models
+	dbCmd.updateColumn(data.board).then(() =>{ //capital ColumnModelsince they're models
 		message.reply(`changes have been successfully made for ${data.board.columnInputName}`);
 	});
 }
@@ -72,7 +72,7 @@ function clearData() {
 	data = {
 		board:{
 			id:'',
-			column:'',
+			columnId:'',
 			columnInputName:'',
             userId:'',
 		}
@@ -111,7 +111,7 @@ module.exports = {
 
 						if(ColumnModel !== null){
 							// console.log(ColumnModel);
-							data.board.column = ColumnModel.name;
+							data.board.columnId = ColumnModel.column_id;
 							editColumn(message);
 						} else {
 							message.channel.send(`${colummNameInput} either doesn't exist in the DB or is case sensitive`);

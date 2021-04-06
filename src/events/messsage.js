@@ -3,7 +3,7 @@ module.exports = {
 	name: 'message',
 	execute(message, client) {
 		if (message.author.bot) return;
-		const prefix = '%';
+		const prefix = 'kb-';
 		const bind = 'bind';
 		bindCommand = prefix.concat(bind);
 		if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -11,7 +11,7 @@ module.exports = {
 		const command = args.shift().toLowerCase();
 		const guildId = message.guild.id;
 		const channelId = message.channel.id;
-		const find = dbCmd.findConfigByServerId(guildId).then((configModel) =>{
+		dbCmd.findConfigByServerId(guildId).then((configModel) =>{
 
 			if(configModel == null){
 				dbCmd.createConfig(guildId);
@@ -40,15 +40,15 @@ module.exports = {
 	 let redirectMsg = 'Channel is binded at: ';
 	 redirectMsg = redirectMsg.concat(channelName);
 	 
-	 return redirectMsg;
+	//  return redirectMsg;
  }
 
 function launchCommand(message, client, commandName, args){
 	if (!client.commands.has(commandName)) return;
-		try {
-			client.commands.get(commandName).execute(message, args);
-		} catch (error) {
-			console.log(error);
-			message.reply('There was an error trying to execute that command');
-		}
+	try {
+		client.commands.get(commandName).execute(message, args);
+	} catch (error) {
+		console.log(error);
+		message.reply('There was an error trying to execute that command');
+	}
 }

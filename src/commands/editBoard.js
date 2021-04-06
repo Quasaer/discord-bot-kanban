@@ -42,13 +42,10 @@ function editName(message){ //gets input for deadline date
 		message.reply('No answer after 30 seconds, operation canceled.');
 	});
 };
-/* 
-    edit boardname
-*/
 
 //start date
 function editStartDate(message){ //gets input for deadline date
-	const date = getFormattedDate(data.board.startDate);
+	const date = dbCmd.getFormattedDate(data.board.startDate);
 	message.reply(`State new start date (YYYY-MM-DD). Current is ${date}.`);
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
@@ -67,7 +64,7 @@ function editStartDate(message){ //gets input for deadline date
 
 //deadline date
 function editDeadlineDate(message){ //gets input for deadline date
-	const date = getFormattedDate(data.board.deadlineDate);
+	const date = dbCmd.getFormattedDate(data.board.deadlineDate);
 	message.reply(`State new deadline date (YYYY-MM-DD). Current is ${date}.`);
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
@@ -109,30 +106,10 @@ function finalConfirmation(message){
 
 //update database
 function updateDatabase(message){
-	dbCmd.updateBoard(data.board).then((boardModel) =>{
+	dbCmd.updateBoard(data.board).then(() =>{
 		message.reply(`changes have been successfully made to ${data.board.name}`);
 	});
 }
-
-//get date
-function getFormattedDate(dateInput){
-	var formattedDate;
-	if(dateInput === '') {
-		formattedDate = 'Nothing'
-	} else {
-		var date = new Date(dateInput);
-		var year = date.getFullYear();
-		var month = date.getMonth();
-		month += 1;
-		var day = date.getDate();
-
-		formattedDate = year + '-' + month + '-' + day; 
-		// console.log(formattedDate);
-	}
-	
-	return formattedDate;
-}
-
 
 //clear data
 function clearData() {
@@ -143,6 +120,8 @@ function clearData() {
 			deadlineDate:'',
 			startDate:'',
 			userId: '',
+			updatedFields:{}, //updated attributes
+			updateCondition:{}, //set of attributes for where caluse (dynamic)
 		}
 	};
 }
