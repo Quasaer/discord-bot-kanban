@@ -43,14 +43,14 @@ module.exports = {
 	 let channelName = message.guild.channels.cache.get(channelId);
 	 let redirectMsg = 'Channel is binded at: ';
 	 redirectMsg = redirectMsg.concat(channelName);
-
+	 
 	 return redirectMsg;
  }
 
-function launchCommand(message, client, commandName){
+function launchCommand(message, client, commandName, args){
 	if (!client.commands.has(commandName)) return;
 		try {
-			client.commands.get(commandName).execute(message, client);
+			client.commands.get(commandName).execute(message, args);
 		} catch (error) {
 			console.log(error);
 			message.reply('There was an error trying to execute that command');

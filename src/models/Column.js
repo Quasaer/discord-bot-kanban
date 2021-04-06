@@ -1,7 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define("Column", {
-        column_id: DataTypes.INTEGER,
-        primaryKey: true,
+        column_id:  {
+			type: DataTypes.INTEGER,
+			primaryKey: true,
+            autoIncrement: true,
+		},
 
         name: {
             type: DataTypes.STRING,
@@ -10,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
 
         task_limit: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
 
         board_id: {
@@ -19,11 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         },
 
         column_order_number: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-
-        deadline_date_time_stamp: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
@@ -40,12 +37,10 @@ module.exports = (sequelize, DataTypes) => {
 
         updated_at_date_time_stamp: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
 
         updated_by_user_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
     }, {
 		timestamps: false,
