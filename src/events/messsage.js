@@ -3,23 +3,23 @@ module.exports = {
 	name: 'message',
 	execute(message, client) {
 		if (message.author.bot) return;
-		const prefix = '%';
-		const bind = 'bind';
-		// stores bind command, used to check if user typed it to update the channel bind (see line 27)
-		bindCommand = prefix.concat(bind);
-		if (!message.content.startsWith(prefix) || message.author.bot) return;
-		const args = message.content.slice(prefix.length).trim().split(/ +/);
-		const command = args.shift().toLowerCase();
 		const guildId = message.guild.id;
 		const channelId = message.channel.id;
 		const find = dbCmd.findConfigByServerId(guildId).then((configModel) =>{
-		// if null, create config record, configmodel.create config
+			const prefix = configModel.prefix;
+			const bind = 'bind';
+			// stores bind command, used to check if user typed it to update the channel bind (see line 27)
+			bindCommand = prefix.concat(bind);
+			if (!message.content.startsWith(prefix) || message.author.bot) return;
+			const args = message.content.slice(prefix.length).trim().split(/ +/);
+			const command = args.shift().toLowerCase();
+			// if null, create config record, configmodel.create config
 			if(configModel == null){
 				dbCmd.createConfig(guildId);
 				launchCommand(message, client, command);
 			} // no bind has been set
 			else if(configModel.channel_bind_id == null){
-				launchCommand(message, client, command);
+				launchCommand(message, client, command); 
 			}
 			// bind has been set
 			else if(configModel.channel_bind_id != null){
