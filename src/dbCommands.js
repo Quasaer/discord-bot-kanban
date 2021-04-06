@@ -108,12 +108,6 @@ async function addColumn(userModel, ColumnName, boardId, columnOrderNumber) { //
 	return column;
 };
 
-async function findColumnByColumnOrderNumberAndBoardId(columnOrderNumber, boardId) { //function to find user
-	const foundColumn = await Column.findOne({
-		where: { column_order_number: columnOrderNumber, board_id: boardId }, });
-	return foundColumn;
-};
-
 async function createConfig(serverId) { //function to add config record to db
 	await Config.create({ server_id: serverId, prefix: '%'}).catch(error => { //adds to config table in database
 		console.log(error);
@@ -133,6 +127,28 @@ async function findConfigByServerId(serverId) { //function to find server id
 	return configModel;
 };
 
+async function updateBoard(board){
+	const updated_at = Math.floor(+new Date() / 1000); //calculates date as integer
+	const boardModel = await Board.update({
+		name: board.name, 
+		start_date_time_stamp: board.startDate,
+		end_date_time_stamp: board.deadlineDate, 
+		updated_at_date_time_stamp: updated_at,
+		updated_by_user_id: board.userId,
+	}, {where: { board_id: board.id}}).catch(error => { //updates config table in database
+		console.log(error);
+	});
+	return boardModel;
+}
+
+async function findColumnNameByBoardId(boardId) { //function to find server id
+	const configModel = await Column.findOne({
+		where: { server_id: serverId }, //attempts to match server id in db to the server id of the current message
+	});
+	return configModel;
+};
+
+
 module.exports = { 
 	addUser,
 	findUser,
@@ -144,4 +160,6 @@ module.exports = {
 	addColumn,
 	addColumnTrackRecord,
 	findAllColumnStatus,
+	updateBoard,
+	findColumnNameByBoardId,
 }; //only export function calls
