@@ -27,8 +27,8 @@ let data = {
 	}
 };
 
-function boardConfigs(message, nameInput){
-	message.reply(`These are the default settings for ${nameInput}\n`
+function boardConfigs(message){
+	message.reply(`These are the default settings for ${data.board.name}\n`
 			+ 'Columns: (`Backlog`, `Active`, `Done`)\n'
 			+ 'Optional start date is `null`\n'
 			+ 'Optional Deadline date is `null`\n'
@@ -43,21 +43,19 @@ function boardConfigs(message, nameInput){
 		// accept only 1 message, and return the promise after 30000ms = 30s
 		// first (and, in this case, only) message of the collection
 		if (collected.first().content.toLowerCase() === 'yes') {
-			dbCmd.findBoardByName(nameInput).then((val) =>{
-				if(val !== null){
-					message.channel.send(`${nameInput} already exists in the DB`);
+			dbCmd.findBoardByName(data.board.name).then((boardModel) =>{
+				if(boardModel !== null){
+					message.channel.send(`${data.board.name} already exists in the DB`);
 				} else {
-					data.board.name = nameInput;
 					handleColumnConfiguration(message);
 				}
 			});
 			//column change function not handleStartDate -- to do later	
 		} else if(collected.first().content.toLowerCase() === 'no') {	
-			dbCmd.findBoardByName(nameInput).then((val) =>{
-				if(val !== null){
-					message.channel.send(`${nameInput} already exists in the DB`);
+			dbCmd.findBoardByName(data.board.name).then((boardModel) =>{
+				if(boardModel !== null){
+					message.channel.send(`${data.board.name} already exists in the DB`);
 				} else {
-					data.board.name = nameInput;
 					populateDatabase(message);
 				}
 			});
@@ -222,7 +220,7 @@ function handleDeadlineDateInput(message){ //gets input for deadline date
 function finalConfirmation(message){
 
 	message.reply(`Changes Successfully made\n`
-			+ 'Would you like to continuw with these settings?\n'
+			+ 'Would you like to continue with these settings?\n'
 			+ '`yes` to create board with default settings or `no` to cancel changes.\n'
 			+ 'You have 30 seconds or else board will not be made.\n');
 
@@ -276,29 +274,7 @@ function populateDatabase(message){
 						dbCmd.addColumn(userModel, columnName, data.board.id, columnOrderNumber).then((columnModel) => {
 							for (let j = 0; j<statusModels.length; j++){
 								dbCmd.addColumnTrackRecord(userModel, columnModel, statusModels[j]).then(() => {
-									data = { //reset data array
-										board:{
-											id: '',
-											name:'',
-											deadlineDate:'',
-											startDate:'',
-											columnStartCount:1,
-											columns:[{
-												1:{
-													'name':'Backlog',
-													'orderNumber':1
-												},
-												2:{
-													'name':'Active',
-													'orderNumber':2
-												},
-												3:{
-													'name':'Done',
-													'orderNumber':3
-												}
-											}],
-										}
-									};
+									
 								});
 							}
 						});
@@ -314,17 +290,47 @@ function populateDatabase(message){
 	
 }
 
+//clear data
+function clearData() {
+	data = { //reset data array
+		board:{
+			id: '',
+			name:'',
+			deadlineDate:'',
+			startDate:'',
+			columnStartCount:1,
+			columns:[{
+				1:{
+					'name':'Backlog',
+					'orderNumber':1
+				},
+				2:{
+					'name':'Active',
+					'orderNumber':2
+				},
+				3:{
+					'name':'Done',
+					'orderNumber':3
+				}
+			}],
+		}
+	};
+}
+
 module.exports = {
 	name: 'addboard',
 	description: 'addboard <name>',
 	execute(message, args) {
         let nameInput = args[0];
+
+		clearData();
 		
 		if (!nameInput) {
 			return message.reply('you need to name a board!\n'
 			+ 'example: %addboard <board name>');
 		} else {
-			boardConfigs(message, nameInput);
+			data.board.name = nameInput;
+			boardConfigs(message);
 		}
     },
 };

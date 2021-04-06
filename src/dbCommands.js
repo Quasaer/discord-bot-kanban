@@ -108,12 +108,6 @@ async function addColumn(userModel, ColumnName, boardId, columnOrderNumber) { //
 	return column;
 };
 
-async function findColumnByColumnOrderNumberAndBoardId(columnOrderNumber, boardId) { //function to find user
-	const foundColumn = await Column.findOne({
-		where: { column_order_number: columnOrderNumber, board_id: boardId }, });
-	return foundColumn;
-};
-
 async function createConfig(serverId) { //function to add config record to db
 	await Config.create({ server_id: serverId, prefix: '%'}).catch(error => { //adds to config table in database
 		console.log(error);
@@ -133,4 +127,66 @@ async function findConfigByServerId(serverId) { //function to find server id
 	return configModel;
 };
 
-module.exports = { addUser, findUser, createConfig, findConfigByServerId, updateBindId }; //only export function calls
+async function updateBoard(data){
+	// data.updatedFields = Math.floor(+new Date() / 1000); //calculates date as integer
+	const boardModel = await Board.update(data.updatedFields, {where: data.board.updateCondition}).catch(error => { //updates config table in database
+		console.log(error);
+	});
+	return boardModel;
+};
+
+async function findColumnNameByBoardIdAndName(boardId, columnName) { //function to find server id
+	const columnModel = await Column.findOne({
+		where: { name: columnName, board_id: boardId }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnModel;
+};
+
+async function updateColumn(data){
+	const updated_at = Math.floor(+new Date() / 1000); //calculates date as integer
+	const columnModel = await Column.update({
+		name: data.columnInputName,
+		updated_at_date_time_stamp: updated_at,
+		updated_by_user_id: data.userId,
+	}, {where: { column_id: data.columnId,}}).catch(error => { //updates config table in database
+		console.log(error);
+	});
+	return columnModel;
+};
+
+//get date
+function getFormattedDate(dateInput){
+	let formattedDate;
+	if(dateInput === '') {
+		formattedDate = 'Nothing'
+	} else {
+		let date = new Date(dateInput);
+		let year = date.getFullYear();
+		let month = date.getMonth();
+		month += 1;
+		let day = date.getDate();
+
+		formattedDate = year + '-' + month + '-' + day; 
+		// console.log(formattedDate);
+	}
+	
+	return formattedDate;
+}
+
+
+module.exports = { 
+	addUser,
+	findUser,
+	createConfig,
+	findConfigByServerId,
+	updateBindId ,
+	findBoardByName,
+	addBoard,
+	addColumn,
+	addColumnTrackRecord,
+	findAllColumnStatus,
+	updateBoard,
+	findColumnNameByBoardIdAndName,
+	updateColumn,
+	getFormattedDate,
+}; //only export function calls
