@@ -47,7 +47,7 @@ function handleColumnConfiguration(message){
 	{max: 1, time: 30000}).then(collected => {
 
 		if (collected.first().content.toLowerCase() === 'yes') {
-			data.board.columns[0] = {};
+			data.columns = {};
 			handleColumnConfigurationInput(message);
 		} else if(collected.first().content.toLowerCase() === 'no') {
 			handleStartDate(message);
@@ -72,11 +72,11 @@ function handleColumnConfigurationInput(message){ //gets input for start date
 	message.reply('name a column');
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
-		let count = data.board.columnStartCount;
+		let count = data.columnStartCount;
 		columnNameInput = collected.first().content.toLowerCase();
 		data.columns[count] = {
 			'name':columnNameInput,
-			'orderNumber':count,
+			'column_order_number':count,
 		};
 		handleColumnConfigurationConfirmation(message);
 	}).catch(() => {
@@ -94,7 +94,7 @@ function handleColumnConfigurationConfirmation(message){
 	{max: 1, time: 30000}).then(collected => {
 
 		if (collected.first().content.toLowerCase() === 'yes') {
-			data.board.columnStartCount += 1;
+			data.columnStartCount += 1;
 			handleColumnConfigurationInput(message);
 		} else if(collected.first().content.toLowerCase() === 'no') {
 			handleStartDate(message);
@@ -208,10 +208,7 @@ function finalConfirmation(message){
 
 
 function populateDatabase(message){
-	//go through data json object and make records
 	const user = message.author.tag;
-	// let columnName ='';
-	// let columnOrderNumber ='';
 	
 	dbCmd.findUser(user).then((userModel) =>{
 		data.board["created_by_user_id"] = userModel.user_id;
