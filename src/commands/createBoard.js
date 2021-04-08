@@ -232,11 +232,11 @@ function populateDatabase(message){
 				*/
 				dbCmd.findAllColumnStatus().then((statusModels) => {
 					//for loop to get statusmodel into data.columnStatus
-					for (let a = 0; a<statusModels.length; a++) {
-						// console.log(statusModels[a].column_status_id);
-						data.columnStatus["column_status_id"] = statusModels[a].column_status_id;
-						console.log(data.columnStatus);
-					};
+					// for (let a = 0; a<statusModels.length; a++) {
+					// 	// console.log(statusModels[a].column_status_id);
+					// 	data.columnStatus["column_status_id"] = statusModels[a].column_status_id;
+					// 	console.log(data.columnStatus);
+					// };
 					
 					for (let i = 1; i <= Object.keys(data.columns).length; i++) {
 						data.columns[i]["created_by_user_id"] = userModel.user_id;
@@ -248,10 +248,15 @@ function populateDatabase(message){
 							for (let j = 0; j<statusModels.length; j++){
 								// data.columnTrack["column_status_id"] = data.columnStatus[j].column_status_id;
 								// console.log(data.columnStatus[0]["column_status_id"]);
-								console.log(data.columnTrack);
-								console.log("esw");
+								data.columnStatus["column_status_id"] = statusModels[j].column_status_id;
+								data.columnTrack["column_status_id"] = data.columnStatus["column_status_id"];
 
-								// dbCmd.addColumnTrackRecord(data.columnStatus[j]);
+								// console.log(data.columnStatus);
+								// console.log("------------");
+								// console.log(data.columnTrack);
+								// console.log("");
+
+								dbCmd.addColumnTrackRecord(data.columnTrack);
 							}
 						});
 					};

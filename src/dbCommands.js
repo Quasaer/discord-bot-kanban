@@ -61,17 +61,8 @@ async function findAllColumnStatus(){
 
 //column track
 async function addColumnTrackRecord(data) { //function to add user
-	// console.log(username);
-	// console.log(columnStatusModel);
-	statusId = columnStatusModel.column_status_id;
-	// console.log(statusId);
-	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	const columnTrackRecord = await ColumnTrack.create({ 
-		column_id: columnId, 
-		column_status_id: statusId,
-		created_at_date_time_stamp: created_at,
-		created_by_user_id: userId, 
-	}).catch(error => { //adds to database (not doing userid)
+	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
+	const columnTrackRecord = await ColumnTrack.create(data).catch(error => { //adds to database (not doing userid)
 		console.log(error);
 	});
 	return columnTrackRecord;
