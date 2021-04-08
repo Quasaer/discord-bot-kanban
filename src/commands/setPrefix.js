@@ -16,9 +16,7 @@ let data = {
 			prefix:''
 		},
 		conditionalFields:{
-			where:{
-				server_id:''
-			}
+			server_id:''
 		}
 
 	}
@@ -36,13 +34,10 @@ module.exports = {
                 if(newPrefix == prefix){
                     message.channel.send(`That prefix is already set!`);
                 } else{
-					//data.config.conditionalFields.id = configModel.config_id;
 					data.config.updatedFields.prefix = newPrefix;
-					data.config.conditionalFields.where.server_id = configModel.server_id;
-					// data.config.channelBindId = configModel.channel_bind_id;
-					console.log(data);
+					data.config.conditionalFields.server_id = configModel.server_id;
                     const resp  = dbCmd.updateConfig(data.config);
-				    message.channel.send(`The prefix has been updated!`);
+					message.channel.send(`The prefix has been updated!`);
                 }
 			} else {
 				console.log(`A config record has not be stored yet.`);
