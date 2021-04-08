@@ -37,7 +37,7 @@ async function findUser(username) { //function to find user
 };
 
 //boards
-async function addBoard(data) { //function to add user
+async function createBoard(data) { //function to add user
 	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
 	const board = await Board.create(data).catch(error => { //adds to database (not doing userid)
 		console.log(error);
@@ -156,7 +156,7 @@ module.exports = {
 	findConfigByServerId,
 	updateBindId ,
 	findBoardByName,
-	addBoard,
+	createBoard,
 	addColumn,
 	addColumnTrackRecord,
 	findAllColumnStatus,
