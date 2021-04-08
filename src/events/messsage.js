@@ -3,7 +3,7 @@ module.exports = {
 	name: 'message',
 	execute(message, client) {
 		if (message.author.bot) return;
-		const prefix = 'kb-';
+		const prefix = '%';
 		const bind = 'bind';
 		bindCommand = prefix.concat(bind);
 		if (!message.content.startsWith(prefix) || message.author.bot) return;

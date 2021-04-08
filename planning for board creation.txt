@@ -4,7 +4,7 @@ add board(project)
 = = output/function
 # = note
 
--> addboard <name> <deadline> # name of board and end date
+-> createboard <name> <deadline> # name of board and end date
 = display default column config # should have 3 default column (Backlog, Active, Done)
 = ask if user wants to keep default configs
 -> Y/N

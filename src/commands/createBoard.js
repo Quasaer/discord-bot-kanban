@@ -1,31 +1,9 @@
 let dbCmd  = require('../dbCommands.js');
-
+let data = {};
 /*
 data comment
 */
-let data = {
-	board:{
-		id: '',
-		name:'',
-		deadlineDate:'',
-		startDate:'',
-		columnStartCount:1,
-		columns:[{
-			1:{
-				'name':'Backlog',
-				'orderNumber':1
-			},
-			2:{
-				'name':'Active',
-				'orderNumber':2
-			},
-			3:{
-				'name':'Done',
-				'orderNumber':3
-			}
-		}],
-	}
-};
+
 
 function boardConfigs(message){
 	message.reply(`These are the default settings for ${data.board.name}\n`
@@ -43,25 +21,14 @@ function boardConfigs(message){
 		// accept only 1 message, and return the promise after 30000ms = 30s
 		// first (and, in this case, only) message of the collection
 		if (collected.first().content.toLowerCase() === 'yes') {
-			dbCmd.findBoardByName(data.board.name).then((boardModel) =>{
-				if(boardModel !== null){
-					message.channel.send(`${data.board.name} already exists in the DB`);
-				} else {
-					handleColumnConfiguration(message);
-				}
-			});
+
+			handleColumnConfiguration(message);
 			//column change function not handleStartDate -- to do later	
 		} else if(collected.first().content.toLowerCase() === 'no') {	
-			dbCmd.findBoardByName(data.board.name).then((boardModel) =>{
-				if(boardModel !== null){
-					message.channel.send(`${data.board.name} already exists in the DB`);
-				} else {
-					populateDatabase(message);
-				}
-			});
+			populateDatabase(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -86,7 +53,7 @@ function handleColumnConfiguration(message){
 			handleStartDate(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -107,7 +74,7 @@ function handleColumnConfigurationInput(message){ //gets input for start date
 	{max: 1, time: 30000}).then(collected => {
 		let count = data.board.columnStartCount;
 		columnNameInput = collected.first().content.toLowerCase();
-		data.board.columns[0][count] = {
+		data.columns[count] = {
 			'name':columnNameInput,
 			'orderNumber':count,
 		};
@@ -133,7 +100,7 @@ function handleColumnConfigurationConfirmation(message){
 			handleStartDate(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -155,7 +122,7 @@ function handleStartDate(message){
 			handleDeadlineDate(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -168,11 +135,11 @@ function handleStartDateInput(message){ //gets input for start date
 	{max: 1, time: 30000}).then(collected => {
 		startDateInput = Date.parse(collected.first().content.toLowerCase());
 		if ( startDateInput !== 'NaN') {
-			data.board.startDate = startDateInput;
+			data.board["start_date_time_stamp"] = startDateInput;
 			handleDeadlineDate(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -193,7 +160,7 @@ function handleDeadlineDate(message){
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -206,11 +173,11 @@ function handleDeadlineDateInput(message){ //gets input for deadline date
 	{max: 1, time: 30000}).then(collected => {
 		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase());
 		if ( deadlineDateInput !== 'NaN') {
-			data.board.deadlineDate = deadlineDateInput;
+			data.board["end_date_time_stamp"] = deadlineDateInput;
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -232,7 +199,7 @@ function finalConfirmation(message){
 			boardConfigs(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -246,18 +213,14 @@ function populateDatabase(message){
 	// let columnName ='';
 	// let columnOrderNumber ='';
 	
-
-	boardName = data.board.name; 
-	startDate = data.board.startDate; 
-	deadlineDate = data.board.deadlineDate; 
-
-	
-
 	dbCmd.findUser(user).then((userModel) =>{
-		dbCmd.addBoard(userModel, boardName, startDate, deadlineDate).then((boardModel) => {
+		data.board["created_by_user_id"] = userModel.user_id;
+		data.columnTrack["created_by_user_id"] = userModel.user_id;
+		// console.log(data.board);
+		dbCmd.createBoard(data.board).then((boardModel) => {
+			// console.log(boardModel);
 			if(boardModel !== null){
-				message.channel.send(`${boardName} has successfully been added to DB`);
-				data.board.id = boardModel.board_id;
+				message.channel.send(`${data.board["name"]} has successfully been added to DB`);
 	
 				// db command get status => returning array of two model objects
 				//column stuff
@@ -268,20 +231,33 @@ function populateDatabase(message){
 	
 				*/
 				dbCmd.findAllColumnStatus().then((statusModels) => {
-					for (let i = 1; i <= Object.keys(data.board.columns[0]).length; i++) {
-						let columnName = data.board.columns[0][i].name;
-						let columnOrderNumber = data.board.columns[0][i].orderNumber;
-						dbCmd.addColumn(userModel, columnName, data.board.id, columnOrderNumber).then((columnModel) => {
+					//for loop to get statusmodel into data.columnStatus
+					for (let a = 0; a<statusModels.length; a++) {
+						// console.log(statusModels[a].column_status_id);
+						data.columnStatus["column_status_id"] = statusModels[a].column_status_id;
+						console.log(data.columnStatus);
+					};
+					
+					for (let i = 1; i <= Object.keys(data.columns).length; i++) {
+						data.columns[i]["created_by_user_id"] = userModel.user_id;
+						data.columns[i]["board_id"] = boardModel.board_id;
+						// console.log(data.columns[i]);
+						dbCmd.addColumn(data.columns[i]).then((columnModel) => {
+							data.columnTrack["column_id"] = columnModel.column_id;
+							// console.log(data.columnTrack);
 							for (let j = 0; j<statusModels.length; j++){
-								dbCmd.addColumnTrackRecord(userModel, columnModel, statusModels[j]).then(() => {
-									
-								});
+								// data.columnTrack["column_status_id"] = data.columnStatus[j].column_status_id;
+								// console.log(data.columnStatus[0]["column_status_id"]);
+								console.log(data.columnTrack);
+								console.log("esw");
+
+								// dbCmd.addColumnTrackRecord(data.columnStatus[j]);
 							}
 						});
-					}
+					};
 				});	
 			} else {
-				message.channel.send(`${boardName} already exists in DB`);
+				message.channel.send(`Error Occured`);
 				console.log('error saving board to database');
 			}
 		});
@@ -289,48 +265,49 @@ function populateDatabase(message){
 
 	
 }
-
-//clear data
-function clearData() {
-	data = { //reset data array
-		board:{
-			id: '',
-			name:'',
-			deadlineDate:'',
-			startDate:'',
-			columnStartCount:1,
-			columns:[{
-				1:{
-					'name':'Backlog',
-					'orderNumber':1
-				},
-				2:{
-					'name':'Active',
-					'orderNumber':2
-				},
-				3:{
-					'name':'Done',
-					'orderNumber':3
-				}
-			}],
-		}
+function resetData(){
+	data = {
+		board:{},
+		columnStartCount:1,
+		columns:{
+			1:{
+				'name':'Backlog',
+				'column_order_number':1
+			},
+			2:{
+				'name':'Active',
+				'column_order_number':2
+			},
+			3:{
+				'name':'Done',
+				'column_order_number':3
+			}
+		},
+		columnStatus:{},
+		columnTrack:{},
 	};
 }
 
 module.exports = {
-	name: 'addboard',
-	description: 'addboard <name>',
+	name: 'createboard',
+	description: 'createboard <name>',
 	execute(message, args) {
         let nameInput = args[0];
 
-		clearData();
+		resetData()
 		
 		if (!nameInput) {
 			return message.reply('you need to name a board!\n'
-			+ 'example: %addboard <board name>');
+			+ 'example: %createboard <board name>');
 		} else {
-			data.board.name = nameInput;
-			boardConfigs(message);
+			data.board["name"] = nameInput;
+			dbCmd.findBoardByName(data.board.name).then((boardModel) =>{
+				if(boardModel !== null){
+					message.channel.send(`${data.board.name} already exists in the DB`);
+				} else {
+					boardConfigs(message);
+				}
+			});
 		}
     },
 };

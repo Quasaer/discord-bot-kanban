@@ -32,11 +32,11 @@ function editName(message){ //gets input for deadline date
 	{max: 1, time: 30000}).then(collected => {
 		const newNameInput = collected.first().content;
 		if ( newNameInput !== '') {
-			data.board.name = newNameInput;
+			data.board.updatedFields["name"] = newNameInput;
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype editboard command');
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -51,11 +51,11 @@ function editStartDate(message){ //gets input for deadline date
 	{max: 1, time: 30000}).then(collected => {
 		const startDateInput = Date.parse(collected.first().content.toLowerCase());
 		if ( startDateInput !== 'NaN') {
-			data.board.startDate = startDateInput;
+			data.board.updatedFields["start_date_time_stamp"] = startDateInput;
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype editboard command');
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -70,11 +70,11 @@ function editDeadlineDate(message){ //gets input for deadline date
 	{max: 1, time: 30000}).then(collected => {
 		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase());
 		if ( deadlineDateInput !== 'NaN') {
-			data.board.deadlineDate = deadlineDateInput;
+			data.board.updatedFields["end_date_time_stamp"] = deadlineDateInput;
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype editboard command');
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -97,7 +97,7 @@ function finalConfirmation(message){
 						+ 'Your board has not been affected');
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype editboard command');
 		}
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -106,8 +106,9 @@ function finalConfirmation(message){
 
 //update database
 function updateDatabase(message){
+	console.log(data.board);
 	dbCmd.updateBoard(data.board).then(() =>{
-		message.reply(`changes have been successfully made to ${data.board.name}`);
+		message.reply(`changes have been successfully made to your board}`);
 	});
 }
 
@@ -115,13 +116,11 @@ function updateDatabase(message){
 function clearData() {
 	data = {
 		board:{
-			id:'',
 			name:'',
 			deadlineDate:'',
 			startDate:'',
-			userId: '',
-			updatedFields:{}, //updated attributes
-			updateCondition:{}, //set of attributes for where caluse (dynamic)
+			updatedFields:{}, 
+			updateCondition:{}, //set of attributes for where clause (dynamic)
 		}
 	};
 }
@@ -144,17 +143,17 @@ module.exports = {
 				else
 			*/
 			const user = message.author.tag;
-			dbCmd.findUser(user).then((userModel) =>{ 
-				data.board.userId = userModel.user_id;
+			dbCmd.findUser(user).then((userModel) =>{
+				data.board.updatedFields["updated_by_user_id"] = userModel.user_id;
 			});
 			dbCmd.findBoardByName(nameInput).then((boardModel) =>{
 				if(boardModel !== null){
-					data.board.id = boardModel.board_id;
+					data.board.updateCondition["board_id"] = boardModel.board_id;
 					data.board.name = nameInput;
 					data.board.startDate = boardModel.start_date_time_stamp;
 					data.board.deadlineDate = boardModel.end_date_time_stamp;
 					editboard(message);
-					// console.log(data.board);
+					console.log(data.board);
 				} else {
 					message.channel.send(`${nameInput} doesn't exist in the DB`);
 				}
