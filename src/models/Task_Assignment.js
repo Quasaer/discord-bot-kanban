@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 		task_assignment_id: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
+      autoIncrement: true,
 		},
 
 		task_id: {

@@ -4,7 +4,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	host: 'localhost',
 	dialect: 'sqlite',
 	logging: false,
-	storage: './KanbanDB.db',
+	storage: './src/KanbanDB.db',
 	define: {
 		timestamps: false,
 		freezeTableName: true,

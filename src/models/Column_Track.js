@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 		column_track_id:{
 			type: DataTypes.INTEGER,
 			primaryKey: true,
+			autoIncrement: true,
 		},
 
         column_id: {

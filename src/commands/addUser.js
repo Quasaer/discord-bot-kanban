@@ -4,9 +4,8 @@ module.exports = {
 	description: 'add <variable> <name>',
 	execute(message, args) {
 		const target = message.mentions.users.first() || message.author;
-		const find = dbCmd.findUser(target.tag).then((val) =>{
+		dbCmd.findUser(target.tag).then((val) =>{
 			const user = target.tag.split('#');
-			console.log(find);
 			if (!message.mentions.users.size) {
 				return message.reply('you need to tag a user in order to add them!');
 			}
