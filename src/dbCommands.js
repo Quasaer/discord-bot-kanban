@@ -126,18 +126,13 @@ async function createConfig(serverId) { //function to add config record to db
 // 	});
 // };
 //function to config record
-async function updateConfig(config) { 
-	const configModel = await Config.update({
-		config_id: config.id,
-		prefix: config.prefix,
-		server_id: config.serverId,
-		channel_bind_id: config.channelBindId,
-	},
-	{where: {server_id: config.serverId}}).catch(error => { //adds to database (not doing userid)
-		console.log(error);
-	});
-
-	return configModel;
+async function updateConfig(data) { 
+	//  const updatedConfig = await Config.update(data.updatedFields,data.condtionalFields).catch(error => { 
+	//  	console.log(error);
+	//  });
+	console.log(data.updatedFields);
+	console.log(data.conditionalFields);
+	return updatedConfig;
 };
 
 // async function updatePrefix(prefixName, serverId) { //function to update prefix to db

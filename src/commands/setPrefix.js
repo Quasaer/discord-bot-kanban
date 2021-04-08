@@ -1,23 +1,28 @@
 let dbCmd  = require('../dbCommands.js');
+//const Config = require('../models/Config.js');
+// let data = {
+// 	config:{
+// 		id:'',
+// 		prefix:'',
+// 		serverId:'',
+// 		channelBindId:''
+// 	}
+// };
 let data = {
 	config:{
 		id:'',
-		prefix:'',
-		serverId:'',
-		channelBindId:''
-	}
-};
-// let data = {
-// 	config:{
-//		updatedFields{
-//			prefix:'',
-//		}
-//		conditionalFields{
-// 			id:''
-//		}
+		channelBindId:'',
+		updatedFields:{
+			prefix:''
+		},
+		conditionalFields:{
+			where:{
+				server_id:''
+			}
+		}
 
-// 	}
-// };    
+	}
+};    
 module.exports = {
 	name: 'setprefix',
 	description: 'setprefix <prefix>',
@@ -31,11 +36,12 @@ module.exports = {
                 if(newPrefix == prefix){
                     message.channel.send(`That prefix is already set!`);
                 } else{
-					data.config.id = configModel.config_id; 
-					data.config.prefix = newPrefix;
-					data.config.serverId = configModel.server_id;
-					data.config.channelBindId = configModel.channel_bind_id;
-                    const resp  = dbCmd.updateConfig(data.config); //updatePrefix(newPrefix, guildId);
+					//data.config.conditionalFields.id = configModel.config_id;
+					data.config.updatedFields.prefix = newPrefix;
+					data.config.conditionalFields.where.server_id = configModel.server_id;
+					// data.config.channelBindId = configModel.channel_bind_id;
+					console.log(data);
+                    const resp  = dbCmd.updateConfig(data.config);
 				    message.channel.send(`The prefix has been updated!`);
                 }
 			} else {
