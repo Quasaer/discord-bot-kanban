@@ -8,7 +8,7 @@ module.exports = {
 		const find = dbCmd.findConfigByServerId(guildId).then((configModel) =>{
 			if(configModel == null){
 				dbCmd.createConfig(guildId);
-				message.reply('You are ready to go!');
+				//message.reply('You are ready to go!');
 				return;
 			}
 			if (!message.content.startsWith(configModel.prefix) || message.author.bot) return;

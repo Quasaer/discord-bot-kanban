@@ -6,7 +6,18 @@ let data = {
 		serverId:'',
 		channelBindId:''
 	}
-};  
+};
+// let data = {
+// 	config:{
+//		updatedFields{
+//			prefix:'',
+//		}
+//		conditionalFields{
+// 			id:''
+//		}
+
+// 	}
+// };    
 module.exports = {
 	name: 'setprefix',
 	description: 'setprefix <prefix>',

@@ -125,8 +125,8 @@ async function createConfig(serverId) { //function to add config record to db
 // 		console.log(error);
 // 	});
 // };
-
-async function updateConfig(config) { //function to update BindID to db
+//function to config record
+async function updateConfig(config) { 
 	const configModel = await Config.update({
 		config_id: config.id,
 		prefix: config.prefix,
