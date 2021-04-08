@@ -122,7 +122,7 @@ async function updateColumn(data){
 //get date
 function getFormattedDate(dateInput){
 	let formattedDate;
-	if(dateInput === '') {
+	if(dateInput === null) {
 		formattedDate = 'Nothing'
 	} else {
 		let date = new Date(dateInput);
