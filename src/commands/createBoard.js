@@ -245,8 +245,7 @@ function populateDatabase(message){
 							for (let j = 0; j<statusModels.length; j++){
 								// data.columnTrack["column_status_id"] = data.columnStatus[j].column_status_id;
 								// console.log(data.columnStatus[0]["column_status_id"]);
-								data.columnStatus["column_status_id"] = statusModels[j].column_status_id;
-								data.columnTrack["column_status_id"] = data.columnStatus["column_status_id"];
+								data.columnTrack["column_status_id"] = statusModels[j].column_status_id;
 
 								// console.log(data.columnStatus);
 								// console.log("------------");
@@ -285,7 +284,6 @@ function resetData(){
 				'column_order_number':3
 			}
 		},
-		columnStatus:{},
 		columnTrack:{},
 	};
 }
