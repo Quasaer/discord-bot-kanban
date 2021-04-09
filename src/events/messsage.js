@@ -40,7 +40,7 @@ module.exports = {
 	 let redirectMsg = 'Channel is binded at: ';
 	 redirectMsg = redirectMsg.concat(channelName);
 	 
-	//  return redirectMsg;
+	 return redirectMsg;
  }
 
 function launchCommand(message, client, commandName, args){
