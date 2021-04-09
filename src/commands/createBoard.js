@@ -1,9 +1,5 @@
 let dbCmd  = require('../dbCommands.js');
 let data = {};
-/*
-data comment
-*/
-
 
 function boardConfigs(message){
 	message.reply(`These are the default settings for ${data.board.name}\n`
@@ -59,15 +55,7 @@ function handleColumnConfiguration(message){
 				message.reply('No answer after 30 seconds, operation canceled.');
 	});
 }
-/*
-	yes -> remove pre set objects for column names -> set up a an intger starting at 1 -> add column name, if want to add more -> add 1 to integer -> do function again
-	init column object function
-	column name input function
-	conitnue Y/N function
-*/
-//
 
-//function to empty list and start integer
 function handleColumnConfigurationInput(message){ //gets input for start date
 	message.reply('name a column');
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
@@ -86,7 +74,7 @@ function handleColumnConfigurationInput(message){ //gets input for start date
 
 //
 function handleColumnConfigurationConfirmation(message){
-	message.reply('Would you like to add another Column?\n'
+	message.reply('Would you like to create another Column?\n'
 				+ 'Confirm with `yes` or deny with `no`.\n'
 				+ 'You have 30 seconds or else board will not be made.\n');
 
@@ -213,53 +201,24 @@ function populateDatabase(message){
 	dbCmd.findUser(user).then((userModel) =>{
 		data.board["created_by_user_id"] = userModel.user_id;
 		data.columnTrack["created_by_user_id"] = userModel.user_id;
-		// console.log(data.board);
 		dbCmd.createBoard(data.board).then((boardModel) => {
-			// console.log(boardModel);
 			if(boardModel !== null){
 				message.channel.send(`${data.board["name"]} has successfully been added to DB`);
-	
-				// db command get status => returning array of two model objects
-				//column stuff
-				/*
-					for loop for columns
-					inside for loop db add column (2 one for name and one for ).then()
-					.then => for loop to loop through column status and add column track record 
-	
-				*/
-				dbCmd.findAllColumnStatus().then((statusModels) => {
-					//for loop to get statusmodel into data.columnStatus
-					// for (let a = 0; a<statusModels.length; a++) {
-					// 	// console.log(statusModels[a].column_status_id);
-					// 	data.columnStatus["column_status_id"] = statusModels[a].column_status_id;
-					// 	console.log(data.columnStatus);
-					// };
-					
+				dbCmd.findAllColumnStatus().then((statusModels) => {					
 					for (let i = 1; i <= Object.keys(data.columns).length; i++) {
 						data.columns[i]["created_by_user_id"] = userModel.user_id;
 						data.columns[i]["board_id"] = boardModel.board_id;
-						// console.log(data.columns[i]);
-						dbCmd.addColumn(data.columns[i]).then((columnModel) => {
+						dbCmd.createColumn(data.columns[i]).then((columnModel) => {
 							data.columnTrack["column_id"] = columnModel.column_id;
-							// console.log(data.columnTrack);
 							for (let j = 0; j<statusModels.length; j++){
-								// data.columnTrack["column_status_id"] = data.columnStatus[j].column_status_id;
-								// console.log(data.columnStatus[0]["column_status_id"]);
 								data.columnTrack["column_status_id"] = statusModels[j].column_status_id;
-
-								// console.log(data.columnStatus);
-								// console.log("------------");
-								// console.log(data.columnTrack);
-								// console.log("");
-
-								dbCmd.addColumnTrackRecord(data.columnTrack);
+								dbCmd.createColumnTrackRecord(data.columnTrack);
 							}
 						});
 					};
 				});	
 			} else {
 				message.channel.send(`Error Occured`);
-				console.log('error saving board to database');
 			}
 		});
 	});
@@ -311,10 +270,3 @@ module.exports = {
 		}
     },
 };
-
-
-/*
-	instead of final confirmation
-	could do a quesiton asking to edit any of the function and depending which one was chosen 
-	will be the function called but will be the handle function adn not the input
-*/

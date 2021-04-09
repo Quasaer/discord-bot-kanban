@@ -65,7 +65,6 @@ function updateDatabase(message){
 	dbCmd.updateColumn(data.column).then(() =>{ //capital ColumnModelsince they're models
 		message.reply(`changes have been successfully made for the column`);
 	});
-	console.log(data.column);
 }
 
 //clear data
@@ -106,7 +105,6 @@ module.exports = {
                     dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, colummNameInput).then((ColumnModel) =>{
 
 						if(ColumnModel !== null){
-							// console.log(ColumnModel);
 							data.column.name = ColumnModel.name;
 							data.column.updateCondition["column_id"] = ColumnModel.column_id;
 							editColumn(message);

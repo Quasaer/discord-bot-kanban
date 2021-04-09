@@ -106,7 +106,6 @@ function finalConfirmation(message){
 
 //update database
 function updateDatabase(message){
-	console.log(data.board);
 	dbCmd.updateBoard(data.board).then(() =>{
 		message.reply(`changes have been successfully made to your board}`);
 	});
@@ -153,7 +152,6 @@ module.exports = {
 					data.board.startDate = boardModel.start_date_time_stamp;
 					data.board.deadlineDate = boardModel.end_date_time_stamp;
 					editboard(message);
-					console.log(data.board);
 				} else {
 					message.channel.send(`${nameInput} doesn't exist in the DB`);
 				}

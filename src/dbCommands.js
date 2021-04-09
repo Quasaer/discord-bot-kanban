@@ -37,9 +37,9 @@ async function findUser(username) { //function to find user
 };
 
 //boards
-async function createBoard(data) { //function to add user
+async function createBoard(data) { 
 	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
-	const board = await Board.create(data).catch(error => { //adds to database (not doing userid)
+	const board = await Board.create(data).catch(error => { 
 		console.log(error);
 	});
 	return board;
@@ -60,17 +60,17 @@ async function findAllColumnStatus(){
 };
 
 //column track
-async function addColumnTrackRecord(data) { //function to add user
-	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
-	await ColumnTrack.create(data).catch(error => { //adds to database (not doing userid)
+async function createColumnTrackRecord(data) { 
+	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); 
+	await ColumnTrack.create(data).catch(error => { 
 		console.log(error);
 	});
 };
 
 //column
-async function addColumn(data) { //function to add user
+async function createColumn(data) { 
 	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
-	const column = await Column.create(data).catch(error => { //adds to database (not doing userid)
+	const column = await Column.create(data).catch(error => { 
 		console.log(error);
 	});
 	return column;
@@ -140,15 +140,15 @@ function getFormattedDate(dateInput){
 
 
 module.exports = { 
-	addUser,
+	createUser,
 	findUser,
 	createConfig,
 	findConfigByServerId,
 	updateBindId ,
 	findBoardByName,
 	createBoard,
-	addColumn,
-	addColumnTrackRecord,
+	createColumn,
+	createColumnTrackRecord,
 	findAllColumnStatus,
 	updateBoard,
 	findColumnNameByBoardIdAndName,
