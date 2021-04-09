@@ -38,7 +38,6 @@ async function findUser(username) { //function to find user
 
 //boards
 async function addBoard(userModel, boardName, startDateInput, deadlineDateInput) { //function to add user
-	// console.log(username);
 	userId = userModel.user_id;
 	
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
@@ -70,12 +69,9 @@ async function findAllColumnStatus(){
 
 //column track
 async function addColumnTrackRecord(userModel, columnModel, columnStatusModel) { //function to add user
-	// console.log(username);
 	userId = userModel.user_id;
 	columnId = columnModel.column_id;
-	// console.log(columnStatusModel);
 	statusId = columnStatusModel.column_status_id;
-	// console.log(statusId);
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
 	const columnTrackRecord = await ColumnTrack.create({ 
 		column_id: columnId, 
@@ -90,9 +86,7 @@ async function addColumnTrackRecord(userModel, columnModel, columnStatusModel) {
 
 //column
 async function addColumn(userModel, ColumnName, boardId, columnOrderNumber) { //function to add user
-	// console.log(username);
 	userId = userModel.user_id;
-	// console.log(boardModel);
 
 	
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
@@ -120,12 +114,7 @@ async function createConfig(serverId) { //function to add config record to db
 	});
 };
 
-// async function updateBindId(channelId, serverId) { //function to update BindID to db
-// 	await Config.update({channel_bind_id: channelId}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
-// 		console.log(error);
-// 	});
-// };
-//function to config record
+//function to update config record
 async function updateConfig(data) { 
 	const updatedConfig = await Config.update(
 		data.updatedFields,
@@ -137,12 +126,6 @@ async function updateConfig(data) {
 	 return updatedConfig;
 	
 };
-
-// async function updatePrefix(prefixName, serverId) { //function to update prefix to db
-// 	await Config.update({prefix: prefixName}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
-// 		console.log(error);
-// 	});
-// };
 
 async function findConfigByServerId(serverId) { //function to find server id
 	const configModel = await Config.findOne({
