@@ -20,7 +20,7 @@ module.exports = {
 		const find = dbCmd.findConfigByServerId(guildId).then((configModel) =>{
              var prefixLength = message.content.length;
              var prefix = configModel.prefix;
-             var newPrefix = message.content[prefixLength-1];
+			 var newPrefix = args[0];
 			if(configModel !== null){
                 if(newPrefix == prefix){
                     message.channel.send(`That prefix is already set!`);
