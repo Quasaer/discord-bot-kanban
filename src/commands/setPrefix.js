@@ -18,7 +18,6 @@ module.exports = {
 	execute(message, args) {
 		const guildId = message.guild.id;
 		const find = dbCmd.findConfigByServerId(guildId).then((configModel) =>{
-             var prefixLength = message.content.length;
              var prefix = configModel.prefix;
 			 var newPrefix = args[0];
 			if(configModel !== null){
