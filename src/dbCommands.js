@@ -40,6 +40,7 @@ async function findUser(username) { //function to find user
 async function createBoard(data) { 
 	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
 	const board = await Board.create(data).catch(error => { 
+
 		console.log(error);
 	});
 	return board;
@@ -63,6 +64,7 @@ async function findAllColumnStatus(){
 async function createColumnTrackRecord(data) { 
 	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); 
 	await ColumnTrack.create(data).catch(error => { 
+
 		console.log(error);
 	});
 };
@@ -82,11 +84,18 @@ async function createConfig(serverId) { //function to add config record to db
 	});
 };
 
-async function updateBindId(channelId, serverId) { //function to update BindID to db
-	await Config.update({channel_bind_id: channelId}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
-		console.log(error);
-	});
-}; 
+//function to update config record
+async function updateConfig(data) { 
+	const updatedConfig = await Config.update(
+		data.updatedFields,
+		{
+			where:data.conditionalFields
+		}).catch(error => { 
+	 	console.log(error);
+	 });
+	 return updatedConfig;
+	
+};
 
 async function findConfigByServerId(serverId) { //function to find server id
 	const configModel = await Config.findOne({
@@ -144,7 +153,6 @@ module.exports = {
 	findUser,
 	createConfig,
 	findConfigByServerId,
-	updateBindId ,
 	findBoardByName,
 	createBoard,
 	createColumn,
@@ -154,4 +162,5 @@ module.exports = {
 	findColumnNameByBoardIdAndName,
 	updateColumn,
 	getFormattedDate,
+	updateConfig,
 }; //only export function calls
