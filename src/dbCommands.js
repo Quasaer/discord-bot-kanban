@@ -127,12 +127,15 @@ async function createConfig(serverId) { //function to add config record to db
 // };
 //function to config record
 async function updateConfig(data) { 
-	 const updatedConfig = await Config.update(data.updatedFields,data.condtionalFields).catch(error => { 
+	const updatedConfig = await Config.update(
+		data.updatedFields,
+		{
+			where:data.conditionalFields
+		}).catch(error => { 
 	 	console.log(error);
 	 });
-	console.log(data.updatedFields);
-	console.log(data.conditionalFields);
-	return updatedConfig;
+	 return updatedConfig;
+	
 };
 
 // async function updatePrefix(prefixName, serverId) { //function to update prefix to db
