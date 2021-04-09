@@ -1,6 +1,0 @@
-add board <name>
-ask date y/n
-N -> return
-y -> inputs for date
-
-
