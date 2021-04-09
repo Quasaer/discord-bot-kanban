@@ -1,13 +1,4 @@
 let dbCmd  = require('../dbCommands.js');
-//const Config = require('../models/Config.js');
-// let data = {
-// 	config:{
-// 		id:'',
-// 		prefix:'',
-// 		serverId:'',
-// 		channelBindId:''
-// 	}
-// };
 let data = {
 	config:{
 		id:'',
