@@ -2,7 +2,7 @@ let dbCmd  = require('../dbCommands.js');
 let data = {};
 
 function editboard(message){
-    message.reply(`What would you like to edit in ${data.board.name}?\n`
+    message.reply(`What would you like to edit in ${data.task.name}?\n`
                 + 'type `name` to change the name of the board.\n'
                 + 'type `startdate` to change the start date of the board.\n'
                 + 'type `deadline` to change the deadline date of the board.\n'
@@ -106,6 +106,7 @@ function finalConfirmation(message){
 
 //update database
 function updateDatabase(message){
+	console.log(data.board);
 	dbCmd.updateBoard(data.board).then(() =>{
 		message.reply(`changes have been successfully made to your board}`);
 	});
@@ -114,48 +115,53 @@ function updateDatabase(message){
 //clear data
 function clearData() {
 	data = {
-		board:{
-			name:'',
-			deadlineDate:'',
-			startDate:'',
-			updatedFields:{}, 
-			updateCondition:{}, //set of attributes for where clause (dynamic)
-		}
+		task:{}
 	};
 }
 
 module.exports = {
-	name: 'editboard',
-	description: 'editboard <name>',
+	name: 'edittask',
+	description: 'editcolumnname <Board name> <column name> <task>',
 	execute(message, args) {
-        let nameInput = args[0];
+        let boardNameInput = args[0];
+        let colummNameInput = args[1];
+        let taskNameInput = args[2];
 		clearData();
 		
-		if (!nameInput) {
+		if (!boardNameInput || !colummNameInput || !taskNameInput) {
 			return message.reply('you need to name a board!\n'
-			+ 'example: %editboard <board name>');
+			+ 'example: %editboard <board name> <column name>');
 		} else {
 			/*
 				check board exists, if it does we can populate the data array return board model
 				data.baord.startdate = boardmodel.
-				data.board.deadline= boardmodel.
+				data.column.deadline= boardmodel.
 				else
 			*/
 			const user = message.author.tag;
-			dbCmd.findUser(user).then((userModel) =>{
-				data.board.updatedFields["updated_by_user_id"] = userModel.user_id;
+			dbCmd.findUser(user).then((userModel) =>{ 
+				data.column.updatedFields["updated_by_user_id"] = userModel.user_id;
 			});
-			dbCmd.findBoardByName(nameInput).then((boardModel) =>{
+			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
-					data.board.updateCondition["board_id"] = boardModel.board_id;
-					data.board.name = nameInput;
-					data.board.startDate = boardModel.start_date_time_stamp;
-					data.board.deadlineDate = boardModel.end_date_time_stamp;
-					editboard(message);
+                    dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, colummNameInput).then((ColumnModel) =>{
+
+						if(ColumnModel !== null){
+							// console.log(ColumnModel);
+							data.column.name = ColumnModel.name;
+							data.column.updateCondition["column_id"] = ColumnModel.column_id;
+							editColumn(message);
+						} else {
+							message.channel.send(`${colummNameInput} either doesn't exist in the DB or is case sensitive`);
+						}
+                    });
+
+					// editboard(message);
 				} else {
-					message.channel.send(`${nameInput} doesn't exist in the DB`);
+					message.channel.send(`${boardNameInput} doesn't exist in the DB`);
 				}
 			});
+			
 		}
 	},
 };
