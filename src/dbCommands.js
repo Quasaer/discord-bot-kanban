@@ -37,18 +37,10 @@ async function findUser(username) { //function to find user
 };
 
 //boards
-async function addBoard(userModel, boardName, startDateInput, deadlineDateInput) { //function to add user
-	// console.log(username);
-	userId = userModel.user_id;
-	
-	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	const board = await Board.create({ 
-		name: boardName, 
-		start_date_time_stamp: startDateInput,
-		end_date_time_stamp: deadlineDateInput, 
-		created_at_date_time_stamp: created_at,
-		created_by_user_id: userId, 
-	}).catch(error => { //adds to database (not doing userid)
+async function createBoard(data) { 
+	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
+	const board = await Board.create(data).catch(error => { 
+
 		console.log(error);
 	});
 	return board;
@@ -69,49 +61,21 @@ async function findAllColumnStatus(){
 };
 
 //column track
-async function addColumnTrackRecord(userModel, columnModel, columnStatusModel) { //function to add user
-	// console.log(username);
-	userId = userModel.user_id;
-	columnId = columnModel.column_id;
-	// console.log(columnStatusModel);
-	statusId = columnStatusModel.column_status_id;
-	// console.log(statusId);
-	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	const columnTrackRecord = await ColumnTrack.create({ 
-		column_id: columnId, 
-		column_status_id: statusId,
-		created_at_date_time_stamp: created_at,
-		created_by_user_id: userId, 
-	}).catch(error => { //adds to database (not doing userid)
+async function createColumnTrackRecord(data) { 
+	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); 
+	await ColumnTrack.create(data).catch(error => { 
+
 		console.log(error);
 	});
-	return columnTrackRecord;
 };
 
 //column
-async function addColumn(userModel, ColumnName, boardId, columnOrderNumber) { //function to add user
-	// console.log(username);
-	userId = userModel.user_id;
-	// console.log(boardModel);
-
-	
-	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
-	const column = await Column.create({ 
-		name: ColumnName, 
-		board_id: boardId,
-		column_order_number: columnOrderNumber,
-		created_at_date_time_stamp: created_at,
-		created_by_user_id: userId, 
-	}).catch(error => { //adds to database (not doing userid)
+async function createColumn(data) { 
+	data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
+	const column = await Column.create(data).catch(error => { 
 		console.log(error);
 	});
 	return column;
-};
-
-async function findColumnByColumnOrderNumberAndBoardId(columnOrderNumber, boardId) { //function to find user
-	const foundColumn = await Column.findOne({
-		where: { column_order_number: columnOrderNumber, board_id: boardId }, });
-	return foundColumn;
 };
 
 async function createConfig(serverId) { //function to add config record to db
@@ -120,11 +84,18 @@ async function createConfig(serverId) { //function to add config record to db
 	});
 };
 
-async function updateBindId(channelId, serverId) { //function to update BindID to db
-	await Config.update({channel_bind_id: channelId}, {where: { server_id: serverId}}).catch(error => { //updates config table in database
-		console.log(error);
-	});
-}; 
+//function to update config record
+async function updateConfig(data) { 
+	const updatedConfig = await Config.update(
+		data.updatedFields,
+		{
+			where:data.conditionalFields
+		}).catch(error => { 
+	 	console.log(error);
+	 });
+	 return updatedConfig;
+	
+};
 
 async function findConfigByServerId(serverId) { //function to find server id
 	const configModel = await Config.findOne({
@@ -133,15 +104,63 @@ async function findConfigByServerId(serverId) { //function to find server id
 	return configModel;
 };
 
+async function updateBoard(data){
+	data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
+	await Board.update(data.updatedFields, {where: data.updateCondition}).catch(error => { //updates config table in database
+		console.log(error);
+	});
+};
+
+async function findColumnNameByBoardIdAndName(boardId, columnName) { //function to find server id
+	const columnModel = await Column.findOne({
+		where: { name: columnName, board_id: boardId }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnModel;
+};
+
+async function updateColumn(data){
+	data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
+	await Column.update(
+			data.updatedFields, 
+			{where: data.updateCondition}
+		).catch(error => { //updates config table in database
+		console.log(error);
+	});
+};
+
+//get date
+function getFormattedDate(dateInput){
+	let formattedDate;
+	if(dateInput === null) {
+		formattedDate = 'Nothing'
+	} else {
+		let date = new Date(dateInput);
+		let year = date.getFullYear();
+		let month = date.getMonth();
+		month += 1;
+		let day = date.getDate();
+
+		formattedDate = year + '-' + month + '-' + day; 
+		// console.log(formattedDate);
+	}
+	
+	return formattedDate;
+}
+
+
 module.exports = { 
-	addUser,
+	createUser,
 	findUser,
 	createConfig,
 	findConfigByServerId,
-	updateBindId ,
 	findBoardByName,
-	addBoard,
-	addColumn,
-	addColumnTrackRecord,
+	createBoard,
+	createColumn,
+	createColumnTrackRecord,
 	findAllColumnStatus,
+	updateBoard,
+	findColumnNameByBoardIdAndName,
+	updateColumn,
+	getFormattedDate,
+	updateConfig,
 }; //only export function calls

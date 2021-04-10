@@ -1,34 +1,8 @@
 let dbCmd  = require('../dbCommands.js');
+let data = {};
 
-/*
-data comment
-*/
-let data = {
-	board:{
-		id: '',
-		name:'',
-		deadlineDate:'',
-		startDate:'',
-		columnStartCount:1,
-		columns:[{
-			1:{
-				'name':'Backlog',
-				'orderNumber':1
-			},
-			2:{
-				'name':'Active',
-				'orderNumber':2
-			},
-			3:{
-				'name':'Done',
-				'orderNumber':3
-			}
-		}],
-	}
-};
-
-function boardConfigs(message, nameInput){
-	message.reply(`These are the default settings for ${nameInput}\n`
+function boardConfigs(message){
+	message.reply(`These are the default settings for ${data.board.name}\n`
 			+ 'Columns: (`Backlog`, `Active`, `Done`)\n'
 			+ 'Optional start date is `null`\n'
 			+ 'Optional Deadline date is `null`\n'
@@ -43,27 +17,14 @@ function boardConfigs(message, nameInput){
 		// accept only 1 message, and return the promise after 30000ms = 30s
 		// first (and, in this case, only) message of the collection
 		if (collected.first().content.toLowerCase() === 'yes') {
-			dbCmd.findBoardByName(nameInput).then((val) =>{
-				if(val !== null){
-					message.channel.send(`${nameInput} already exists in the DB`);
-				} else {
-					data.board.name = nameInput;
-					handleColumnConfiguration(message);
-				}
-			});
+
+			handleColumnConfiguration(message);
 			//column change function not handleStartDate -- to do later	
 		} else if(collected.first().content.toLowerCase() === 'no') {	
-			dbCmd.findBoardByName(nameInput).then((val) =>{
-				if(val !== null){
-					message.channel.send(`${nameInput} already exists in the DB`);
-				} else {
-					data.board.name = nameInput;
-					populateDatabase(message);
-				}
-			});
+			populateDatabase(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -82,36 +43,28 @@ function handleColumnConfiguration(message){
 	{max: 1, time: 30000}).then(collected => {
 
 		if (collected.first().content.toLowerCase() === 'yes') {
-			data.board.columns[0] = {};
+			data.columns = {};
 			handleColumnConfigurationInput(message);
 		} else if(collected.first().content.toLowerCase() === 'no') {
 			handleStartDate(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
 	});
 }
-/*
-	yes -> remove pre set objects for column names -> set up a an intger starting at 1 -> add column name, if want to add more -> add 1 to integer -> do function again
-	init column object function
-	column name input function
-	conitnue Y/N function
-*/
-//
 
-//function to empty list and start integer
 function handleColumnConfigurationInput(message){ //gets input for start date
 	message.reply('name a column');
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
-		let count = data.board.columnStartCount;
+		let count = data.columnStartCount;
 		columnNameInput = collected.first().content.toLowerCase();
-		data.board.columns[0][count] = {
+		data.columns[count] = {
 			'name':columnNameInput,
-			'orderNumber':count,
+			'column_order_number':count,
 		};
 		handleColumnConfigurationConfirmation(message);
 	}).catch(() => {
@@ -121,7 +74,7 @@ function handleColumnConfigurationInput(message){ //gets input for start date
 
 //
 function handleColumnConfigurationConfirmation(message){
-	message.reply('Would you like to add another Column?\n'
+	message.reply('Would you like to create another Column?\n'
 				+ 'Confirm with `yes` or deny with `no`.\n'
 				+ 'You have 30 seconds or else board will not be made.\n');
 
@@ -129,13 +82,13 @@ function handleColumnConfigurationConfirmation(message){
 	{max: 1, time: 30000}).then(collected => {
 
 		if (collected.first().content.toLowerCase() === 'yes') {
-			data.board.columnStartCount += 1;
+			data.columnStartCount += 1;
 			handleColumnConfigurationInput(message);
 		} else if(collected.first().content.toLowerCase() === 'no') {
 			handleStartDate(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -157,7 +110,7 @@ function handleStartDate(message){
 			handleDeadlineDate(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -170,11 +123,11 @@ function handleStartDateInput(message){ //gets input for start date
 	{max: 1, time: 30000}).then(collected => {
 		startDateInput = Date.parse(collected.first().content.toLowerCase());
 		if ( startDateInput !== 'NaN') {
-			data.board.startDate = startDateInput;
+			data.board["start_date_time_stamp"] = startDateInput;
 			handleDeadlineDate(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -195,7 +148,7 @@ function handleDeadlineDate(message){
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -208,11 +161,11 @@ function handleDeadlineDateInput(message){ //gets input for deadline date
 	{max: 1, time: 30000}).then(collected => {
 		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase());
 		if ( deadlineDateInput !== 'NaN') {
-			data.board.deadlineDate = deadlineDateInput;
+			data.board["end_date_time_stamp"] = deadlineDateInput;
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -222,7 +175,7 @@ function handleDeadlineDateInput(message){ //gets input for deadline date
 function finalConfirmation(message){
 
 	message.reply(`Changes Successfully made\n`
-			+ 'Would you like to continuw with these settings?\n'
+			+ 'Would you like to continue with these settings?\n'
 			+ '`yes` to create board with default settings or `no` to cancel changes.\n'
 			+ 'You have 30 seconds or else board will not be made.\n');
 
@@ -234,7 +187,7 @@ function finalConfirmation(message){
 			boardConfigs(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype addboard command');
+			+ 'Please retype createboard command');
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -243,95 +196,77 @@ function finalConfirmation(message){
 
 
 function populateDatabase(message){
-	//go through data json object and make records
 	const user = message.author.tag;
-	// let columnName ='';
-	// let columnOrderNumber ='';
 	
-
-	boardName = data.board.name; 
-	startDate = data.board.startDate; 
-	deadlineDate = data.board.deadlineDate; 
-
-	
-
 	dbCmd.findUser(user).then((userModel) =>{
-		dbCmd.addBoard(userModel, boardName, startDate, deadlineDate).then((boardModel) => {
+		data.board["created_by_user_id"] = userModel.user_id;
+		data.columnTrack["created_by_user_id"] = userModel.user_id;
+		dbCmd.createBoard(data.board).then((boardModel) => {
 			if(boardModel !== null){
-				message.channel.send(`${boardName} has successfully been added to DB`);
-				data.board.id = boardModel.board_id;
-	
-				// db command get status => returning array of two model objects
-				//column stuff
-				/*
-					for loop for columns
-					inside for loop db add column (2 one for name and one for ).then()
-					.then => for loop to loop through column status and add column track record 
-	
-				*/
-				dbCmd.findAllColumnStatus().then((statusModels) => {
-					for (let i = 1; i <= Object.keys(data.board.columns[0]).length; i++) {
-						let columnName = data.board.columns[0][i].name;
-						let columnOrderNumber = data.board.columns[0][i].orderNumber;
-						dbCmd.addColumn(userModel, columnName, data.board.id, columnOrderNumber).then((columnModel) => {
+				message.channel.send(`${data.board["name"]} has successfully been added to DB`);
+				dbCmd.findAllColumnStatus().then((statusModels) => {					
+					for (let i = 1; i <= Object.keys(data.columns).length; i++) {
+						data.columns[i]["created_by_user_id"] = userModel.user_id;
+						data.columns[i]["board_id"] = boardModel.board_id;
+						dbCmd.createColumn(data.columns[i]).then((columnModel) => {
+							data.columnTrack["column_id"] = columnModel.column_id;
 							for (let j = 0; j<statusModels.length; j++){
-								dbCmd.addColumnTrackRecord(userModel, columnModel, statusModels[j]).then(() => {
-									data = { //reset data array
-										board:{
-											id: '',
-											name:'',
-											deadlineDate:'',
-											startDate:'',
-											columnStartCount:1,
-											columns:[{
-												1:{
-													'name':'Backlog',
-													'orderNumber':1
-												},
-												2:{
-													'name':'Active',
-													'orderNumber':2
-												},
-												3:{
-													'name':'Done',
-													'orderNumber':3
-												}
-											}],
-										}
-									};
-								});
+								data.columnTrack["column_status_id"] = statusModels[j].column_status_id;
+								dbCmd.createColumnTrackRecord(data.columnTrack);
 							}
 						});
-					}
+					};
 				});	
 			} else {
-				message.channel.send(`${boardName} already exists in DB`);
-				console.log('error saving board to database');
+				message.channel.send(`Error Occured`);
 			}
 		});
 	});
 
 	
 }
+function resetData(){
+	data = {
+		board:{},
+		columnStartCount:1,
+		columns:{
+			1:{
+				'name':'Backlog',
+				'column_order_number':1
+			},
+			2:{
+				'name':'Active',
+				'column_order_number':2
+			},
+			3:{
+				'name':'Done',
+				'column_order_number':3
+			}
+		},
+		columnTrack:{},
+	};
+}
 
 module.exports = {
-	name: 'addboard',
-	description: 'addboard <name>',
+	name: 'createboard',
+	description: 'createboard <name>',
 	execute(message, args) {
         let nameInput = args[0];
+
+		resetData()
 		
 		if (!nameInput) {
 			return message.reply('you need to name a board!\n'
-			+ 'example: %addboard <board name>');
+			+ 'example: %createboard <board name>');
 		} else {
-			boardConfigs(message, nameInput);
+			data.board["name"] = nameInput;
+			dbCmd.findBoardByName(data.board.name).then((boardModel) =>{
+				if(boardModel !== null){
+					message.channel.send(`${data.board.name} already exists in the DB`);
+				} else {
+					boardConfigs(message);
+				}
+			});
 		}
     },
 };
-
-
-/*
-	instead of final confirmation
-	could do a quesiton asking to edit any of the function and depending which one was chosen 
-	will be the function called but will be the handle function adn not the input
-*/
