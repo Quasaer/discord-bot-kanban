@@ -21,7 +21,7 @@ const Column = require('./models/Column')(sequelize, Sequelize.DataTypes);
 const Config = require('./models/Config')(sequelize, Sequelize.DataTypes);
 const Task_Assignment = require('./models/Task_Assignment')(sequelize, Sequelize.DataTypes);
 // global scope
-async function addUser(username) { //function to add user
+async function createUser(username) { //function to add user
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
 	const user = await Users.create({ discord_username: username, created_at_date_stamp: created_at}).catch(error => { //adds to database
 		console.log(error);
