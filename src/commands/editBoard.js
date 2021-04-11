@@ -127,6 +127,7 @@ function clearData() {
 module.exports = {
 	name: 'editboard',
 	description: 'editboard <name>',
+	count: 6,
 	execute(message, args) {
         let nameInput = args[0];
 		clearData();
