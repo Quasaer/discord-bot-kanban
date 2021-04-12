@@ -185,6 +185,12 @@ async function updateTask(data){
 		console.log(error);
 	});
 };
+async function countBoardColumns(boardId) {
+	const columnCount = Column.count({
+		where: { board_id: boardId }
+	})
+	return columnCount;
+}
 
 module.exports = { 
 	createUser,
@@ -203,4 +209,5 @@ module.exports = {
 	updateConfig,
 	findTaskByColumnIdAndName,
 	updateTask,
+  countBoardColumns,
 }; //only export function calls
