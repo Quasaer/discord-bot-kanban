@@ -147,9 +147,32 @@ function getFormattedDate(dateInput){
 	return formattedDate;
 }
 
+async function findColumnTrackIdByColumnId(columnId){
+	const allColumnTrack = await ColumnTrack.findAll({
+		where: { column_id: columnId },
+	});
+	return allColumnTrack;
+}
+
+async function findTaskUsingColumnTrackIdAndName(ColumnTrackId, taskName){
+	const tasksModel = await Tasks.findOne({
+		where: { name: taskName, column_track_id: ColumnTrackId }, //attempts to match server id in db to the server id of the current message
+	});
+	return tasksModel;
+}
+
+async function updateTask(data){
+	data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
+	await Tasks.update(
+			data.updatedFields, 
+			{where: data.updateCondition}
+		).catch(error => { //updates config table in database
+		console.log(error);
+	});
+};
 
 module.exports = { 
-	createUser,
+	addUser,
 	findUser,
 	createConfig,
 	findConfigByServerId,
@@ -163,4 +186,7 @@ module.exports = {
 	updateColumn,
 	getFormattedDate,
 	updateConfig,
+	findColumnTrackIdByColumnId,
+	findTaskUsingColumnTrackIdAndName,
+	updateTask,
 }; //only export function calls

@@ -18,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
 
         task_assignment_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
 
         description: {
@@ -28,7 +27,6 @@ module.exports = (sequelize, DataTypes) => {
 
         deadline_date_time_stamp: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
 
         created_at_date_time_stamp: {
@@ -43,12 +41,10 @@ module.exports = (sequelize, DataTypes) => {
 
         updated_at_date_time_stamp: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
 
         updated_by_user_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
     }, {
 		timestamps: false,
