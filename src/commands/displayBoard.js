@@ -28,7 +28,7 @@ module.exports = {
                 
                 }
                 boardEmbed.setTimestamp();
-                boardEmbed.setFooter('Kanban DB Bot');
+                boardEmbed.setFooter('Kanban Discord Bot');
                 // send back to channel
                 message.channel.send(boardEmbed);
             });
