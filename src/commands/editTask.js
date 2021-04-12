@@ -142,33 +142,27 @@ module.exports = {
                     dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, colummNameInput).then((columnModel) =>{
 
 						if(columnModel !== null){
-							dbCmd.findColumnTrackIdByColumnId(columnModel.column_id).then((columnTrackModel) =>{
-
-								if(columnTrackModel !== null){
-									for (let i = 0; i<columnTrackModel.length; i++){
-										let columnTrackId = columnTrackModel[i].column_track_id;
-										dbCmd.findTaskUsingColumnTrackIdAndName(columnTrackId, taskNameInput).then((taskModel) =>{
-											if(taskModel !== null){
-												data.task["name"] = taskModel.name;
-												data.task["description"] = taskModel.description;
-												data.task["deadline_date_time_stamp"] = taskModel.deadline_date_time_stamp;
-												data.task.updateCondition["task_id"] = taskModel.task_id;
-												editTask(message);
-											}
-										});
-									}
+							dbCmd.findTaskUsingColumnIdAndName(columnModel.column_id, taskNameInput).then((taskModel) =>{
+								console.log(taskModel);
+								if(taskModel !== undefined){
+									data.task["name"] = taskModel.name;
+									data.task["description"] = taskModel.description;
+									data.task["deadline_date_time_stamp"] = taskModel.deadline_date_time_stamp;
+									data.task.updateCondition["task_id"] = taskModel.task_id;
+									console.log(data.task);
+									editTask(message);
 								} else {
-									message.channel.send(`an error occured`);
+									message.channel.send(`The task ${taskNameInput} doesn't exist in the DB.`);
 								}
 							});
 						} else {
-							message.channel.send(`${colummNameInput} either doesn't exist in the DB or is case sensitive`);
+							message.channel.send(`The column ${colummNameInput} either doesn't exist in the DB or is case sensitive`);
 						}
                     });
 
 					// editboard(message);
 				} else {
-					message.channel.send(`${boardNameInput} doesn't exist in the DB`);
+					message.channel.send(`The baord ${boardNameInput} doesn't exist in the DB`);
 				}
 			});
 			
