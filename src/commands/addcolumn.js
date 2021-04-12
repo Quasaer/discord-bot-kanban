@@ -119,8 +119,7 @@ function populateDatabase(message, boardNameInput) {
           dbCmd.createColumn(data[i]).then((columnModel) => {
               data.columnTrack["column_id"] = columnModel.column_id;
               for (let j = 0; j < statusModels.length; j++) {
-                data.columnTrack["column_status_id"] =
-                  statusModels[j].column_status_id;
+                data.columnTrack["column_status_id"] = statusModels[j].column_status_id;
                 dbCmd.createColumnTrackRecord(data.columnTrack);
               }
             });
