@@ -1,7 +1,7 @@
 let dbCmd  = require('../dbCommands.js');
 module.exports = {
-	name: 'adduser',
-	description: 'add <variable> <name>',
+	name: 'createuser',
+	description: 'create <variable> <name>',
 	execute(message, args) {
 		const target = message.mentions.users.first() || message.author;
 		dbCmd.findUser(target.tag).then((val) =>{
@@ -12,7 +12,7 @@ module.exports = {
 			if(val !== null){
 				message.channel.send(`${user[0]} already exists in the DB`);
 			} else {
-				const resp  = dbCmd.addUser(target.tag);
+				const resp  = dbCmd.createUser(target.tag);
 				if(resp){
 					message.channel.send(`${user[0]} has successfully been added to DB`);
 				} else {
