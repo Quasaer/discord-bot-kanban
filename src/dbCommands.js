@@ -117,6 +117,13 @@ async function findColumnNameByBoardIdAndName(boardId, columnName) { //function 
 	});
 	return columnModel;
 };
+// temp version, gonna need a more efficent way but would like to focus on the implementation first
+async function findAllColumnNamesByBoardId(boardId) {
+	const columnModel = await Column.findAll({
+		where: { board_id: boardId },
+	});
+	return columnModel;
+};
 
 async function updateColumn(data){
 	data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
@@ -149,7 +156,7 @@ function getFormattedDate(dateInput){
 
 
 module.exports = { 
-	createUser,
+	addUser,
 	findUser,
 	createConfig,
 	findConfigByServerId,
@@ -163,4 +170,5 @@ module.exports = {
 	updateColumn,
 	getFormattedDate,
 	updateConfig,
+	findAllColumnNamesByBoardId
 }; //only export function calls
