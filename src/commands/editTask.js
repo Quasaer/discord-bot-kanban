@@ -142,14 +142,12 @@ module.exports = {
                     dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, colummNameInput).then((columnModel) =>{
 
 						if(columnModel !== null){
-							dbCmd.findTaskUsingColumnIdAndName(columnModel.column_id, taskNameInput).then((taskModel) =>{
-								console.log(taskModel);
+							dbCmd.findTaskByColumnIdAndName(columnModel.column_id, taskNameInput).then((taskModel) =>{
 								if(taskModel !== undefined){
 									data.task["name"] = taskModel.name;
 									data.task["description"] = taskModel.description;
 									data.task["deadline_date_time_stamp"] = taskModel.deadline_date_time_stamp;
 									data.task.updateCondition["task_id"] = taskModel.task_id;
-									console.log(data.task);
 									editTask(message);
 								} else {
 									message.channel.send(`The task ${taskNameInput} doesn't exist in the DB.`);
