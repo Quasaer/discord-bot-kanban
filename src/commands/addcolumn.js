@@ -107,14 +107,15 @@ function populateDatabase(message, boardNameInput) {
   const user = message.author.tag;
 
   dbCmd.findUser(user).then((userModel) => {
-    data.columnTrack["created_by_user_id"] = userModel.user_id;
+    let userId =  userModel.user_id
+    data.columnTrack["created_by_user_id"] = userId;
     dbCmd.findBoardByName(boardNameInput).then((boardModel) => {
       if (boardModel) {
         //loop through columns and add to db
         
         dbCmd.findAllColumnStatus().then((statusModels) => {
           for (let i = 0; i < Object.keys(data).length; i++) {
-          data[i]["created_by_user_id"] = userModel.user_id;
+          data[i]["created_by_user_id"] = userId;
           data[i]["board_id"] = boardModel.board_id;
           dbCmd.createColumn(data[i]).then((columnModel) => {
               data.columnTrack["column_id"] = columnModel.column_id;
