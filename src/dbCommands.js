@@ -170,6 +170,14 @@ function getFormattedDate(dateInput) {
   return formattedDate;
 }
 
+//gets the number of columns on a board
+async function countBoardColumns(boardId) {
+	const columnCount = Column.count({
+		where: { board_id: boardId }
+	})
+	return columnCount
+}
+
 module.exports = {
   addUser,
   findUser,
@@ -185,4 +193,5 @@ module.exports = {
   updateColumn,
   getFormattedDate,
   updateConfig,
+  countBoardColumns,
 }; //only export function calls

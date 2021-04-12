@@ -248,27 +248,25 @@ function resetData(){
 }
 
 module.exports = {
-  name: "createboard",
-  description: "createboard <name>",
-  count: 5,
-  execute(message, args) {
-    let nameInput = args[0];
+	name: 'createboard',
+	description: 'createboard <name>',
+	execute(message, args) {
+        let nameInput = args[0];
 
-    resetData();
-
-    if (!nameInput) {
-      return message.reply(
-        "you need to name a board!\n" + "example: %createboard <board name>"
-      );
-    } else {
-      data.board["name"] = nameInput;
-      dbCmd.findBoardByName(data.board.name).then((boardModel) => {
-        if (boardModel !== null) {
-          message.channel.send(`${data.board.name} already exists in the DB`);
-        } else {
-          boardConfigs(message);
-        }
-      });
-    }
-  },
+		resetData()
+		
+		if (!nameInput) {
+			return message.reply('you need to name a board!\n'
+			+ 'example: %createboard <board name>');
+		} else {
+			data.board["name"] = nameInput;
+			dbCmd.findBoardByName(data.board.name).then((boardModel) =>{
+				if(boardModel !== null){
+					message.channel.send(`${data.board.name} already exists in the DB`);
+				} else {
+					boardConfigs(message);
+				}
+			});
+		}
+    },
 };

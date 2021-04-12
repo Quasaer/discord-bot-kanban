@@ -122,6 +122,7 @@ function clearData() {
 module.exports = {
 	name: 'edittask',
 	description: 'editcolumnname <Board name> <column name> <task>',
+	count: 9,
 	execute(message, args) {
         let boardNameInput = args[0];
         let colummNameInput = args[1];
