@@ -132,7 +132,7 @@ function populateDatabase(message, boardNameInput) {
         message.channel.send(`Error Occured`);
       }
     });
-  });
+  }); 
 }
 
 function resetData() {
