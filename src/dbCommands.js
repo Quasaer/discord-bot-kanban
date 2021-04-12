@@ -161,6 +161,14 @@ async function updateTask(data){
 	});
 };
 
+async function findMaxColumnTrackId(columnId){
+	const foundColumnId = await ColumnTrack.max(
+		column_track_id,
+		{where:{ column_id : columnId}}
+	)
+	return foundColumnId;
+}
+
 module.exports = { 
 	createUser,
 	findUser,
