@@ -1,7 +1,6 @@
 const dbCmd = require("../dbCommands.js");
 
 let data = {};
-let count = 0;
 
 //confirms the user wants to create a column
 //boardNameInput - The name of the board to create a column in.
@@ -55,12 +54,12 @@ function columnConfiguration(message, boardNameInput) {
       columnNameInput = collected.first().content.toLowerCase();
       dbCmd.findBoardByName(boardNameInput).then((val) => {
         dbCmd.countBoardColumns(val.board_id).then((columnCount) => {
-          let order_number = columnCount + count + 1;
-          data[count] = {
+          let order_number = columnCount + data.count + 1;
+          data.columns[data.count] = {
             name: columnNameInput,
             column_order_number: order_number,
           };
-          count++;
+          data.count++;
         });
       });
       ColumnConfirmation(message, boardNameInput);
@@ -109,15 +108,17 @@ function populateDatabase(message, boardNameInput) {
   dbCmd.findUser(user).then((userModel) => {
     let userId =  userModel.user_id
     data.columnTrack["created_by_user_id"] = userId;
+    // console.log(data);
     dbCmd.findBoardByName(boardNameInput).then((boardModel) => {
       if (boardModel) {
         //loop through columns and add to db
         
         dbCmd.findAllColumnStatus().then((statusModels) => {
-          for (let i = 0; i < Object.keys(data).length; i++) {
-          data[i]["created_by_user_id"] = userId;
-          data[i]["board_id"] = boardModel.board_id;
-          dbCmd.createColumn(data[i]).then((columnModel) => {
+          for (let i = 0; i < Object.keys(data.columns).length; i++) {
+            data.columns[i]["created_by_user_id"] = userId;
+						data.columns[i]["board_id"] = boardModel.board_id;
+            console.log(data.columns[i]);
+            dbCmd.createColumn(data.columns[i]).then((columnModel) => {
               data.columnTrack["column_id"] = columnModel.column_id;
               for (let j = 0; j < statusModels.length; j++) {
                 data.columnTrack["column_status_id"] = statusModels[j].column_status_id;
@@ -125,9 +126,10 @@ function populateDatabase(message, boardNameInput) {
               }
             });
           }
+        }).catch((err) => {
+          console.log(err);
         });
         message.channel.send(`Columns created in board ${boardNameInput}`);
-        count = 0;
       } else {
         message.channel.send(`Error Occured`);
       }
@@ -137,7 +139,9 @@ function populateDatabase(message, boardNameInput) {
 
 function resetData() {
   data = {
+    columns:{},
     columnTrack: {},
+    count: 0,
   };
 }
 
