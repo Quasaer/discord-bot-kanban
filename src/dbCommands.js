@@ -21,7 +21,7 @@ const Column = require('./models/Column')(sequelize, Sequelize.DataTypes);
 const Config = require('./models/Config')(sequelize, Sequelize.DataTypes);
 const Task_Assignment = require('./models/Task_Assignment')(sequelize, Sequelize.DataTypes);
 // global scope
-async function addUser(username) { //function to add user
+async function createUser(username) { //function to add user
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
 	const user = await Users.create({ discord_username: username, created_at_date_stamp: created_at}).catch(error => { //adds to database
 		console.log(error);
@@ -141,12 +141,25 @@ function getFormattedDate(dateInput){
 		let day = date.getDate();
 
 		formattedDate = year + '-' + month + '-' + day; 
-		// console.log(formattedDate);
 	}
 	
 	return formattedDate;
 }
 
+async function findTaskByColumnIdAndName(columnId, taskName){
+	const [results, metadata] = await sequelize.query("SELECT * FROM Tasks JOIN Column_track ON Tasks.column_track_id = Column_track.column_track_id WHERE Column_track.column_id = " + columnId + " AND tasks.name = '" + taskName + "'");
+	return results[0];
+}
+
+async function updateTask(data){
+	data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
+	await Tasks.update(
+			data.updatedFields, 
+			{where: data.updateCondition}
+		).catch(error => { //updates config table in database
+		console.log(error);
+	});
+};
 
 module.exports = { 
 	createUser,
@@ -163,4 +176,6 @@ module.exports = {
 	updateColumn,
 	getFormattedDate,
 	updateConfig,
+	findTaskByColumnIdAndName,
+	updateTask,
 }; //only export function calls
