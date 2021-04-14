@@ -125,6 +125,21 @@ async function findAllColumnNamesByBoardId(boardId) {
 	return columnModel;
 };
 
+async function findColumnTrackIdByColumnId(ColumnId) {
+	const columnTrackModel = await ColumnTrack.findAll({
+		where: { column_id: ColumnId },
+	});
+	return columnTrackModel;
+};
+
+async function findTasksByColumnTrackId(columnTrackId) {
+	const tasksModel = await Tasks.findAll({
+		where: { column_track_id: columnTrackId },
+	});
+	return tasksModel;
+};
+
+
 async function updateColumn(data){
 	data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
 	await Column.update(
@@ -169,7 +184,7 @@ async function updateTask(data){
 };
 
 module.exports = { 
-	addUser,
+	createUser,
 	findUser,
 	createConfig,
 	findConfigByServerId,
@@ -186,4 +201,6 @@ module.exports = {
 	findAllColumnNamesByBoardId,
 	findTaskByColumnIdAndName,
 	updateTask,
+	findColumnTrackIdByColumnId,
+	findTasksByColumnTrackId
 }; //only export function calls
