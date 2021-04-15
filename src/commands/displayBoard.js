@@ -20,7 +20,8 @@ module.exports = {
                 boardEmbed.setThumbnail('https://i.dlpng.com/static/png/6905682_preview.png');
                 for(var x = 0; x < arrayColumnModel.length; x++){
                     var columnObj = arrayColumnModel[x];
-                    dbCmd.findTasksByColumnIdAndName(columnObj.column_id,columnObj.name,boardEmbed).then((taskModel) =>{
+                    // not the correct way of passing values, but mainly struggling with the scope of working within the dbCmbs for some reason.
+                    dbCmd.findTasksByColumnIdAndName(columnObj.column_id,columnObj.name,boardEmbed).then((taskModel) =>{ 
                         var boardColumns = { name: '', value:'', inline: true };
                         boardColumns.name  = 'columnObj.name';
                         var taskValues = '';
