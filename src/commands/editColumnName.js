@@ -68,7 +68,7 @@ function updateDatabase(message){
 }
 
 //clear data
-function clearData() {
+function setData() {
 	data = {
 		column:{
 			name: '',
@@ -84,7 +84,7 @@ module.exports = {
 	execute(message, args) {
         let boardNameInput = args[0];
         let colummNameInput = args[1];
-		clearData();
+		setData();
 		
 		if (!boardNameInput || !colummNameInput) {
 			return message.reply('you need to name a board!\n'

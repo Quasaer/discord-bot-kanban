@@ -28,7 +28,7 @@ function updateTaskColumnTrackId(message){
 	});
 }
 
-function clearData() {
+function setData() {
 	data = {
         task:{
             updatedFields:{},
@@ -45,7 +45,7 @@ module.exports = {
         let boardNameInput = args[0];
         let colummNameInput = args[1];
         let taskNameInput = args[2];
-		clearData();
+		setData();
 		
 		if (!boardNameInput || !colummNameInput || !taskNameInput) {
 			return message.reply('you need to name a board, column name and task name!\n'
@@ -84,7 +84,6 @@ module.exports = {
                                                 } else {
                                                     data.task.updatedFields["column_track_id"] = data.task["task_column_track_id"] + 1;
                                                     updateTaskColumnTrackIdConfirmation(message);
-                                                    // console.log(data);
                                                 }
                                             })
                                         });

@@ -111,7 +111,7 @@ function updateDatabase(message){
 }
 
 //clear data
-function clearData() {
+function setData() {
 	data = {
 		task:{
 			updatedFields:{},
@@ -127,7 +127,7 @@ module.exports = {
         let boardNameInput = args[0];
         let colummNameInput = args[1];
         let taskNameInput = args[2];
-		clearData();
+		setData();
 		
 		if (!boardNameInput || !colummNameInput || !taskNameInput) {
 			return message.reply('you need to name a board, column name and task name!\n'
