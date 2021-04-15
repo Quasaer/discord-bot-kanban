@@ -173,6 +173,19 @@ async function findTaskByColumnIdAndName(columnId, taskName){
 	return results[0];
 }
 
+async function findAllBoardColumnAndTasksByBoardId(boardId){
+	const [results,metadata] = await sequelize.query(`
+	select b.name boardName, c.name colName, t.name taskName, cs.name columnStatus
+	from board b
+	join Column c on b.board_id = c.board_id
+	join Column_track ct on c.column_id = ct.column_id
+	join Tasks t on ct.column_track_id = t.column_track_id
+	join Column_status cs on ct.column_status_id = cs.column_status_id
+	where b.board_id = ${boardId};`
+	);
+	return results;
+}
+
 async function findTasksByColumnIdAndName(columnId,columnName,messageEmbed){
 	const [results, metadata] = await sequelize.query("SELECT * FROM Tasks JOIN Column_track ON Tasks.column_track_id = Column_track.column_track_id WHERE Column_track.column_id = " + columnId);
 	return results[0];
