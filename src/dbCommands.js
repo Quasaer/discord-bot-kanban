@@ -169,6 +169,21 @@ async function findMaxColumnTrackId(columnId){
 	return foundColumnId;
 }
 
+async function findMaxColumnId(boardId){
+	const foundColumnId = await Column.max(
+		'column_id', 
+		{where:{ board_id: boardId }}
+	)
+	return foundColumnId;
+}
+
+async function findColumnTrackByTaskTrackId(trackId) { //function to find server id
+	const columnTrackModel = await ColumnTrack.findOne({
+		where: { column_track_id: trackId }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnTrackModel;
+};
+
 module.exports = { 
 	createUser,
 	findUser,
@@ -187,4 +202,6 @@ module.exports = {
 	findTaskByColumnIdAndName,
 	updateTask,
 	findMaxColumnTrackId,
+	findMaxColumnId,
+	findColumnTrackByTaskTrackId,
 }; //only export function calls

@@ -2,7 +2,7 @@ let dbCmd  = require('../dbCommands.js');
 let data = {};
 
 function updateTaskColumnTrackIdConfirmation(message){
-    message.reply(`Would you like to update ${data.task.name} From active to Done?\n`
+    message.reply(`Would you like to update ${data.task["name"]} From active to Done?\n`
                 + 'type `yes` to confirm or `no` to cancel.\n'
                 + 'You have 30 seconds or else task will not be made.\n');
 
@@ -38,8 +38,8 @@ function clearData() {
 
 
 module.exports = {
-	name: 'updatetaskstatus',
-	description: 'updatetaskstatus <Board name> <Column name> <Task name>',
+	name: 'completetaskstatus',
+	description: 'completetaskstatus <Board name> <Column name> <Task name>',
 	execute(message, args) {
         let boardNameInput = args[0];
         let colummNameInput = args[1];
@@ -48,7 +48,7 @@ module.exports = {
 		
 		if (!boardNameInput || !colummNameInput || !taskNameInput) {
 			return message.reply('you need to name a board, column name and task name!\n'
-			+ 'example: %updatetaskstatus <Board name> <Column name> <Task name>');
+			+ 'example: %completetaskstatus <Board name> <Column name> <Task name>');
 		} else {
 			const user = message.author.tag;
 			dbCmd.findUser(user).then((userModel) =>{
@@ -62,6 +62,7 @@ module.exports = {
 							dbCmd.findTaskByColumnIdAndName(columnModel.column_id, taskNameInput).then((taskModel) =>{
 								if(taskModel !== undefined){
                                     data.task.updateCondition["task_id"]=taskModel.task_id;
+                                    data.task["name"]=taskModel.name;
                                     dbCmd.findMaxColumnTrackId(columnModel.column_id).then((MaxColumnTrackId) => {
                                         data.task.updatedFields["column_track_id"] = MaxColumnTrackId;
                                         updateTaskColumnTrackIdConfirmation(message);
