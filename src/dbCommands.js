@@ -173,6 +173,11 @@ async function findTaskByColumnIdAndName(columnId, taskName){
 	return results[0];
 }
 
+async function findTasksByColumnIdAndName(columnId,columnName,messageEmbed){
+	const [results, metadata] = await sequelize.query("SELECT * FROM Tasks JOIN Column_track ON Tasks.column_track_id = Column_track.column_track_id WHERE Column_track.column_id = " + columnId);
+	return results[0];
+}
+
 async function updateTask(data){
 	data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
 	await Tasks.update(
@@ -202,5 +207,6 @@ module.exports = {
 	findTaskByColumnIdAndName,
 	updateTask,
 	findColumnTrackIdByColumnId,
-	findTasksByColumnTrackId
+	findTasksByColumnTrackId,
+	findTasksByColumnIdAndName
 }; //only export function calls
