@@ -132,12 +132,6 @@ async function findColumnTrackIdByColumnId(ColumnId) {
 	return columnTrackModel;
 };
 
-async function findTasksByColumnTrackId(columnTrackId) {
-	const tasksModel = await Tasks.findAll({
-		where: { column_track_id: columnTrackId },
-	});
-	return tasksModel;
-};
 
 
 async function updateColumn(data){
@@ -173,22 +167,28 @@ async function findTaskByColumnIdAndName(columnId, taskName){
 	return results[0];
 }
 
-async function findAllBoardColumnAndTasksByBoardId(boardId){
-	const [results,metadata] = await sequelize.query(`
-	select b.name boardName, c.name colName, t.name taskName, cs.name columnStatus
-	from board b
-	join Column c on b.board_id = c.board_id
-	join Column_track ct on c.column_id = ct.column_id
-	join Tasks t on ct.column_track_id = t.column_track_id
-	join Column_status cs on ct.column_status_id = cs.column_status_id
-	where b.board_id = ${boardId};`
+async function findAllBoardColumnsByBoardId(boardId){
+	const results = await sequelize.query(
+	"SELECT c.name colName, ct.column_track_id columnTrackId "+
+	"FROM Board b "+
+	"JOIN Column c on b.board_id = c.board_id "+
+	"JOIN Column_track ct on c.column_id = ct.column_id "+
+	"WHERE b.board_id = :boardId; ",
+	 { replacements: { boardId: boardId },type: Sequelize.SELECT }
 	);
 	return results;
 }
 
-async function findTasksByColumnIdAndName(columnId,columnName,messageEmbed){
-	const [results, metadata] = await sequelize.query("SELECT * FROM Tasks JOIN Column_track ON Tasks.column_track_id = Column_track.column_track_id WHERE Column_track.column_id = " + columnId);
-	return results[0];
+async function findTasksByColumnTrackId(columnTrackId){
+	const results = await sequelize.query(
+		"SELECT t.name taskName, cs.name colStatus"+
+		" FROM Tasks t"+
+		" JOIN Column_track ct on ct.column_track_id = t.column_track_id"+
+		" JOIN Column_status cs on ct.column_status_id = cs.column_status_id"+
+		" WHERE t.column_track_id = :columnTrackId; ",
+		{ replacements: { columnTrackId: columnTrackId },type: Sequelize.SELECT }
+	);
+	return results;
 }
 
 async function updateTask(data){
@@ -221,5 +221,5 @@ module.exports = {
 	updateTask,
 	findColumnTrackIdByColumnId,
 	findTasksByColumnTrackId,
-	findTasksByColumnIdAndName
+	findAllBoardColumnsByBoardId
 }; //only export function calls

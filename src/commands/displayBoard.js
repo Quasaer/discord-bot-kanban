@@ -1,43 +1,51 @@
 let dbCmd  = require('../dbCommands.js');
-const Discord = require('discord.js');
+const embed = {
+	color: 0x0099ff,
+	title: '',
+	url: 'https://discord.js.org',
+	description: 'Columns and Tasks',
+	thumbnail: {
+		url: 'https://i.dlpng.com/static/png/6905682_preview.png',
+	},
+	fields: [],
+};
 module.exports = {
 	name: 'displayboard',
 	description: 'displayboard <board name>',
 	execute(message, args) {
         let boardName = args[0];
-        // find board by name
-        // super join // order by column order number
-		dbCmd.findBoardByName(boardName).then((boardModel) =>{
-            let boardId = boardModel.board_id;
-            // find all columns by board id
-            dbCmd.findAllColumnNamesByBoardId(boardId).then((columnModel) =>{
-                var arrayColumnModel = columnModel;
-                const boardEmbed = new Discord.MessageEmbed();
-                // set attributes for message embed
-                boardEmbed.setColor('#0099ff');
-                boardEmbed.setTitle(boardModel.name);
-                boardEmbed.setDescription('Columns and Tasks');
-                boardEmbed.setThumbnail('https://i.dlpng.com/static/png/6905682_preview.png');
-                for(var x = 0; x < arrayColumnModel.length; x++){
-                    var columnObj = arrayColumnModel[x];
-                    // not the correct way of passing values, but mainly struggling with the scope of working within the dbCmbs for some reason.
-                    dbCmd.findTasksByColumnIdAndName(columnObj.column_id,columnObj.name,boardEmbed).then((taskModel) =>{ 
-                        var boardColumns = { name: '', value:'', inline: true };
-                        boardColumns.name  = 'columnObj.name';
-                        var taskValues = '';
-                        // go through each task
-                        for(var i = 0; i < taskModel.length; i++){
-                            var taskObj = taskModel[i];
-                            taskValues = 'Task Name\n';//taskValues.concat(taskObj.name);
+        embed.title = boardName;
+		dbCmd.findBoardByName(boardName).then((board) =>{
+            // console.log(board.board_id);
+            const data = dbCmd.findAllBoardColumnsByBoardId(board.board_id);
+            data.then((result) => {
+                let taskStringBuilder = [];
+                let field = {}
+                result[0].forEach((column, index)=> {
+                    //Fetch all tasks by 
+                    const tasks = dbCmd.findTasksByColumnTrackId(column.columnTrackId);
+                    tasks.then((taskResult) =>{
+                        if(index == 0 || index !=0 && result[0][index - 1].colName != column.colName ){
+                            field = {};
+                            field['name'] = column.colName;
+                            taskStringBuilder = []
                         }
-                        boardColumns.value = taskValues;
-                        boardEmbed.addField(boardColumns);
+                        taskResult[0].forEach(task => {
+                            taskStringBuilder.push(`${task.taskName} - Status:  ${task.colStatus}  \n `)
+                        });
+                        if(index !=0 && result[0][index - 1].colName == column.colName ){
+                            field['value'] = taskStringBuilder.join("");
+                            embed['fields'].push(field);
+                        }
+                    }).finally(() => {
+                        message.channel.send({ embed: embed });
                     });
-                }
-                boardEmbed.setTimestamp();
-                boardEmbed.setFooter('Kanban Discord Bot');
-                message.channel.send(boardEmbed);
+                });
+            }).catch(err => {
+                console.log(err);
             });
-		});
+
+
+        });
 	},
 };

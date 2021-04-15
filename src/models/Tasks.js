@@ -15,11 +15,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-
-        task_assignment_id: {
-            type: DataTypes.INTEGER,
-        },
-
         description: {
             type: DataTypes.STRING,
             allowNull: false,
