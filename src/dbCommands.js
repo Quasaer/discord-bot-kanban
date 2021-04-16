@@ -1,4 +1,5 @@
 const { User } = require("discord.js");
+const { col } = require("sequelize");
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize("database", "username", "password", {
@@ -228,14 +229,6 @@ async function assignTask(data) {
   return assignTaskToUsers;
 }
 
-//find task id
-async function findTaskId(taskId) {
-  const foundTaskId = await Board.findOne({
-    where: { task_id: taskId },
-  });
-  return foundTaskId;
-}
-
 module.exports = {
   createUser,
   findUser,
@@ -260,5 +253,4 @@ module.exports = {
   findColumnTrackByTaskTrackId,
   findMinColumnTrackId,
   assignTask,
-  findTaskId,
 }; //only export function calls
