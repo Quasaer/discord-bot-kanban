@@ -15,20 +15,12 @@ const sequelize = new Sequelize("database", "username", "password", {
 const Users = require("./models/Users")(sequelize, Sequelize.DataTypes);
 const Board = require("./models/Board")(sequelize, Sequelize.DataTypes);
 const Tasks = require("./models/Tasks")(sequelize, Sequelize.DataTypes);
-const ColumnStatus = require("./models/Column_Status")(
-  sequelize,
-  Sequelize.DataTypes
-);
-const ColumnTrack = require("./models/Column_Track")(
-  sequelize,
-  Sequelize.DataTypes
-);
+const ColumnStatus = require("./models/Column_Status")(sequelize, Sequelize.DataTypes);
+const ColumnTrack = require("./models/Column_Track")(sequelize, Sequelize.DataTypes);
 const Column = require("./models/Column")(sequelize, Sequelize.DataTypes);
 const Config = require("./models/Config")(sequelize, Sequelize.DataTypes);
-const Task_Assignment = require("./models/Task_Assignment")(
-  sequelize,
-  Sequelize.DataTypes
-);
+const Task_Assignment = require("./models/Task_Assignment")(sequelize,Sequelize.DataTypes);
+
 // global scope
 async function createUser(username) { //function to add user
 	const created_at = Math.floor(+new Date() / 1000); //calculates date as integer
@@ -185,6 +177,7 @@ async function updateTask(data){
 		console.log(error);
 	});
 };
+
 async function countBoardColumns(boardId) {
 	const columnCount = Column.count({
 		where: { board_id: boardId }
@@ -192,22 +185,32 @@ async function countBoardColumns(boardId) {
 	return columnCount;
 }
 
-module.exports = { 
-	createUser,
-	findUser,
-	createConfig,
-	findConfigByServerId,
-	findBoardByName,
-	createBoard,
-	createColumn,
-	createColumnTrackRecord,
-	findAllColumnStatus,
-	updateBoard,
-	findColumnNameByBoardIdAndName,
-	updateColumn,
-	getFormattedDate,
-	updateConfig,
-	findTaskByColumnIdAndName,
-	updateTask,
+//task
+async function createTask(data) {
+  data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
+  const task = await Tasks.create(data).catch((error) => {
+    console.log(error);
+  });
+  return task;
+}
+
+module.exports = {
+  createUser,
+  findUser,
+  createConfig,
+  findConfigByServerId,
+  findBoardByName,
+  createBoard,
+  createColumn,
+  createColumnTrackRecord,
+  findAllColumnStatus,
+  updateBoard,
+  findColumnNameByBoardIdAndName,
+  updateColumn,
+  getFormattedDate,
+  updateConfig,
+  findTaskByColumnIdAndName,
+  updateTask,
   countBoardColumns,
+  createTask,
 }; //only export function calls

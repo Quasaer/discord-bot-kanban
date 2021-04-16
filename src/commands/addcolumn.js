@@ -12,22 +12,9 @@ function confirmation(message, boardNameInput) {
   );
 
   //collects messages from the original message author
-  message.channel
-    .awaitMessages((m) => m.author.id == message.author.id, {
-      max: 1,
-      time: 30000,
-    })
-    .then((collected) => {
+  message.channel.awaitMessages((m) => m.author.id == message.author.id, {max: 1,time: 30000,}).then((collected) => {
       if (collected.first().content.toLowerCase() === "yes") {
-        dbCmd.findBoardByName(boardNameInput).then((val) => {
-          if (!val) {
-            message.channel.send(
-              `${boardNameInput} doesn't exist in the db use \`%createboard\` to create it`
-            );
-          } else {
-            columnConfiguration(message, boardNameInput);
-          }
-        });
+          columnConfiguration(message, boardNameInput);
       } else if (collected.first().content.toLowerCase() === "no") {
         message.channel.send("operation canceled");
       } else {
@@ -45,12 +32,7 @@ function confirmation(message, boardNameInput) {
 //boardNameInput - The name of the board to create a column in.
 function columnConfiguration(message, boardNameInput) {
   message.reply("name a column");
-  message.channel
-    .awaitMessages((m) => m.author.id == message.author.id, {
-      max: 1,
-      time: 30000,
-    })
-    .then((collected) => {
+  message.channel.awaitMessages((m) => m.author.id == message.author.id, {max: 1,time: 30000,}).then((collected) => {
       columnNameInput = collected.first().content.toLowerCase();
       dbCmd.findBoardByName(boardNameInput).then((val) => {
         dbCmd.countBoardColumns(val.board_id).then((columnCount) => {
@@ -62,7 +44,7 @@ function columnConfiguration(message, boardNameInput) {
           data.count++;
         });
       });
-      ColumnConfirmation(message, boardNameInput);
+      columnConfirmation(message, boardNameInput);
     })
     .catch((error) => {
       console.error(error);
@@ -72,27 +54,19 @@ function columnConfiguration(message, boardNameInput) {
 
 //configures the column and adds it to the data array
 //boardNameInput - The name of the board to create a column in.
-function ColumnConfirmation(message, boardNameInput) {
-  message.reply(
-    `Would you like to create another Column in board ${boardNameInput}?\n` +
+function columnConfirmation(message, boardNameInput) {
+  message.reply(`Would you like to create another Column in board ${boardNameInput}?\n` +
       "Confirm with `yes` or deny with `no`.\n" +
       "You have 30 seconds or else board will not be made.\n"
   );
 
-  message.channel
-    .awaitMessages((m) => m.author.id == message.author.id, {
-      max: 1,
-      time: 30000,
-    })
-    .then((collected) => {
+  message.channel.awaitMessages((m) => m.author.id == message.author.id, {max: 1, time: 30000,}).then((collected) => {
       if (collected.first().content.toLowerCase() === "yes") {
         columnConfiguration(message, boardNameInput);
       } else if (collected.first().content.toLowerCase() === "no") {
         populateDatabase(message, boardNameInput);
       } else {
-        message.reply(
-          "That is not a valid response\n" + "Please retype createboard command"
-        );
+        message.reply("That is not a valid response\n" + "Please retype createboard command");
       }
     })
     .catch(() => {
@@ -108,7 +82,6 @@ function populateDatabase(message, boardNameInput) {
   dbCmd.findUser(user).then((userModel) => {
     let userId =  userModel.user_id
     data.columnTrack["created_by_user_id"] = userId;
-    // console.log(data);
     dbCmd.findBoardByName(boardNameInput).then((boardModel) => {
       if (boardModel) {
         //loop through columns and add to db
@@ -117,7 +90,6 @@ function populateDatabase(message, boardNameInput) {
           for (let i = 0; i < Object.keys(data.columns).length; i++) {
             data.columns[i]["created_by_user_id"] = userId;
 						data.columns[i]["board_id"] = boardModel.board_id;
-            console.log(data.columns[i]);
             dbCmd.createColumn(data.columns[i]).then((columnModel) => {
               data.columnTrack["column_id"] = columnModel.column_id;
               for (let j = 0; j < statusModels.length; j++) {
@@ -155,11 +127,17 @@ module.exports = {
     resetData();
 
     if (!boardNameInput) {
-      return message.reply(
-        "you need to name a board!\n" + "example: %addcolumn <board name>"
-      );
+      return message.reply("you need to name a board!\n" + "example: %addcolumn <board name>");
     } else {
-      confirmation(message, boardNameInput);
-    }
+      dbCmd.findBoardByName(boardNameInput).then((val) => {
+        if (!val) {
+          message.channel.send(`${boardNameInput} doesn't exist in the db use \`%createboard\` to create it`);
+        } else {
+          confirmation(message, boardNameInput);
+        }
+      });
+		}
   },
 };
+
+

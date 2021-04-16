@@ -221,9 +221,7 @@ function populateDatabase(message){
 				message.channel.send(`Error Occured`);
 			}
 		});
-	});
-
-	
+	});	
 }
 function resetData(){
 	data = {
