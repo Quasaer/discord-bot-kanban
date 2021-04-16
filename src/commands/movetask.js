@@ -2,7 +2,7 @@ let dbCmd  = require('../dbCommands.js');
 let data = {};
 
 function updateTaskColumnTrackIdConfirmation(message){
-    message.reply(`Would you like to update ${data.task["name"]} From active to Done?\n`
+    message.reply(`Would you like to update ${data.task["name"]} to the next column?\n`
                 + 'type `yes` to confirm or `no` to cancel.\n'
                 + 'You have 30 seconds or else task will not be made.\n');
 

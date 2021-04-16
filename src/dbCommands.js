@@ -217,6 +217,14 @@ async function createTask(data) {
   return task;
 }
 
+async function findMinColumnTrackId(columnId){
+	const foundColumnId = await ColumnTrack.min(
+		'column_track_id', 
+		{where:{ column_id: columnId }}
+	)
+	return foundColumnId;
+}
+
 module.exports = {
   createUser,
   findUser,
@@ -239,4 +247,5 @@ module.exports = {
 	findMaxColumnTrackId,
 	findMaxColumnId,
 	findColumnTrackByTaskTrackId,
+  findMinColumnTrackId,
 }; //only export function calls
