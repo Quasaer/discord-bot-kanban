@@ -29,11 +29,18 @@ module.exports = {
                             field['name'] = column.colName;
                             taskStringBuilder = []
                         }
-                        taskResult[0].forEach(task => {
-                            taskStringBuilder.push(`${task.taskName} - Status:  ${task.colStatus}  \n `)
-                        });
+                        if(taskResult[0].length > 0){
+                            taskResult[0].forEach(task => {
+                                taskStringBuilder.push(`${task.taskName} - Status:  ${task.colStatus}  \n `)
+                            });
+                        }
                         if(index !=0 && result[0][index - 1].colName == column.colName ){
-                            field['value'] = taskStringBuilder.join("");
+                            //check that the string builder is not empty
+                            if(taskStringBuilder.length != 0){
+                                field['value'] = taskStringBuilder.join("");
+                            }else{
+                                field['value'] = 'No Tasks';
+                            }
                             field['inline'] = true;
                             embed['fields'].push(field);
                         }
@@ -43,6 +50,7 @@ module.exports = {
                         if(embed.fields.length == result[0].length / 2){
                             message.channel.send({ embed: embed });
                         }
+                        // console.log(embed);
                     });
                 });
             }).catch(err => {
