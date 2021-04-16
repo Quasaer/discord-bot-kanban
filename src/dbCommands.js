@@ -178,6 +178,29 @@ async function updateTask(data){
 	});
 };
 
+async function findMaxColumnTrackId(columnId){
+	const foundColumnId = await ColumnTrack.max(
+		'column_track_id', 
+		{where:{ column_id: columnId }}
+	)
+	return foundColumnId;
+}
+
+async function findMaxColumnId(boardId){
+	const foundColumnId = await Column.max(
+		'column_id', 
+		{where:{ board_id: boardId }}
+	)
+	return foundColumnId;
+}
+
+async function findColumnTrackByTaskTrackId(trackId) { //function to find server id
+	const columnTrackModel = await ColumnTrack.findOne({
+		where: { column_track_id: trackId }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnTrackModel;
+};
+
 async function countBoardColumns(boardId) {
 	const columnCount = Column.count({
 		where: { board_id: boardId }
@@ -213,4 +236,7 @@ module.exports = {
   updateTask,
   countBoardColumns,
   createTask,
+	findMaxColumnTrackId,
+	findMaxColumnId,
+	findColumnTrackByTaskTrackId,
 }; //only export function calls

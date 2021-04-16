@@ -112,7 +112,7 @@ function updateDatabase(message){
 }
 
 //clear data
-function clearData() {
+function setData() {
 	data = {
 		board:{
 			name:'',
@@ -130,7 +130,7 @@ module.exports = {
 	count: 7,
 	execute(message, args) {
         let nameInput = args[0];
-		clearData();
+		setData();
 		
 		if (!nameInput) {
 			return message.reply('you need to name a board!\n'
