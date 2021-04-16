@@ -50,14 +50,13 @@ module.exports = {
                         if(embed.fields.length == result[0].length / 2){
                             message.channel.send({ embed: embed });
                         }
-                        // console.log(embed);
                     });
                 });
             }).catch(err => {
                 console.log(err);
             });
-
-
+        }).catch(() =>{
+            return message.channel.send(`Invalid board name.`);
         });
 	},
 };
