@@ -1,4 +1,4 @@
-let dbCmd  = require('../dbCommands.js');
+let dbCmd = require("../dbCommands.js");
 module.exports = {
 	name: 'createuser',
 	description: 'create <variable> <name>',

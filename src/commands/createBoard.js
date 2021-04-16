@@ -221,11 +221,9 @@ function populateDatabase(message){
 				message.channel.send(`Error Occured`);
 			}
 		});
-	});
-
-	
+	});	
 }
-function resetData(){
+function setData(){
 	data = {
 		board:{},
 		columnStartCount:1,
@@ -253,7 +251,7 @@ module.exports = {
 	execute(message, args) {
         let nameInput = args[0];
 
-		resetData()
+		setData();
 		
 		if (!nameInput) {
 			return message.reply('you need to name a board!\n'
