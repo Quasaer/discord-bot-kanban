@@ -62,6 +62,7 @@ async function findBoardByName(boardName) {
   return foundBoardByName;
 }
 
+
 //column status
 async function findAllColumnStatus() {
   const allStatus = await ColumnStatus.findAll({
@@ -225,6 +226,23 @@ async function findMinColumnTrackId(columnId){
 	return foundColumnId;
 }
 
+//assignTask
+async function assignTask(data) {
+  data["created_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
+  const assignTaskToUsers = await Task_Assignment.create(data).catch((error) => {
+    console.log(error);
+  });
+  return assignTaskToUsers;
+}
+
+//find task id
+async function findTaskId(taskId) {
+  const foundTaskId = await Board.findOne({
+    where: { task_id: taskId },
+  });
+  return foundTaskId;
+}
+
 module.exports = {
   createUser,
   findUser,
@@ -244,8 +262,10 @@ module.exports = {
   updateTask,
   countBoardColumns,
   createTask,
-	findMaxColumnTrackId,
-	findMaxColumnId,
-	findColumnTrackByTaskTrackId,
+  findMaxColumnTrackId,
+  findMaxColumnId,
+  findColumnTrackByTaskTrackId,
   findMinColumnTrackId,
+  assignTask,
+  findTaskId,
 }; //only export function calls

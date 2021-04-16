@@ -87,7 +87,7 @@ function finalConfirmation(message){
 function populateDatabase(message) {  
   // console.log(data.task)
   dbCmd.createTask(data.task).then(() => {
-    message.reply(`changes have been successfully made for the column`);
+    message.reply(`changes have been successfully made for the task`);
   });
 }
 
