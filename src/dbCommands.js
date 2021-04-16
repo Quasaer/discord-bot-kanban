@@ -37,13 +37,6 @@ async function findUser(username) { //function to find user
 	return foundUser;
 };
 
-async function findUser(username) {
-  //function to find user
-  const foundUser = await Users.findOne({
-    where: { discord_username: username }, //attempts to match username paramter (target.tag) to column name discord_username
-  });
-  return foundUser;
-}
 
 //boards
 async function createBoard(data) {
