@@ -16,7 +16,6 @@ module.exports = {
         let boardName = args[0];
         embed.title = boardName;
 		dbCmd.findBoardByName(boardName).then((board) =>{
-            // console.log(board.board_id);
             const data = dbCmd.findAllBoardColumnsByBoardId(board.board_id);
             data.then((result) => {
                 let taskStringBuilder = [];
@@ -35,10 +34,15 @@ module.exports = {
                         });
                         if(index !=0 && result[0][index - 1].colName == column.colName ){
                             field['value'] = taskStringBuilder.join("");
+                            field['inline'] = true;
                             embed['fields'].push(field);
                         }
                     }).finally(() => {
-                        message.channel.send({ embed: embed });
+                        //Only send embed message when the field (column) count matches the number of columns taken from db
+                        //Divide the result by 2 because of duplicates
+                        if(embed.fields.length == result[0].length / 2){
+                            message.channel.send({ embed: embed });
+                        }
                     });
                 });
             }).catch(err => {
