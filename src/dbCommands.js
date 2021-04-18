@@ -185,7 +185,7 @@ async function findAllBoardColumnsByBoardId(boardId){
 	"JOIN Column c on b.board_id = c.board_id "+
 	"JOIN Column_track ct on c.column_id = ct.column_id "+
 	"WHERE b.board_id = :boardId; ",
-	 { replacements: { boardId: boardId },type: Sequelize.SELECT }
+	{ replacements: { boardId: boardId },type: Sequelize.SELECT }
 	);
 	return results;
 }
@@ -277,6 +277,47 @@ async function findTaskId(taskId) {
   return foundTaskId;
 }
 
+async function deleteBoard(boardId) {
+  await Board.destroy({ where: { board_id: boardId }});
+}
+
+async function findAllColumnTracksByColumnId(columnId) {
+	const columnTrackModel = await ColumnTrack.findAll({
+		where: { column_id: columnId },
+	});
+	return columnTrackModel;
+};
+
+async function findAllTasksByColumnTrackId(columnTrackId) {
+	const TasksModel = await Tasks.findAll({
+		where: { column_track_id: columnTrackId },
+	});
+	return TasksModel;
+};
+
+async function findAllTaskAssignmentsByTaskId(taskId) {
+	const TaskAssignmentModel = await Task_Assignment.findAll({
+		where: { task_id: taskId },
+	});
+	return TaskAssignmentModel;
+};
+
+async function deleteTaskAssignment(taskAssignmentId) {
+  await Task_Assignment.destroy({ where: { task_assignment_id: taskAssignmentId }});
+}
+
+// async function deleteBoard(boardId) {
+//   await Board.destroy({ where: { board_id: boardId }});
+// }
+
+// async function deleteBoard(boardId) {
+//   await Board.destroy({ where: { board_id: boardId }});
+// }
+
+// async function deleteBoard(boardId) {
+//   await Board.destroy({ where: { board_id: boardId }});
+// }
+
 module.exports = {
   createUser,
   findUser,
@@ -305,5 +346,10 @@ module.exports = {
   findAllColumnNamesByBoardId,
 	findColumnTrackIdByColumnId,
 	findTasksByColumnTrackId,
-	findAllBoardColumnsByBoardId
+	findAllBoardColumnsByBoardId,
+  deleteBoard,
+  findAllColumnTracksByColumnId,
+  findAllTasksByColumnTrackId,
+  findAllTaskAssignmentsByTaskId,
+  deleteTaskAssignment,
 }; 
