@@ -165,6 +165,9 @@ function getFormattedDate(dateInput){
 		let year = date.getFullYear();
 		let month = date.getMonth();
 		month += 1;
+    if (month < 10){
+      month = `0${month}`;
+    }
 		let day = date.getDate();
 
 		formattedDate = year + '-' + month + '-' + day; 
