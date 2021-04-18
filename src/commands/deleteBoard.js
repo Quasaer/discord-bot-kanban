@@ -1,6 +1,5 @@
 let dbCmd  = require('../dbCommands.js');
 let data = {};
-
 function finalConfirmation(message){
 	message.reply(`Changes Successfully made\n`
 			+ 'Would you like to continue with these settings?\n'
@@ -25,27 +24,31 @@ function finalConfirmation(message){
 
 //update database
 function updateDatabase(message){
-    // console.log(data.taskAssignment[0]);
+	// data.task.push(5);
+    console.log(data);
 
-    if(data.taskAssignmentCount !== 0){
-        for (let i = 0; i < data.taskAssignmentCount; i++) {
-            dbCmd.deleteTaskAssignment(data.taskAssignment[i]);
-        }
-    }
+    // if(data.taskAssignmentCount !== 0){
 
-    // dbCmd.deleteBoard(data.board["board_id"]).then(() =>{
-	// 	message.reply(`changes have been successfully made to your task}`);
-	// });
+	dbCmd.deleteTaskAssignment(data.taskAssignment).then(()=>{
+		dbCmd.deleteTasks(data.task).then(()=>{
+			dbCmd.deleteColumnTrack(data.columnTrack).then(()=>{
+				dbCmd.deleteColumns(data.columns).then(()=>{
+					dbCmd.deleteBoard(data.board).then(()=>{
+						message.reply('Your board has successfully been deleted.');
+					});
+				});
+			});
+		});
+	});
 }
 
 function setData() {
 	data = {
-		board:{},
-        columns:{},
-        columnTrack:{},
-        task:{},
-        taskAssignment:{},
-        taskAssignmentCount:0,
+		board:[],
+        columns:[],
+        columnTrack:[],
+        task:[],
+        taskAssignment:[],
 	};
 }
 module.exports = {
@@ -60,44 +63,31 @@ module.exports = {
 			return message.reply('you need to name a board!\n'
 			+ 'example: %editboard <board name>');
 		} else {
-			/*
-				check board exists, if it does we can populate the data array return board model
-				data.baord.startdate = boardmodel.
-				data.board.deadline= boardmodel.
-				else
-			*/
-			// const user = message.author.tag;
-			// dbCmd.findUser(user).then((userModel) =>{
-			// 	data.board.updatedFields["updated_by_user_id"] = userModel.user_id;
-			// });
 			dbCmd.findBoardByName(nameInput).then((boardModel) =>{
 				if(boardModel !== null){
-					data.board["board_id"] = boardModel.board_id;
-                        dbCmd.findAllColumnNamesByBoardId(data.board["board_id"]).then((columnModels) => {					
+					data.board.push(boardModel.board_id);
+                        dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {					
                             
                             for (let i = 0; i < columnModels.length; i++) {
                                 // console.log(columnModels[i]);
                                 // console.log(columnModels[i].column_id);
-                                data.columns[i] = columnModels[i].column_id;
+                                data.columns.push(columnModels[i].column_id);
                                 dbCmd.findAllColumnTracksByColumnId(columnModels[i].column_id).then((columnTrackModels)=>{
-                                    for (let i = 0; i < columnTrackModels.length; i++) {
-                                        data.columnTrack[i] = columnTrackModels[i].column_track_id;
-                                        dbCmd.findAllTasksByColumnTrackId(columnTrackModels[i].column_track_id).then((taskModels)=>{
-                                            for (let i = 0; i < taskModels.length; i++) {
-                                                if (taskModels[i].length !== 0){
-                                                    for (let i = 0; i < taskModels.length; i++) {
-                                                        data.task[i] = taskModels[i].task_id;
-                                                        dbCmd.findAllTaskAssignmentsByTaskId(taskModels[i].task_id).then((taskAssignmentsModels)=>{
-                                                            if (taskAssignmentsModels !== undefined || taskAssignmentsModels[i].length !== 0){
-                                                                for (let i = 0; i < taskAssignmentsModels.length; i++) {
-                                                                    data.taskAssignment[i] = taskAssignmentsModels[i].task_assignment_id;
-                                                                    data.taskAssignmentCount ++;
-                                                                };
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            }
+                                    for (let j = 0; j < columnTrackModels.length; j++) {
+										data.columnTrack.push(columnTrackModels[j].column_track_id);
+                                        dbCmd.findAllTasksByColumnTrackId(columnTrackModels[j].column_track_id).then((taskModels)=>{
+											if (taskModels.length !== 0){
+												for (let m = 0; m < taskModels.length; m++) {
+													data.task.push(taskModels[m].task_id);
+													dbCmd.findAllTaskAssignmentsByTaskId(taskModels[m].task_id).then((taskAssignmentsModels)=>{
+														if (taskAssignmentsModels !== undefined || taskAssignmentsModels[0].length !== 0){
+															for (let n = 0; n < taskAssignmentsModels.length; n++) {
+																data.taskAssignment.push(taskAssignmentsModels[n].task_assignment_id);
+															};
+														}
+													});
+												}
+											}
                                         });
                                     }
                                 });

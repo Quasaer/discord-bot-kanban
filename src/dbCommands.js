@@ -277,9 +277,7 @@ async function findTaskId(taskId) {
   return foundTaskId;
 }
 
-async function deleteBoard(boardId) {
-  await Board.destroy({ where: { board_id: boardId }});
-}
+
 
 async function findAllColumnTracksByColumnId(columnId) {
 	const columnTrackModel = await ColumnTrack.findAll({
@@ -303,20 +301,34 @@ async function findAllTaskAssignmentsByTaskId(taskId) {
 };
 
 async function deleteTaskAssignment(taskAssignmentId) {
-  await Task_Assignment.destroy({ where: { task_assignment_id: taskAssignmentId }});
+  if(taskAssignmentId.length !== 0){
+    await Task_Assignment.destroy({ where: { task_assignment_id: taskAssignmentId }});
+  }
 }
 
-// async function deleteBoard(boardId) {
-//   await Board.destroy({ where: { board_id: boardId }});
-// }
+async function deleteTasks(taskId) {
+  if(taskId.length !== 0){
+    await Tasks.destroy({ where: { task_id: taskId }});
+  }
+}
 
-// async function deleteBoard(boardId) {
-//   await Board.destroy({ where: { board_id: boardId }});
-// }
+async function deleteColumnTrack(columnTrackId) {
+  if(columnTrackId.length !== 0){
+    await ColumnTrack.destroy({ where: { column_track_id: columnTrackId }});
+  }
+}
 
-// async function deleteBoard(boardId) {
-//   await Board.destroy({ where: { board_id: boardId }});
-// }
+async function deleteColumns(columnId) {
+  if(columnId.length !== 0){
+    await Column.destroy({ where: { column_id: columnId }});
+  }
+}
+
+async function deleteBoard(boardId) {
+  if(boardId.length !== 0){
+    await Board.destroy({ where: { board_id: boardId }});
+  }
+}
 
 module.exports = {
   createUser,
@@ -352,4 +364,7 @@ module.exports = {
   findAllTasksByColumnTrackId,
   findAllTaskAssignmentsByTaskId,
   deleteTaskAssignment,
+  deleteTasks,
+  deleteColumnTrack,
+  deleteColumns,
 }; 
