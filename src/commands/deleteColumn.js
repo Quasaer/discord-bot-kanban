@@ -76,8 +76,6 @@ module.exports = {
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
 					data.board.push(boardModel.board_id);
-
-
                         dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {		
 							let columnOrderNumberCheck = false;	
 							let columnOrderNumberIndex = 0;		
