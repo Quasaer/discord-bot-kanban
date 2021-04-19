@@ -1,43 +1,34 @@
-//asking user if they want to add a task limit to a column
-function taskLimitOption(message){
-	message.reply('Would you like to add a task limit to your column?\n'
-				+ 'Confirm with `yes` or deny with `no`.\n'
-				+ 'You have 30 seconds or else Task will not be made.\n');
-
-	message.channel.awaitMessages(m => m.author.id == message.author.id,{max: 1, time: 30000}).then(collected => {
-
-		if (collected.first().content.toLowerCase() === 'yes') {
-			taskLimit(message);
-		} else if(collected.first().content.toLowerCase() === 'no') {
-			taskName(message);
-		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype addtask command');
-		}     
-	}).catch(() => {
-				message.reply('No answer after 30 seconds, operation canceled.');
-	});
-};
-
-// task limit
-function taskLimit(message){
-  message.channel.send(`Enter a task limit for the column`);
-  message.channel.awaitMessages(m => {
-      if(m.author.id != message.author.id)
-          return false
-      if (isNaN(m.content)){
-          message.channel.send("This is not a valid response. Enter a number below.");
-          return false
-      }
-      return true
-  },{max: 1, time: 30000}).then(collected => {
-      taskLimitInput = collected.first().content;
-      if(!taskLimitInput)
-          return message.channel.send('Time ran out. Canceled!')
-
-      let taskLimitForColumn = Number(taskLimitInput.content)//here you have string parsed as a number if you need to
-      taskName(message);
-  }).catch(() => {
-      message.reply('No answer after 30 seconds, operation canceled.');
-  });
+let dbCmd  = require('../dbCommands.js');
+let data = {
+	updatedFields:{
+		task_limit:''
+	},
+	updateCondition:{
+        name:'' // column name
+	}
+};  
+module.exports = {
+	name: 'settasklimit',
+	description: 'settasklimit <board name> <column name> <number>',
+	execute(message, args) {
+        let boardName = args[0];
+        dbCmd.findBoardByName(boardName).then((board) =>{
+            if(board != null && board.name == boardName){
+                let columnName = args[1];
+                dbCmd.findColumnNameByBoardIdAndName(board.board_id,columnName).then((column) => {
+                    let limitNumber = parseInt(args[2]);
+                    if(Number.isInteger(limitNumber) == true && column.name == columnName){
+                        data.updateCondition.name = columnName;
+                        data.updatedFields.task_limit = limitNumber;
+                        dbCmd.updateColumn(data);
+                        message.channel.send(`The Task Limit has been updated!`);
+                    } else{
+                        message.channel.send(`Invaild data entry.`);
+                    }
+                });
+            } else{
+                message.channel.send(`Not board of that name found.`);
+            }
+        });
+	},
 };
