@@ -25,7 +25,7 @@ module.exports = {
                     if(Number.isInteger(limitNumber) == true && column.name == columnName){
                         data.updateCondition.name = columnName;
                         data.updatedFields.task_limit = limitNumber;
-                        // set data object with values, then pass values to updateColumn record
+                        // set data object with values, then pass values to updateColumn command
                         dbCmd.updateColumn(data);
                         message.channel.send(`The Task Limit has been updated!`);
                     } else{
