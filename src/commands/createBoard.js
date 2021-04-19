@@ -121,13 +121,15 @@ function handleStartDateInput(message){ //gets input for start date
 	message.reply('add Start date (YYYY-MM-DD)');
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
-		startDateInput = Date.parse(collected.first().content.toLowerCase());
-		if ( startDateInput !== 'NaN') {
+		let startDateInput = Date.parse(collected.first().content.toLowerCase());
+		let formattedDate = dbCmd.getFormattedDate(startDateInput);
+		if ( collected.first().content.toLowerCase() === formattedDate) {
 			data.board["start_date_time_stamp"] = startDateInput;
 			handleDeadlineDate(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype createboard command');
+			message.reply('That is not a valid response, or is not a vlid date\n'
+			+ 'Please check and retype date');
+			handleStartDateInput(message);
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -160,12 +162,14 @@ function handleDeadlineDateInput(message){ //gets input for deadline date
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
 		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase());
-		if ( deadlineDateInput !== 'NaN') {
+		let formattedDate = dbCmd.getFormattedDate(deadlineDateInput);
+		if ( collected.first().content.toLowerCase() === formattedDate) {
 			data.board["end_date_time_stamp"] = deadlineDateInput;
 			finalConfirmation(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype createboard command');
+			message.reply('That is not a valid response, or a valid date\n'
+			+ 'Please cehck and retype date.');
+			handleDeadlineDateInput(message);
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -187,10 +191,11 @@ function finalConfirmation(message){
 			boardConfigs(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype createboard command');
+			+ 'Please re enter confirmation');
+			finalConfirmation(message);
 		}     
 	}).catch(() => {
-				message.reply('No answer after 30 seconds, operation canceled.');
+		message.reply('No answer after 30 seconds, operation canceled.');
 	});
 }
 

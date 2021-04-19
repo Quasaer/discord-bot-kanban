@@ -120,13 +120,29 @@ async function updateBoard(data) {
   );
 }
 
-async function findColumnNameByBoardIdAndName(boardId, columnName) {
-  //function to find server id
-  const columnModel = await Column.findOne({
-    where: { name: columnName, board_id: boardId }, //attempts to match server id in db to the server id of the current message
-  });
-  return columnModel;
-}
+async function findColumnNameByBoardIdAndName(boardId, columnName) { //function to find server id
+	const columnModel = await Column.findOne({
+		where: { name: columnName, board_id: boardId }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnModel;
+};
+// temp version, gonna need a more efficent way but would like to focus on the implementation first
+async function findAllColumnNamesByBoardId(boardId) {
+	const columnModel = await Column.findAll({
+		where: { board_id: boardId },
+	});
+	return columnModel;
+};
+
+async function findColumnTrackIdByColumnId(ColumnId) {
+	const columnTrackModel = await ColumnTrack.findAll({
+		where: { column_id: ColumnId },
+	});
+	return columnTrackModel;
+};
+
+
+
 
 async function updateColumn(data) {
   data.updatedFields["updated_at_date_time_stamp"] = Math.floor(
@@ -150,6 +166,9 @@ function getFormattedDate(dateInput){
 		let year = date.getFullYear();
 		let month = date.getMonth();
 		month += 1;
+    if (month < 10){
+      month = `0${month}`;
+    }
 		let day = date.getDate();
 
 		formattedDate = year + '-' + month + '-' + day; 
@@ -163,6 +182,30 @@ async function findTaskByColumnIdAndName(columnId, taskName){
 	return results[0];
 }
 
+async function findAllBoardColumnsByBoardId(boardId){
+	const results = await sequelize.query(
+	"SELECT c.name colName, ct.column_track_id columnTrackId "+
+	"FROM Board b "+
+	"JOIN Column c on b.board_id = c.board_id "+
+	"JOIN Column_track ct on c.column_id = ct.column_id "+
+	"WHERE b.board_id = :boardId; ",
+	{ replacements: { boardId: boardId },type: Sequelize.SELECT }
+	);
+	return results;
+}
+
+async function findTasksByColumnTrackId(columnTrackId){
+	const results = await sequelize.query(
+		"SELECT t.name taskName, cs.name colStatus"+
+		" FROM Tasks t"+
+		" JOIN Column_track ct on ct.column_track_id = t.column_track_id"+
+		" JOIN Column_status cs on ct.column_status_id = cs.column_status_id"+
+		" WHERE t.column_track_id = :columnTrackId; ",
+		{ replacements: { columnTrackId: columnTrackId },type: Sequelize.SELECT }
+	);
+	return results;
+}
+
 async function updateTask(data){
 	data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
 	await Tasks.update(
@@ -172,6 +215,7 @@ async function updateTask(data){
 		console.log(error);
 	});
 };
+
 
 async function findMaxColumnTrackId(columnId){
 	const foundColumnId = await ColumnTrack.max(
@@ -229,6 +273,67 @@ async function assignTask(data) {
   return assignTaskToUsers;
 }
 
+//find task id
+async function findTaskId(taskId) {
+  const foundTaskId = await Board.findOne({
+    where: { task_id: taskId },
+  });
+  return foundTaskId;
+}
+
+
+
+async function findAllColumnTracksByColumnId(columnId) {
+	const columnTrackModel = await ColumnTrack.findAll({
+		where: { column_id: columnId },
+	});
+	return columnTrackModel;
+};
+
+async function findAllTasksByColumnTrackId(columnTrackId) {
+	const TasksModel = await Tasks.findAll({
+		where: { column_track_id: columnTrackId },
+	});
+	return TasksModel;
+};
+
+async function findAllTaskAssignmentsByTaskId(taskId) {
+	const TaskAssignmentModel = await Task_Assignment.findAll({
+		where: { task_id: taskId },
+	});
+	return TaskAssignmentModel;
+};
+
+async function deleteTaskAssignment(taskAssignmentId) {
+  if(taskAssignmentId.length !== 0){
+    await Task_Assignment.destroy({ where: { task_assignment_id: taskAssignmentId }});
+  }
+}
+
+async function deleteTasks(taskId) {
+  if(taskId.length !== 0){
+    await Tasks.destroy({ where: { task_id: taskId }});
+  }
+}
+
+async function deleteColumnTrack(columnTrackId) {
+  if(columnTrackId.length !== 0){
+    await ColumnTrack.destroy({ where: { column_track_id: columnTrackId }});
+  }
+}
+
+async function deleteColumns(columnId) {
+  if(columnId.length !== 0){
+    await Column.destroy({ where: { column_id: columnId }});
+  }
+}
+
+async function deleteBoard(boardId) {
+  if(boardId.length !== 0){
+    await Board.destroy({ where: { board_id: boardId }});
+  }
+}
+
 module.exports = {
   createUser,
   findUser,
@@ -252,5 +357,18 @@ module.exports = {
   findMaxColumnId,
   findColumnTrackByTaskTrackId,
   findMinColumnTrackId,
+  findTaskId,
+  findAllColumnNamesByBoardId,
+	findColumnTrackIdByColumnId,
+	findTasksByColumnTrackId,
+	findAllBoardColumnsByBoardId,
+  deleteBoard,
+  findAllColumnTracksByColumnId,
+  findAllTasksByColumnTrackId,
+  findAllTaskAssignmentsByTaskId,
+  deleteTaskAssignment,
+  deleteTasks,
+  deleteColumnTrack,
+  deleteColumns,
   assignTask,
-}; //only export function calls
+}; 
