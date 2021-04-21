@@ -1,4 +1,5 @@
 const { User } = require("discord.js");
+const { col } = require("sequelize");
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize("database", "username", "password", {
@@ -354,7 +355,6 @@ module.exports = {
   findMaxColumnId,
   findColumnTrackByTaskTrackId,
   findMinColumnTrackId,
-  assignTask,
   findTaskId,
   findAllColumnNamesByBoardId,
 	findColumnTrackIdByColumnId,
@@ -368,4 +368,5 @@ module.exports = {
   deleteTasks,
   deleteColumnTrack,
   deleteColumns,
+  assignTask,
 }; 
