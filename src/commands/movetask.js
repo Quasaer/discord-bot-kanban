@@ -37,7 +37,6 @@ function setData() {
 	};
 }
 
-
 module.exports = {
 	name: 'movetask',
 	description: 'movetask <Board name> <Column name> <Task name>',
@@ -58,37 +57,39 @@ module.exports = {
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
                     dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, colummNameInput).then((columnModel) =>{
-
 						if(columnModel !== null){
 							dbCmd.findTaskByColumnIdAndName(columnModel.column_id, taskNameInput).then((taskModel) =>{ //finding task
 								if(taskModel !== undefined){
                                     data.task.updateCondition["task_id"]=taskModel.task_id; //assigning task id
                                     data.task["task_column_track_id"]=taskModel.column_track_id
                                     data.task["name"]=taskModel.name;
-
                                     /*
                                         code to move task to next column whilst staying in the right board
                                         find max of the column for a baord
                                         then add 1 to the column track if it is not above
                                     */
                                     dbCmd.findMaxColumnId(boardModel.board_id).then((MaxColumnId) => {; //finding the max column id for board
-
                                         dbCmd.findMaxColumnTrackId(MaxColumnId).then((MaxColumnTrackId) => {
                                             dbCmd.findColumnTrackByTaskTrackId(data.task["task_column_track_id"]).then((columnTrackModel)=>{
                                                 data.task["column_status_id"]=columnTrackModel.column_status_id;
-
                                                 if(data.task["task_column_track_id"] == MaxColumnTrackId){ //cehcks if column track is max
                                                     message.channel.send(`You have reached the end of your board`);
                                                 } else if (data.task["column_status_id"] == 1) { //check if status is 1
                                                     message.channel.send(`Your task: ${data.task["name"]} has not been completed`);
                                                 } else {
-                                                    data.task.updatedFields["column_track_id"] = data.task["task_column_track_id"] + 1;
+                                                    /* 
+                                                        get current column order number
+                                                        add 1 to order number
+                                                        get min column track for new column
+                                                        update task with that min column track id
+                                                    */
+                                                    // dbCmd.findMinColumnTrackId //get zappys
+                                                    data.task.updatedFields["column_track_id"] = data.task["task_column_track_id"] + 1; 
                                                     updateTaskColumnTrackIdConfirmation(message);
                                                 }
                                             })
                                         });
                                     });
-
 								} else {
 									message.channel.send(`The task ${taskNameInput} doesn't exist in the DB.`);
 								}
@@ -97,7 +98,6 @@ module.exports = {
 							message.channel.send(`The column ${colummNameInput} either doesn't exist in the DB or is case sensitive`);
 						}
                     });
-
 					// editboard(message);
 				} else {
 					message.channel.send(`The baord ${boardNameInput} doesn't exist in the DB`);

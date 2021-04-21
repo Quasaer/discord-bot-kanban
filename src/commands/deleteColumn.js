@@ -69,53 +69,52 @@ module.exports = {
         let columnNameInput = args[1];
 		setData();
 		
-		if (!boardNameInput) {
-			return message.reply('you need to name a board!\n'
-			+ 'example: %editboard <board name>');
+		if (!boardNameInput || !columnNameInput) {
+			return message.reply('you need to name a board and column!\n'
+			+ 'example: %editboard <board name> <column name>');
 		} else {
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
-					data.board.push(boardModel.board_id);
-                        dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {		
-							let columnOrderNumberCheck = false;	
-							let columnOrderNumberIndex = 0;		
-                            for (let i = 0; i < columnModels.length; i++) {
-								if (columnModels[i].name == columnNameInput){
-									columnOrderNumberCheck = true;
-									columnOrderNumberIndex = i;
-									data.columns.push(columnModels[i].column_id);
-									dbCmd.findAllColumnTracksByColumnId(columnModels[i].column_id).then((columnTrackModels)=>{
-										for (let j = 0; j < columnTrackModels.length; j++) {
-											data.columnTrack.push(columnTrackModels[j].column_track_id);
-											dbCmd.findAllTasksByColumnTrackId(columnTrackModels[j].column_track_id).then((taskModels)=>{
-												if (taskModels.length !== 0){
-													for (let m = 0; m < taskModels.length; m++) {
-														data.task.push(taskModels[m].task_id);
-														dbCmd.findAllTaskAssignmentsByTaskId(taskModels[m].task_id).then((taskAssignmentsModels)=>{
-															if (taskAssignmentsModels !== undefined || taskAssignmentsModels[0].length !== 0){
-																for (let n = 0; n < taskAssignmentsModels.length; n++) {
-																	data.taskAssignment.push(taskAssignmentsModels[n].task_assignment_id);
-																};
-															}
-														});
-													}
+					dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {		
+						let columnOrderNumberCheck = false;	
+						let columnOrderNumberIndex = 0;		
+						for (let i = 0; i < columnModels.length; i++) {
+							if (columnModels[i].name == columnNameInput){
+								columnOrderNumberCheck = true;
+								columnOrderNumberIndex = i;
+								data.columns.push(columnModels[i].column_id);
+								dbCmd.findAllColumnTracksByColumnId(columnModels[i].column_id).then((columnTrackModels)=>{
+									for (let j = 0; j < columnTrackModels.length; j++) {
+										data.columnTrack.push(columnTrackModels[j].column_track_id);
+										dbCmd.findAllTasksByColumnTrackId(columnTrackModels[j].column_track_id).then((taskModels)=>{
+											if (taskModels.length !== 0){
+												for (let m = 0; m < taskModels.length; m++) {
+													data.task.push(taskModels[m].task_id);
+													dbCmd.findAllTaskAssignmentsByTaskId(taskModels[m].task_id).then((taskAssignmentsModels)=>{
+														if (taskAssignmentsModels !== undefined || taskAssignmentsModels[0].length !== 0){
+															for (let n = 0; n < taskAssignmentsModels.length; n++) {
+																data.taskAssignment.push(taskAssignmentsModels[n].task_assignment_id);
+															};
+														}
+													});
 												}
-											});
-										}
-									});
-								}
-								if(columnOrderNumberCheck == true && i > columnOrderNumberIndex){
-									let columnOrderNumber = columnModels[i].column_order_number - 1;
-									let updateColumnOrderNumberData = {
-										updatedFields: {column_order_number: columnOrderNumber},
-										updateCondition: {column_id: columnModels[i].column_id},
-									};
-									data.updateColumnOrderNumber.push(updateColumnOrderNumberData);
-								}
-                            };
-							// console.log(data.updateColumnOrderNumber);
-							finalConfirmation(message);
-                        });
+											}
+										});
+									}
+								});
+							}
+							if(columnOrderNumberCheck == true && i > columnOrderNumberIndex){
+								let columnOrderNumber = columnModels[i].column_order_number - 1;
+								let updateColumnOrderNumberData = {
+									updatedFields: {column_order_number: columnOrderNumber},
+									updateCondition: {column_id: columnModels[i].column_id},
+								};
+								data.updateColumnOrderNumber.push(updateColumnOrderNumberData);
+							}
+						};
+						// console.log(data.updateColumnOrderNumber);
+						finalConfirmation(message);
+					});
 				} else {
 					message.channel.send(`${nameInput} doesn't exist in the DB`);
 				}
