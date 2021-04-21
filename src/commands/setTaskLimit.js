@@ -29,20 +29,18 @@ module.exports = {
                         }
                         // find all the column track ids with the same column id, this finds the amount of tasks in a column
                         dbCmd.findColumnTrackIdByColumnId(column.column_id).then((columnTrack) => {
-                            // var numTasks = columnTrack.length;
-                            // // this makes sure that the number of tasks is < task limit the user has entered
-                            // if(numTasks > data.updatedFields.task_limit){
-                            //     message.channel.send('The number of current tasks cannot be higher than the task limit!')
-                            // }
-                            // else{
-                            //     // update column's task limit number
-                            //     dbCmd.updateColumn(data);
-                            //     message.channel.send(`The task limit has been updated!`);
-                            // }
                             dbCmd.findTaskCountByColumnTrackId(columnTrack).then(result => {
-                                console.log(result.taskCount);
+                                var numTasks = result.taskCount;
+                                // this makes sure that the number of tasks is < task limit the user has entered
+                                if(numTasks > data.updatedFields.task_limit){
+                                    message.channel.send('The number of current tasks cannot be higher than the task limit!')
+                                }
+                                else{
+                                    // update column's task limit number
+                                    dbCmd.updateColumn(data);
+                                    message.channel.send(`The task limit has been updated!`);
+                                }
                             });
-
                         });
                         // else, the column you are looking for doesn't exist.
                     } else{
