@@ -143,7 +143,6 @@ async function findColumnTrackIdByColumnId(ColumnId) {
 
 
 
-
 async function updateColumn(data) {
   console.log(`\n\n\n` + data);
   data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
@@ -205,6 +204,16 @@ async function findTasksByColumnTrackId(columnTrackId){
 	return results;
 }
 
+async function findTaskCountByColumnTrackId(columnTrackId){
+	const results = await sequelize.query(
+		"SELECT count(t.task_id) taskCount"+
+		" FROM Tasks t"+
+		" WHERE t.column_track_id = :columnTrackIdActive OR  t.column_track_id = :columnTrackIdDone",
+		{ replacements: { columnTrackIdActive: columnTrackId[0].column_track_id, columnTrackIdDone:columnTrackId[1].column_track_id },type: Sequelize.SELECT }
+	);
+	return results[0][0];
+}
+
 async function updateTask(data){
 	data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
 	await Tasks.update(
@@ -214,7 +223,6 @@ async function updateTask(data){
 		console.log(error);
 	});
 };
-
 
 async function findMaxColumnTrackId(columnId){
 	const foundColumnId = await ColumnTrack.max(
@@ -368,4 +376,5 @@ module.exports = {
   deleteColumnTrack,
   deleteColumns,
   assignTask,
+  findTaskCountByColumnTrackId
 }; 
