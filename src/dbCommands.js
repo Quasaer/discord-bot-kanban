@@ -185,7 +185,8 @@ async function findAllBoardColumnsByBoardId(boardId){
 	"FROM Board b "+
 	"JOIN Column c on b.board_id = c.board_id "+
 	"JOIN Column_track ct on c.column_id = ct.column_id "+
-	"WHERE b.board_id = :boardId; ",
+	"WHERE b.board_id = :boardId "+
+  "ORDER BY c.column_order_number ASC;",
 	{ replacements: { boardId: boardId },type: Sequelize.SELECT }
 	);
 	return results;
