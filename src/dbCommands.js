@@ -1,4 +1,5 @@
 const { User } = require("discord.js");
+const { col } = require("sequelize");
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize("database", "username", "password", {
@@ -165,6 +166,9 @@ function getFormattedDate(dateInput){
 		let year = date.getFullYear();
 		let month = date.getMonth();
 		month += 1;
+    if (month < 10){
+      month = `0${month}`;
+    }
 		let day = date.getDate();
 
 		formattedDate = year + '-' + month + '-' + day; 
@@ -185,7 +189,7 @@ async function findAllBoardColumnsByBoardId(boardId){
 	"JOIN Column c on b.board_id = c.board_id "+
 	"JOIN Column_track ct on c.column_id = ct.column_id "+
 	"WHERE b.board_id = :boardId; ",
-	 { replacements: { boardId: boardId },type: Sequelize.SELECT }
+	{ replacements: { boardId: boardId },type: Sequelize.SELECT }
 	);
 	return results;
 }
@@ -277,6 +281,59 @@ async function findTaskId(taskId) {
   return foundTaskId;
 }
 
+
+
+async function findAllColumnTracksByColumnId(columnId) {
+	const columnTrackModel = await ColumnTrack.findAll({
+		where: { column_id: columnId },
+	});
+	return columnTrackModel;
+};
+
+async function findAllTasksByColumnTrackId(columnTrackId) {
+	const TasksModel = await Tasks.findAll({
+		where: { column_track_id: columnTrackId },
+	});
+	return TasksModel;
+};
+
+async function findAllTaskAssignmentsByTaskId(taskId) {
+	const TaskAssignmentModel = await Task_Assignment.findAll({
+		where: { task_id: taskId },
+	});
+	return TaskAssignmentModel;
+};
+
+async function deleteTaskAssignment(taskAssignmentId) {
+  if(taskAssignmentId.length !== 0){
+    await Task_Assignment.destroy({ where: { task_assignment_id: taskAssignmentId }});
+  }
+}
+
+async function deleteTasks(taskId) {
+  if(taskId.length !== 0){
+    await Tasks.destroy({ where: { task_id: taskId }});
+  }
+}
+
+async function deleteColumnTrack(columnTrackId) {
+  if(columnTrackId.length !== 0){
+    await ColumnTrack.destroy({ where: { column_track_id: columnTrackId }});
+  }
+}
+
+async function deleteColumns(columnId) {
+  if(columnId.length !== 0){
+    await Column.destroy({ where: { column_id: columnId }});
+  }
+}
+
+async function deleteBoard(boardId) {
+  if(boardId.length !== 0){
+    await Board.destroy({ where: { board_id: boardId }});
+  }
+}
+
 module.exports = {
   createUser,
   findUser,
@@ -300,10 +357,18 @@ module.exports = {
   findMaxColumnId,
   findColumnTrackByTaskTrackId,
   findMinColumnTrackId,
-  assignTask,
   findTaskId,
   findAllColumnNamesByBoardId,
 	findColumnTrackIdByColumnId,
 	findTasksByColumnTrackId,
-	findAllBoardColumnsByBoardId
+	findAllBoardColumnsByBoardId,
+  deleteBoard,
+  findAllColumnTracksByColumnId,
+  findAllTasksByColumnTrackId,
+  findAllTaskAssignmentsByTaskId,
+  deleteTaskAssignment,
+  deleteTasks,
+  deleteColumnTrack,
+  deleteColumns,
+  assignTask,
 }; 
