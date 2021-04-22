@@ -339,6 +339,20 @@ async function deleteBoard(boardId) {
   }
 }
 
+async function findColumnByColumnTrackColumnId(columnId) { //function to find server id
+	const columnModel = await Column.findOne({
+		where: { column_id: columnId }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnModel;
+};
+
+async function findColumnByBoardIdAndColumnOrderNumber(boardId, columnOrderNumber) { //function to find server id
+	const columnModel = await Column.findOne({
+		where: { board_id: boardId, column_order_number: columnOrderNumber }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnModel;
+};
+
 module.exports = {
   createUser,
   findUser,
@@ -376,5 +390,7 @@ module.exports = {
   deleteColumnTrack,
   deleteColumns,
   assignTask,
-  findTaskCountByColumnTrackId
+  findTaskCountByColumnTrackId,
+  findColumnByColumnTrackColumnId,
+  findColumnByBoardIdAndColumnOrderNumber
 }; 

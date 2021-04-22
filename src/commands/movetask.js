@@ -22,9 +22,8 @@ function updateTaskColumnTrackIdConfirmation(message){
 }
 
 function updateTaskColumnTrackId(message){
-    console.log(data)
     dbCmd.updateTask(data.task).then(() =>{
-		message.reply(`changes have been successfully made to your task}`);
+		message.reply(`changes have been successfully made to your task`);
 	});
 }
 
@@ -77,14 +76,30 @@ module.exports = {
                                                 } else if (data.task["column_status_id"] == 1) { //check if status is 1
                                                     message.channel.send(`Your task: ${data.task["name"]} has not been completed`);
                                                 } else {
+                                                    dbCmd.findColumnByColumnTrackColumnId(columnTrackModel.column_id).then((columnModel)=>{
+                                                        let columnOrderNumber = columnModel.column_order_number;
+                                                        columnOrderNumber++;
+                                                        dbCmd.findColumnByBoardIdAndColumnOrderNumber(boardModel.board_id, columnOrderNumber).then((newColumnModel)=>{
+                                                            dbCmd.findMinColumnTrackId(newColumnModel.column_id).then((newColumnTrackModel)=>{
+                                                                data.task.updatedFields["column_track_id"] = newColumnTrackModel;
+                                                            });
+                                                        });
+                                                    });
                                                     /* 
+                                                        find column id using current column track for task
+                                                        find current column
                                                         get current column order number
                                                         add 1 to order number
                                                         get min column track for new column
                                                         update task with that min column track id
                                                     */
+                                                    /*
+                                                    create findColumnByColumnTrackColumnId
+                                                    let columnOrderNumbeer = column.order_number
+                                                    columnOrderNumbeer ++;
+
+                                                    */
                                                     // dbCmd.findMinColumnTrackId //get zappys
-                                                    data.task.updatedFields["column_track_id"] = data.task["task_column_track_id"] + 1; 
                                                     updateTaskColumnTrackIdConfirmation(message);
                                                 }
                                             })

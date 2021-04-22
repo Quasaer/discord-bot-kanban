@@ -23,7 +23,7 @@ function updateTaskColumnTrackIdConfirmation(message){
 
 function updateTaskColumnTrackId(message){
     dbCmd.updateTask(data.task).then(() =>{
-		message.reply(`changes have been successfully made to your task}`);
+		message.reply(`changes have been successfully made to your task`);
 	});
 }
 
