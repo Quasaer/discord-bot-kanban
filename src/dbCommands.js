@@ -144,7 +144,6 @@ async function findColumnTrackIdByColumnId(ColumnId) {
 
 
 async function updateColumn(data) {
-  console.log(`\n\n\n` + data);
   data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
   await Column.update(data.updatedFields, {
     where: data.updateCondition,

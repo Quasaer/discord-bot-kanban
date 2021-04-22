@@ -28,31 +28,37 @@ function editColumnOrder(message){
         let columnOrderList = collected.first().content.toLowerCase().split(/[ ,]+/);
 		columnCountValidation = data.columnCount - 1;
 		if(columnOrderList.length !== data.columnCount){
-			message.reply(`You have not inputted enough columns order numbers, there should be ${data.columnCount} not ${columnOrderList.length}!`);
+			message.reply('You have not inputted the correct amount of columns order numbers.\n'
+			+ `There should be ${data.columnCount} column order numbers not ${columnOrderList.length}!`);
 			editColumnOrder(message);
 		// } else if(columnOrderList.length !== data.columnCount){
 		// 	message.reply(`You have not inputted enough columns order numbers, there should be ${data.columnCount} not ${columnOrderList.length}!`);
 		// 	editColumnOrder(message);
 
-		} else {
-			let ColumnOrderInputArray = [];
+		} else { 
 			for (let i = 0; i < columnOrderList.length; i++) {
 				let number = parseInt(columnOrderList[i]);
-				let numberValidation = Number.isInteger(columnOrderList);
-				// if(Number.isInteger(123) === true){
-				// 	console.log(numberValidation);
-				// 	ColumnOrderInputArray.push(columnOrderList[i]);
-				// } else{
-				// 	message.reply('You can only input integers for the column order apart from `,');
-				// 	editColumnOrder(message);
-				// };
+				if(Number.isInteger(number)==false){ 
+					message.reply(`${columnOrderList[i]} is not a valid column order number.\n`
+					+ 'You can only input integers for the column order apart from `,`.'
+					+ `And ranging from ${data.columnCount}`);
+					editColumnOrder(message);
+					break;
+				} else if(data.ColumnOrderInputArray.includes(columnOrderList[i])) {
+					message.reply(`${columnOrderList[i]} has been inputted multiple times.\n`
+					+ 'You can only input one integer for each column order number.'
+					+ `And ranging from ${data.columnCount}`);
+					editColumnOrder(message);
+					break;
+				}else {
+					data.ColumnOrderInputArray.push(columnOrderList[i]);
+				};
 				/*
 					check if inputs are all numbers
 					check if they start from 1 to the column count
 				*/
-				console.log(numberValidation);
-				console.log(number);
 			}
+			updateColumnOrder(message);
 			
 			}
     }).catch(() => {
@@ -60,12 +66,37 @@ function editColumnOrder(message){
     });
 }
 
-
+function updateColumnOrder(message){
+	/*
+		get the columns
+		and loop through
+		get column order input array
+		replace the columns column_order_number with the new ones if not same
+	*/
+	for (let i = 0; i < Object.keys(data.columns).length; i++) {
+		if(data.ColumnOrderInputArray[i] !== data.columns[i]["column_order_number"]){
+			data.updateColumns[i] = {
+				'updatedFields':{
+					'column_order_number':data.ColumnOrderInputArray[i],
+				},
+				'updateCondition':{
+					'column_id':data.columns[i]['id'],
+				}
+			};
+		}
+	}
+	finalConfirmation(message);
+}
 //final confirmation
 function finalConfirmation(message){
-	
+	message.reply('Your columns have been re-ordered.\n'
+			+ 'Would you like to conitnue with these changes?\n'
+			+ 'Type `yes` to accept or `no` to cancel.\n'
+			+ 'You have 30 seconds or else task will not be made.\n');
+
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
+
 		if (collected.first().content.toLowerCase() === 'yes') {
 			updateDatabase(message);
 		} else if(collected.first().content.toLowerCase() === 'no') {	
@@ -82,9 +113,13 @@ function finalConfirmation(message){
 
 //update database
 function updateDatabase(message){
-	dbCmd.updateTask(data.task).then(() =>{
-		message.reply(`changes have been successfully made to your task}`);
-	});
+
+	for (let i = 0; i < Object.keys(data.updateColumns).length; i++) {
+		dbCmd.updateColumn(data.updateColumns[i])		;
+	}
+	
+	message.reply(`changes have been successfully made to your task}`);
+	
 }
 
 //clear data
@@ -94,6 +129,8 @@ function setData() {
 		board:{},
 		columns:{},
         columnCount: 0,
+		ColumnOrderInputArray: [],
+		updateColumns: {},
 	};
 }
 
