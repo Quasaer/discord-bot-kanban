@@ -85,21 +85,6 @@ module.exports = {
                                                             });
                                                         });
                                                     });
-                                                    /* 
-                                                        find column id using current column track for task
-                                                        find current column
-                                                        get current column order number
-                                                        add 1 to order number
-                                                        get min column track for new column
-                                                        update task with that min column track id
-                                                    */
-                                                    /*
-                                                    create findColumnByColumnTrackColumnId
-                                                    let columnOrderNumbeer = column.order_number
-                                                    columnOrderNumbeer ++;
-
-                                                    */
-                                                    // dbCmd.findMinColumnTrackId //get zappys
                                                     updateTaskColumnTrackIdConfirmation(message);
                                                 }
                                             })
