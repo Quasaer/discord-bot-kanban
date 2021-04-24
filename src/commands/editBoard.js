@@ -49,13 +49,15 @@ function editStartDate(message){ //gets input for deadline date
 	message.reply(`State new start date (YYYY-MM-DD). Current is ${date}.`);
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
-		const startDateInput = Date.parse(collected.first().content.toLowerCase());
-		if ( startDateInput !== 'NaN') {
+		let startDateInput = Date.parse(collected.first().content.toLowerCase());
+		let formattedDate = dbCmd.getFormattedDate(startDateInput);
+		if ( collected.first().content.toLowerCase() === formattedDate) {
 			data.board.updatedFields["start_date_time_stamp"] = startDateInput;
-			finalConfirmation(message);
+			handleDeadlineDate(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype editboard command');
+			message.reply('That is not a valid response, or is not a vlid date\n'
+			+ 'Please check and retype date');
+			handleStartDateInput(message);
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -68,13 +70,15 @@ function editDeadlineDate(message){ //gets input for deadline date
 	message.reply(`State new deadline date (YYYY-MM-DD). Current is ${date}.`);
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
-		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase());
-		if ( deadlineDateInput !== 'NaN') {
+		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase()); //parses input into date
+		let formattedDate = dbCmd.getFormattedDate(deadlineDateInput); //formats date from parsed date
+		if ( collected.first().content.toLowerCase() === formattedDate) { //checks inputted string against formatted date
 			data.board.updatedFields["end_date_time_stamp"] = deadlineDateInput;
 			finalConfirmation(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype editboard command');
+			message.reply('That is not a valid response, or a valid date\n'
+			+ 'Please cehck and retype date.');
+			handleDeadlineDateInput(message);
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');

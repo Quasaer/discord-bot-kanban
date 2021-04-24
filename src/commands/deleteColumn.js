@@ -25,17 +25,25 @@ function finalConfirmation(message){
 //update database
 function updateDatabase(message){
 	// data.task.push(5);
-    console.log(data);
+    console.log(data.updateColumnOrderNumber.length);
 
     // if(data.taskAssignmentCount !== 0){
+	if(data.updateColumnOrderNumber.length !== 0){
+		for(let i = 0; i < data.updateColumnOrderNumber.length; i++){
+			dbCmd.updateColumn(data.updateColumnOrderNumber[i]);
+		}
+		deleteBoardAndColumn(message);
+	} else {
+		deleteBoardAndColumn(message);
+	}	
+}
 
+function deleteBoardAndColumn(message){
 	dbCmd.deleteTaskAssignment(data.taskAssignment).then(()=>{
 		dbCmd.deleteTasks(data.task).then(()=>{
 			dbCmd.deleteColumnTrack(data.columnTrack).then(()=>{
 				dbCmd.deleteColumns(data.columns).then(()=>{
-					dbCmd.deleteBoard(data.board).then(()=>{
-						message.reply('Your board has successfully been deleted.');
-					});
+					message.reply('Your board has successfully been deleted.');
 				});
 			});
 		});
@@ -49,30 +57,36 @@ function setData() {
         columnTrack:[],
         task:[],
         taskAssignment:[],
+		updateColumnOrderNumber: [],
 	};
 }
 module.exports = {
-	name: 'deleteboard',
-	description: 'editboard <name>',
+	name: 'deletecolumn',
+	description: 'deletecolumn <board name> <column name>',
 	count: 7,
 	execute(message, args) {
-        let nameInput = args[0];
+        let boardNameInput = args[0];
+        let columnNameInput = args[1];
 		setData();
 		
-		if (!nameInput) {
-			return message.reply('you need to name a board!\n'
-			+ 'example: %editboard <board name>');
+		if (!boardNameInput || !columnNameInput) {
+			return message.reply('you need to name a board and column!\n'
+			+ 'example: %editboard <board name> <column name>');
 		} else {
-			dbCmd.findBoardByName(nameInput).then((boardModel) =>{
+			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
-					data.board.push(boardModel.board_id);
-                        dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {					
-                            for (let i = 0; i < columnModels.length; i++) {
-                                data.columns.push(columnModels[i].column_id);
-                                dbCmd.findAllColumnTracksByColumnId(columnModels[i].column_id).then((columnTrackModels)=>{
-                                    for (let j = 0; j < columnTrackModels.length; j++) {
+					dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {		
+						let columnOrderNumberCheck = false;	
+						let columnOrderNumberIndex = 0;		
+						for (let i = 0; i < columnModels.length; i++) {
+							if (columnModels[i].name == columnNameInput){
+								columnOrderNumberCheck = true;
+								columnOrderNumberIndex = i;
+								data.columns.push(columnModels[i].column_id);
+								dbCmd.findAllColumnTracksByColumnId(columnModels[i].column_id).then((columnTrackModels)=>{
+									for (let j = 0; j < columnTrackModels.length; j++) {
 										data.columnTrack.push(columnTrackModels[j].column_track_id);
-                                        dbCmd.findAllTasksByColumnTrackId(columnTrackModels[j].column_track_id).then((taskModels)=>{
+										dbCmd.findAllTasksByColumnTrackId(columnTrackModels[j].column_track_id).then((taskModels)=>{
 											if (taskModels.length !== 0){
 												for (let m = 0; m < taskModels.length; m++) {
 													data.task.push(taskModels[m].task_id);
@@ -85,12 +99,22 @@ module.exports = {
 													});
 												}
 											}
-                                        });
-                                    }
-                                });
-                            };
-                            finalConfirmation(message);
-                        });
+										});
+									}
+								});
+							}
+							if(columnOrderNumberCheck == true && i > columnOrderNumberIndex){
+								let columnOrderNumber = columnModels[i].column_order_number - 1;
+								let updateColumnOrderNumberData = {
+									updatedFields: {column_order_number: columnOrderNumber},
+									updateCondition: {column_id: columnModels[i].column_id},
+								};
+								data.updateColumnOrderNumber.push(updateColumnOrderNumberData);
+							}
+						};
+						// console.log(data.updateColumnOrderNumber);
+						finalConfirmation(message);
+					});
 				} else {
 					message.channel.send(`${nameInput} doesn't exist in the DB`);
 				}

@@ -82,7 +82,7 @@ function handleColumnConfigurationConfirmation(message){
 	{max: 1, time: 30000}).then(collected => {
 
 		if (collected.first().content.toLowerCase() === 'yes') {
-			data.columnStartCount += 1;
+			data.columnStartCount ++;
 			handleColumnConfigurationInput(message);
 		} else if(collected.first().content.toLowerCase() === 'no') {
 			handleStartDate(message);
@@ -161,9 +161,9 @@ function handleDeadlineDateInput(message){ //gets input for deadline date
 	message.reply('add Deadline date (YYYY-MM-DD)');
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
-		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase());
-		let formattedDate = dbCmd.getFormattedDate(deadlineDateInput);
-		if ( collected.first().content.toLowerCase() === formattedDate) {
+		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase()); //parses input into date
+		let formattedDate = dbCmd.getFormattedDate(deadlineDateInput); //formats date from parsed date
+		if ( collected.first().content.toLowerCase() === formattedDate) { //checks inputted string against formatted date
 			data.board["end_date_time_stamp"] = deadlineDateInput;
 			finalConfirmation(message);
 		} else {

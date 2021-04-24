@@ -67,13 +67,15 @@ function editDeadlineDate(message){ //gets input for deadline date
 	message.reply(`State new deadline date (YYYY-MM-DD). Current is ${date}.`);
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
-		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase());
-		if ( deadlineDateInput !== 'NaN') {
+		const deadlineDateInput = Date.parse(collected.first().content.toLowerCase()); //parses input into date
+		let formattedDate = dbCmd.getFormattedDate(deadlineDateInput); //formats date from parsed date
+		if ( collected.first().content.toLowerCase() === formattedDate) { //checks inputted string against formatted date
 			data.task.updatedFields["deadline_date_time_stamp"] = deadlineDateInput;
 			finalConfirmation(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype edittask command');
+			message.reply('That is not a valid response, or a valid date\n'
+			+ 'Please cehck and retype date.');
+			handleDeadlineDateInput(message);
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');

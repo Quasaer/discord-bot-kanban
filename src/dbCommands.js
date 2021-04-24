@@ -144,9 +144,7 @@ async function findColumnTrackIdByColumnId(ColumnId) {
 
 
 async function updateColumn(data) {
-  data.updatedFields["updated_at_date_time_stamp"] = Math.floor(
-    +new Date() / 1000
-  ); //calculates date as integer
+  data.updatedFields["updated_at_date_time_stamp"] = Math.floor(+new Date() / 1000); //calculates date as integer
   await Column.update(data.updatedFields, {
     where: data.updateCondition,
   }).catch((error) => {
@@ -187,7 +185,8 @@ async function findAllBoardColumnsByBoardId(boardId){
 	"FROM Board b "+
 	"JOIN Column c on b.board_id = c.board_id "+
 	"JOIN Column_track ct on c.column_id = ct.column_id "+
-	"WHERE b.board_id = :boardId; ",
+	"WHERE b.board_id = :boardId "+
+  "ORDER BY c.column_order_number ASC;",
 	{ replacements: { boardId: boardId },type: Sequelize.SELECT }
 	);
 	return results;
@@ -289,8 +288,6 @@ async function findTaskId(taskId) {
   return foundTaskId;
 }
 
-
-
 async function findAllColumnTracksByColumnId(columnId) {
 	const columnTrackModel = await ColumnTrack.findAll({
 		where: { column_id: columnId },
@@ -342,6 +339,20 @@ async function deleteBoard(boardId) {
   }
 }
 
+async function findColumnByColumnTrackColumnId(columnId) { //function to find server id
+	const columnModel = await Column.findOne({
+		where: { column_id: columnId }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnModel;
+};
+
+async function findColumnByBoardIdAndColumnOrderNumber(boardId, columnOrderNumber) { //function to find server id
+	const columnModel = await Column.findOne({
+		where: { board_id: boardId, column_order_number: columnOrderNumber }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnModel;
+};
+
 module.exports = {
   createUser,
   findUser,
@@ -379,5 +390,7 @@ module.exports = {
   deleteColumnTrack,
   deleteColumns,
   assignTask,
-  findTaskCountByColumnTrackId
+  findTaskCountByColumnTrackId,
+  findColumnByColumnTrackColumnId,
+  findColumnByBoardIdAndColumnOrderNumber
 }; 
