@@ -125,7 +125,7 @@ module.exports = {
     } else {
       /*
 				check board exists, if it does we can populate the data array return board model
-				data.baord.startdate = boardmodel.
+				data.board.startdate = boardmodel.
 				data.column.deadline= boardmodel.
 				else
 			*/

@@ -25,6 +25,7 @@ function boardConfigs(message){
 		} else {
 			message.reply('That is not a valid response\n'
 			+ 'Please retype createboard command');
+			boardConfigs(message);
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -50,6 +51,7 @@ function handleColumnConfiguration(message){
 		} else {
 			message.reply('That is not a valid response\n'
 			+ 'Please retype createboard command');
+			handleColumnConfiguration(message);
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -168,7 +170,7 @@ function handleDeadlineDateInput(message){ //gets input for deadline date
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response, or a valid date\n'
-			+ 'Please cehck and retype date.');
+			+ 'Please check and retype date.');
 			handleDeadlineDateInput(message);
 		}     
 	}).catch(() => {

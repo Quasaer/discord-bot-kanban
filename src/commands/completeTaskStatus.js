@@ -78,7 +78,7 @@ module.exports = {
 
 					// editboard(message);
 				} else {
-					message.channel.send(`The baord ${boardNameInput} doesn't exist in the DB`);
+					message.channel.send(`The board ${boardNameInput} doesn't exist in the DB`);
 				}
 			});
 			
