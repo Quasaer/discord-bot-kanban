@@ -74,7 +74,7 @@ function editDeadlineDate(message){ //gets input for deadline date
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response, or a valid date\n'
-			+ 'Please cehck and retype date.');
+			+ 'Please check and retype date.');
 			handleDeadlineDateInput(message);
 		}     
 	}).catch(() => {
@@ -162,7 +162,7 @@ module.exports = {
 
 					// editboard(message);
 				} else {
-					message.channel.send(`The baord ${boardNameInput} doesn't exist in the DB`);
+					message.channel.send(`The board ${boardNameInput} doesn't exist in the DB`);
 				}
 			});
 			

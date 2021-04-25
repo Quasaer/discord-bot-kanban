@@ -77,7 +77,7 @@ function editDeadlineDate(message){ //gets input for deadline date
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response, or a valid date\n'
-			+ 'Please cehck and retype date.');
+			+ 'Please check and retype date.');
 			handleDeadlineDateInput(message);
 		}     
 	}).catch(() => {
@@ -142,7 +142,7 @@ module.exports = {
 		} else {
 			/*
 				check board exists, if it does we can populate the data array return board model
-				data.baord.startdate = boardmodel.
+				data.board.startdate = boardmodel.
 				data.board.deadline= boardmodel.
 				else
 			*/

@@ -64,14 +64,14 @@ module.exports = {
                                     data.task["name"]=taskModel.name;
                                     /*
                                         code to move task to next column whilst staying in the right board
-                                        find max of the column for a baord
+                                        find max of the column for a board
                                         then add 1 to the column track if it is not above
                                     */
                                     dbCmd.findMaxColumnId(boardModel.board_id).then((MaxColumnId) => {; //finding the max column id for board
                                         dbCmd.findMaxColumnTrackId(MaxColumnId).then((MaxColumnTrackId) => {
                                             dbCmd.findColumnTrackByTaskTrackId(data.task["task_column_track_id"]).then((columnTrackModel)=>{
                                                 data.task["column_status_id"]=columnTrackModel.column_status_id;
-                                                if(data.task["task_column_track_id"] == MaxColumnTrackId){ //cehcks if column track is max
+                                                if(data.task["task_column_track_id"] == MaxColumnTrackId){ //checks if column track is max
                                                     message.channel.send(`You have reached the end of your board`);
                                                 } else if (data.task["column_status_id"] == 1) { //check if status is 1
                                                     message.channel.send(`Your task: ${data.task["name"]} has not been completed`);
@@ -100,7 +100,7 @@ module.exports = {
                     });
 					// editboard(message);
 				} else {
-					message.channel.send(`The baord ${boardNameInput} doesn't exist in the DB`);
+					message.channel.send(`The board ${boardNameInput} doesn't exist in the DB`);
 				}
 			});
 			

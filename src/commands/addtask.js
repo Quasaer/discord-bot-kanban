@@ -55,7 +55,7 @@ function handleDeadlineDateInput(message){
 			finalConfirmation(message);
 		} else {
 			message.reply('That is not a valid response, or a valid date\n'
-			+ 'Please cehck and retype date.');
+			+ 'Please check and retype date.');
 			handleDeadlineDateInput(message);
 		}  
 	}).catch(() => {
@@ -89,7 +89,7 @@ function finalConfirmation(message){
 function populateDatabase(message) {  
   // console.log(data.task)
   dbCmd.createTask(data.task).then(() => {
-    message.reply(`changes have been successfully made for the task`);
+    message.reply(`The task has been successfully created.`);
   });
 }
 
@@ -109,7 +109,8 @@ module.exports = {
     setData();
 
     if (!boardNameInput || !columnNameInput || !taskNameInput ) {
-      return message.reply("you need to name a board!\n" + "example: %addtask <board name> <column name> <task name>");
+      return message.reply("you need to name a board, column and task!\n" 
+                          + "example: %addtask <board name> <column name> <task name>");
     } else {
       const user = message.author.tag;
       dbCmd.findUser(user).then((userModel) =>{
