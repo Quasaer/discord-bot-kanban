@@ -93,7 +93,7 @@ async function createConfig(serverId) {
 //function to update config record
 async function updateConfig(data) {
   const updatedConfig = await Config.update(data.updatedFields, {
-    where: data.conditionalFields,
+    where: data.updateCondition,
   }).catch((error) => {
     console.log(error);
   });

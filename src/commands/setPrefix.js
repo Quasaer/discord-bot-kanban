@@ -1,34 +1,25 @@
 let dbCmd  = require('../dbCommands.js');
 let data = {
-	config:{
-		id:'',
-		channelBindId:'',
-		updatedFields:{
-			prefix:''
-		},
-		conditionalFields:{
-			server_id:''
-		}
-
-	}
+  updatedFields:{},
+  updateCondition:{}
 };    
 module.exports = {
   name: "setprefix",
   description: '`%setprefix <prefix>\nChange the prefix for the bot'+"'"+'s commands.`',
   count: 2,
   execute(message, args) {
-    const guildId = message.guild.id;
-    const find = dbCmd.findConfigByServerId(guildId).then((configModel) => {
-      var prefix = configModel.prefix;
-      var newPrefix = args[0];
+    let guildId = message.guild.id;
+    dbCmd.findConfigByServerId(guildId).then((configModel) => {
+      let newPrefix = args[0];
       if (configModel !== null) {
-        if (newPrefix == prefix) {
+        if (newPrefix == configModel.prefix) {
           message.channel.send(`That prefix is already set!`);
         } else {
-          data.config.updatedFields.prefix = newPrefix;
-          data.config.conditionalFields.server_id = configModel.server_id;
-          const resp = dbCmd.updateConfig(data.config);
-          message.channel.send(`The prefix has been updated!`);
+          data.updatedFields["prefix"] = newPrefix;
+          data.updateCondition["config_id"] = configModel.config_id;
+          dbCmd.updateConfig(data).then(()=>{
+            message.channel.send(`The prefix has been updated!`);
+          });
         }
       } else {
         console.log(`A config record has not be stored yet.`);
