@@ -151,8 +151,8 @@ module.exports = {
 				data.userid = userModel.user_id;
 			});
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
-				data.board['name']=boardModel.name;
 				if(boardModel !== null){
+					data.board['name']=boardModel.name;
                     dbCmd.findAllColumnModelsByBoardId(boardModel.board_id).then((columnModels) =>{
 						if(columnModels.length !== 0){
 							//
