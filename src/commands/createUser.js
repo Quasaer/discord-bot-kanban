@@ -3,7 +3,7 @@ module.exports = {
 	name: 'createuser',
 	description: '`createuser <mention name>\nAdd a user to the database.`',
 	execute(message, args) {
-		const target = message.mentions.users.first();
+		const target = message.mentions.users.first() || message.author;
 		dbCmd.findUser(target.tag).then((val) =>{
 			const user = target.tag.split('#');
 			if (!message.mentions.users.size) {
