@@ -90,7 +90,7 @@ function updateColumnOrder(message){
 //final confirmation
 function finalConfirmation(message){
 	message.reply('Your columns have been re-ordered.\n'
-			+ 'Would you like to conitnue with these changes?\n'
+			+ 'Would you like to continue with these changes?\n'
 			+ 'Type `yes` to accept or `no` to cancel.\n'
 			+ 'You have 30 seconds or else task will not be made.\n');
 
