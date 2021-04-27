@@ -119,7 +119,7 @@ function updateDatabase(message){
 		dbCmd.updateColumn(data.updateColumns[i])		;
 	}
 	
-	message.reply(`changes have been successfully made to your task}`);
+	message.reply(`changes have been successfully made to your task`);
 	
 }
 
