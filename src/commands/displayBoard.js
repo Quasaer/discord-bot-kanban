@@ -1,21 +1,14 @@
 let dbCmd  = require('../dbCommands.js');
-const embed = {
-	color: 0x0099ff,
-	title: '',
-	url: 'https://discord.js.org',
-	description: 'Columns and Tasks',
-	thumbnail: {
-		url: 'https://i.dlpng.com/static/png/6905682_preview.png',
-	},
-	fields: [],
-};
+let embed;
 module.exports = {
 	name: 'displayboard',
 	description: 'displayboard <board name>',
 	execute(message, args) {
+        clearEmbed()
         let boardName = args[0];
         embed.title = boardName;
 		dbCmd.findBoardByName(boardName).then((board) =>{
+            console.log(board);
             const data = dbCmd.findAllBoardColumnsByBoardId(board.board_id);
             data.then((result) => {
                 let taskStringBuilder = [];
@@ -52,6 +45,7 @@ module.exports = {
                         }
                     });
                 });
+
             }).catch(err => {
                 console.log(err);
             });
@@ -60,3 +54,15 @@ module.exports = {
         });
 	},
 };
+function clearEmbed(){
+    embed = {
+        color: 0x0099ff,
+        title: '',
+        url: 'https://discord.js.org',
+        description: 'Columns and Tasks',
+        thumbnail: {
+            url: 'https://i.dlpng.com/static/png/6905682_preview.png',
+        },
+        fields: [],
+    }
+}
