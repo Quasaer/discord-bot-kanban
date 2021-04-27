@@ -14,7 +14,7 @@ let data = {
 };    
 module.exports = {
   name: "setprefix",
-  description: "setprefix <prefix>",
+  description: '`%setprefix <prefix>\nChange the prefix for the bot'+"'"+'s commands.`',
   count: 2,
   execute(message, args) {
     const guildId = message.guild.id;

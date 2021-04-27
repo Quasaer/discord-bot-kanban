@@ -1,9 +1,9 @@
 let dbCmd = require("../dbCommands.js");
 module.exports = {
 	name: 'createuser',
-	description: 'create <variable> <name>',
+	description: '`%createuser <mention name>\nAdd a user to the database.`',
 	execute(message, args) {
-		const target = message.mentions.users.first() || message.author;
+		const target = message.mentions.users.first();
 		dbCmd.findUser(target.tag).then((val) =>{
 			const user = target.tag.split('#');
 			if (!message.mentions.users.size) {

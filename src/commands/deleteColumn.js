@@ -14,8 +14,9 @@ function finalConfirmation(message){
 			message.reply('Your changes have been cancelled.\n' 
 						+ 'Your task has not been affected');
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype edittask command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+			finalConfirmation(message);
 		}
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -24,10 +25,6 @@ function finalConfirmation(message){
 
 //update database
 function updateDatabase(message){
-	// data.task.push(5);
-    console.log(data.updateColumnOrderNumber.length);
-
-    // if(data.taskAssignmentCount !== 0){
 	if(data.updateColumnOrderNumber.length !== 0){
 		for(let i = 0; i < data.updateColumnOrderNumber.length; i++){
 			dbCmd.updateColumn(data.updateColumnOrderNumber[i]);
@@ -62,7 +59,7 @@ function setData() {
 }
 module.exports = {
 	name: 'deletecolumn',
-	description: 'deletecolumn <board name> <column name>',
+	description: '`%deletecolumn <board name> <column name>\nDelete a column from a specified board.`',
 	count: 7,
 	execute(message, args) {
         let boardNameInput = args[0];
@@ -77,9 +74,11 @@ module.exports = {
 				if(boardModel !== null){
 					dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {		
 						let columnOrderNumberCheck = false;	
-						let columnOrderNumberIndex = 0;		
+						let columnOrderNumberIndex = 0;	
+						let columnFoundCheck = false;
 						for (let i = 0; i < columnModels.length; i++) {
 							if (columnModels[i].name == columnNameInput){
+								columnFoundCheck = true;
 								columnOrderNumberCheck = true;
 								columnOrderNumberIndex = i;
 								data.columns.push(columnModels[i].column_id);
@@ -102,7 +101,7 @@ module.exports = {
 										});
 									}
 								});
-							}
+							} 
 							if(columnOrderNumberCheck == true && i > columnOrderNumberIndex){
 								let columnOrderNumber = columnModels[i].column_order_number - 1;
 								let updateColumnOrderNumberData = {
@@ -112,11 +111,14 @@ module.exports = {
 								data.updateColumnOrderNumber.push(updateColumnOrderNumberData);
 							}
 						};
-						// console.log(data.updateColumnOrderNumber);
-						finalConfirmation(message);
+						if(columnFoundCheck == false){
+							message.channel.send(`${columnNameInput} doesn't exist in the DB`);
+						} else {
+							finalConfirmation(message);
+						}
 					});
 				} else {
-					message.channel.send(`${nameInput} doesn't exist in the DB`);
+					message.channel.send(`${boardNameInput} doesn't exist in the DB`);
 				}
 			});
 		}

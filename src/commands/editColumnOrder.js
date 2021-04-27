@@ -103,8 +103,9 @@ function finalConfirmation(message){
 			message.reply('Your changes have been cancelled.\n' 
 						+ 'Your task has not been affected');
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype edittask command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+			finalConfirmation(message);
 		}
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -136,7 +137,7 @@ function setData() {
 
 module.exports = {
 	name: 'editcolumnorder',
-	description: 'editcolumnorder <Board name>',
+	description: '`%editcolumnorder <Board name>\nEdit the column order of a board'+"'"+'s columns.`',
 	execute(message, args) {
         let boardNameInput = args[0];
 		setData();

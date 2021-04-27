@@ -23,8 +23,8 @@ function boardConfigs(message){
 		} else if(collected.first().content.toLowerCase() === 'no') {	
 			populateDatabase(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype createboard command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
 			boardConfigs(message);
 		}     
 	}).catch(() => {
@@ -49,12 +49,11 @@ function handleColumnConfiguration(message){
 		} else if(collected.first().content.toLowerCase() === 'no') {
 			handleStartDate(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype createboard command');
+			message.reply('That is not a valid response');
 			handleColumnConfiguration(message);
 		}     
 	}).catch(() => {
-				message.reply('No answer after 30 seconds, operation canceled.');
+		message.reply('No answer after 30 seconds, operation canceled.');
 	});
 }
 
@@ -62,17 +61,37 @@ function handleColumnConfigurationInput(message){ //gets input for start date
 	message.reply('name a column');
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
-		let count = data.columnStartCount;
 		columnNameInput = collected.first().content.toLowerCase();
-		data.columns[count] = {
-			'name':columnNameInput,
-			'column_order_number':count,
+		if(data.columnCount == 1){
+			addColumn(message, columnNameInput);
+		} else if (data.columnCount > 1){
+			let columnDuplicationCheck = false;
+			for (let i = 1; i <= Object.keys(data.columns).length; i++) {
+				if(columnNameInput == data.columns[i]["name"]){
+					message.reply(`${columnNameInput} has already been created,\n` +
+					`you canot have duplicate columns`);
+					handleColumnConfigurationConfirmation(message);
+					columnDuplicationCheck = true;
+				};
+			};
+			if(columnDuplicationCheck == false){
+				addColumn(message, columnNameInput);
+			};
 		};
-		handleColumnConfigurationConfirmation(message);
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
 	});
 };
+
+function addColumn(message, columnNameInput){
+	let count = data.columnCount;
+	data.columns[count] = {
+		'name':columnNameInput,
+		'column_order_number':count,
+	};
+	data.columnCount ++;
+	handleColumnConfigurationConfirmation(message);
+}
 
 //
 function handleColumnConfigurationConfirmation(message){
@@ -84,13 +103,13 @@ function handleColumnConfigurationConfirmation(message){
 	{max: 1, time: 30000}).then(collected => {
 
 		if (collected.first().content.toLowerCase() === 'yes') {
-			data.columnStartCount ++;
 			handleColumnConfigurationInput(message);
 		} else if(collected.first().content.toLowerCase() === 'no') {
 			handleStartDate(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please retype createboard command');
+						+ 'Please type either `yes` or `no`.');
+			handleColumnConfigurationConfirmation(message);
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -111,8 +130,9 @@ function handleStartDate(message){
 		} else if(collected.first().content.toLowerCase() === 'no') {
 			handleDeadlineDate(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype createboard command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter date confirmation');
+        	taskDeadlineDate(message);
 		}     
 	}).catch(() => {
 				message.reply('No answer after 30 seconds, operation canceled.');
@@ -130,7 +150,7 @@ function handleStartDateInput(message){ //gets input for start date
 			handleDeadlineDate(message);
 		} else {
 			message.reply('That is not a valid response, or is not a vlid date\n'
-			+ 'Please check and retype date');
+						+ 'Please check and retype date');
 			handleStartDateInput(message);
 		}     
 	}).catch(() => {
@@ -151,11 +171,12 @@ function handleDeadlineDate(message){
 		} else if(collected.first().content.toLowerCase() === 'no') {
 			finalConfirmation(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype createboard command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter date confirmation');
+        	handleDeadlineDate(message);
 		}     
 	}).catch(() => {
-				message.reply('No answer after 30 seconds, operation canceled.');
+		message.reply('No answer after 30 seconds, operation canceled.');
 	});
 };
 
@@ -193,7 +214,7 @@ function finalConfirmation(message){
 			boardConfigs(message);
 		} else {
 			message.reply('That is not a valid response\n'
-			+ 'Please re enter confirmation');
+						+ 'Please re enter confirmation');
 			finalConfirmation(message);
 		}     
 	}).catch(() => {
@@ -233,7 +254,7 @@ function populateDatabase(message){
 function setData(){
 	data = {
 		board:{},
-		columnStartCount:1,
+		columnCount:1,
 		columns:{
 			1:{
 				'name':'Backlog',
@@ -254,7 +275,7 @@ function setData(){
 
 module.exports = {
 	name: 'createboard',
-	description: 'createboard <name>',
+	description: '`%createboard <name>\nCreate a board for your project.`',
 	execute(message, args) {
         let nameInput = args[0];
 

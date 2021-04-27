@@ -17,9 +17,9 @@ function editColumn(message) {
       } else if (collected.first().content.toLowerCase() === "no") {
         message.reply("Command has been cancelled");
       } else {
-        message.reply(
-          "That is not a valid response\n" + "Please retype editboard command"
-        );
+        message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+			editColumn(message);
       }
     })
     .catch(() => {
@@ -44,10 +44,9 @@ function editName(message) {
         data.column.updatedFields["name"] = newNameInput;
         finalConfirmation(message);
       } else {
-        message.reply(
-          "That is not a valid response\n" +
-            "Please retype editcolumnname command"
-        );
+        message.reply('That is not a valid response\n' 
+						+ 'Please enter a name');
+        editName(message);
       }
     })
     .catch(() => {
@@ -78,10 +77,9 @@ function finalConfirmation(message) {
             "Your board has not been affected"
         );
       } else {
-        message.reply(
-          "That is not a valid response\n" +
-            "Please retype editcolumnname command"
-        );
+        message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+        finalConfirmation(message);
       }
     })
     .catch(() => {
@@ -110,7 +108,7 @@ function clearData() {
 
 module.exports = {
   name: "editcolumnname",
-  description: "editcolumnname <Board name> <column name>",
+  description: '`%editcolumnname <Board name> <column name>\nEdit a specified column name of a board.`',
   count: 8,
   execute(message, args) {
     let boardNameInput = args[0];

@@ -14,8 +14,9 @@ function finalConfirmation(message){
 			message.reply('Your changes have been cancelled.\n' 
 						+ 'Your task has not been affected');
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype edittask command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+			finalConfirmation(message);
 		}
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -24,7 +25,7 @@ function finalConfirmation(message){
 
 function deleteBoardAndColumn(message){
 	dbCmd.deleteTaskAssignment(data.taskAssignment).then(()=>{
-		message.reply('Your board has successfully been deleted.');
+		message.reply('The user has successfully been unassigned from the task.');
 	});
 }
 
@@ -35,19 +36,19 @@ function setData() {
 }
 module.exports = {
 	name: 'unassignuser',
-	description: 'deletecolumn <board name> <column name> <task name> <username>',
+	description: '`%unassignuser <board name> <column name> <task name> <mention username>\nUnassign a user from a task.`',
 	count: 7,
 	execute(message, args) {
         let boardNameInput = args[0];
         let columnNameInput = args[1];
         let taskNameInput = args[1];
-		let userNameInput = message.mentions.users.first() || message.author;
+		let userNameInput = message.mentions.users.first();
 
 		setData();
 		
-		if (!boardNameInput|| !columnNameInput|| !taskNameInput|| !userNameInput) {
-			return message.reply('you need to name a board!\n'
-			+ 'example: %editboard <board name>');
+		if (!boardNameInput|| !columnNameInput|| !taskNameInput|| !message.mentions.users.size) {
+			return message.reply('you need to name a board, column, task and mention a user!\n'
+			+ 'example: %editboard <board name> <column name> <task name> <mention username "@">');
 		} else {
 			dbCmd.findUser(userNameInput.tag).then((userModel) =>{
 				if(userModel === null){
@@ -84,7 +85,6 @@ module.exports = {
 										});
 									}
 								};
-								// console.log(data.updateColumnOrderNumber);
 								finalConfirmation(message);
 							});
 						} else {

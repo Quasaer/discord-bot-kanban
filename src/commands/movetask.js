@@ -13,8 +13,9 @@ function updateTaskColumnTrackIdConfirmation(message){
         } else if(collected.first().content.toLowerCase() === 'no') {
             message.reply('Operation has been cancelled.');
         } else {
-            message.reply('That is not a valid response\n'
-            + 'Please retype edittask command');
+            message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+			updateTaskColumnTrackIdConfirmation(message);
         }     
     }).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -38,7 +39,7 @@ function setData() {
 
 module.exports = {
 	name: 'movetask',
-	description: 'movetask <Board name> <Column name> <Task name>',
+	description: '`%movetask <Board name> <Column name> <Task name>\nMove a task from one column to the next.`',
 	execute(message, args) {
         let boardNameInput = args[0];
         let colummNameInput = args[1];

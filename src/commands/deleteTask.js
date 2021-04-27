@@ -39,7 +39,7 @@ function setData() {
 }
 module.exports = {
 	name: 'deletetask',
-	description: 'deletecolumn <board name> <column name>',
+	description: '`%deletetask <board name> <column name> <task name>\nDelete a task from a column in a specified board.`',
 	count: 7,
 	execute(message, args) {
         let boardNameInput = args[0];
@@ -48,20 +48,24 @@ module.exports = {
 		setData();
 		
 		if (!boardNameInput || !columnNameInput || !taskNameInput) {
-			return message.reply('you need to name a board!\n'
-			+ 'example: %editboard <board name>');
+			return message.reply('you need to name a board, column and task!\n'
+			+ 'example: %editboard <board name> <column name> <task name>');
 		} else {
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
+					let columnFoundCheck = false;	
+					let taskFoundCheck = false;	
 					dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {		
 						for (let i = 0; i < columnModels.length; i++) {
 							if (columnModels[i].name == columnNameInput){
+								columnFoundCheck = true;
 								dbCmd.findAllColumnTracksByColumnId(columnModels[i].column_id).then((columnTrackModels)=>{
 									for (let j = 0; j < columnTrackModels.length; j++) {
 										dbCmd.findAllTasksByColumnTrackId(columnTrackModels[j].column_track_id).then((taskModels)=>{
 											if (taskModels.length !== 0){
 												for (let m = 0; m < taskModels.length; m++) {
 													if(taskModels[m].name == taskNameInput){
+														taskFoundCheck = true;
 														data.task.push(taskModels[m].task_id);
 														dbCmd.findAllTaskAssignmentsByTaskId(taskModels[m].task_id).then((taskAssignmentsModels)=>{
 															if (taskAssignmentsModels !== undefined || taskAssignmentsModels[0].length !== 0){
@@ -78,8 +82,17 @@ module.exports = {
 								});
 							}
 						};
-						// console.log(data.updateColumnOrderNumber);
-						finalConfirmation(message);
+						if(columnFoundCheck == false){
+							message.channel.send(`The column ${columnNameInput} doesn't exist in ${boardNameInput} or the DB.\n`
+												+ `Please check ${columnNameInput} and try again`);
+						} else{
+							if(taskFoundCheck == false){
+								message.channel.send(`the task ${taskNameInput} either doesn't exist in ${columnNameInput} or the DB.\n`
+												+ `Please check ${taskNameInput} and try again`);
+							} else{
+								finalConfirmation(message);
+							}
+						}
 					});
 				} else {
 					message.channel.send(`${boardNameInput} doesn't exist in the DB`);

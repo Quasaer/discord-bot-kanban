@@ -9,7 +9,7 @@ let data = {
 };  
 module.exports = {
 	name: 'settasklimit',
-	description: 'settasklimit <board name> <column name> <number>',
+	description: '`%settasklimit <board name> <column name> <number>\nSet a limit of tasks allowed for a specified column of a board.`',
 	execute(message, args) {
         let boardName = args[0];
         // get user input to find board record

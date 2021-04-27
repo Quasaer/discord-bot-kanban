@@ -6,6 +6,7 @@ function editboard(message){
                 + 'type `name` to change the name of the board.\n'
                 + 'type `startdate` to change the start date of the board.\n'
                 + 'type `deadline` to change the deadline date of the board.\n'
+				+ 'type `cancel` to abort changes\n'
                 + 'You have 30 seconds or else board will not be made.\n');
 
     message.channel.awaitMessages(m => m.author.id == message.author.id,
@@ -16,9 +17,12 @@ function editboard(message){
             editStartDate(message);
         } else if(collected.first().content.toLowerCase() === 'deadline') {
             editDeadlineDate(message);
+        } else if (collected.first().content.toLowerCase() === 'cancel'){
+            message.reply('Tedit command has been cancelled\n');
         } else {
-            message.reply('That is not a valid response\n'
-            + 'Please retype editboard command');
+            message.reply('That is not a valid response\n' 
+						+ 'Please enter one of the specified options');
+			editboard(message);
         }     
     }).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -35,8 +39,9 @@ function editName(message){ //gets input for deadline date
 			data.board.updatedFields["name"] = newNameInput;
 			finalConfirmation(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype editboard command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please enter a name');
+			editName(message);
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -100,8 +105,9 @@ function finalConfirmation(message){
 			message.reply('Your changes have been cancelled.\n' 
 						+ 'Your board has not been affected');
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype editboard command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+			finalConfirmation(message);
 		}
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -130,7 +136,7 @@ function setData() {
 
 module.exports = {
 	name: 'editboard',
-	description: 'editboard <name>',
+	description: '`%editboard <name>\nEdit a board'+"'"+'s name, start date and deadline date.`',
 	count: 7,
 	execute(message, args) {
         let nameInput = args[0];
