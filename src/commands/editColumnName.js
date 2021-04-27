@@ -133,7 +133,7 @@ module.exports = {
       });
       dbCmd.findBoardByName(boardNameInput).then((boardModel) => {
         if (boardModel !== null) {
-          dbCmd.findColumnNameByBoardIdAndName(
+          dbCmd.findColumnModelByBoardIdAndName(
               boardModel.board_id,
               colummNameInput
             )

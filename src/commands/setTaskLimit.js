@@ -18,7 +18,7 @@ module.exports = {
             if(board != null && board.name == boardName){
                 let columnName = args[1];
                 // find the column name by the board id from the board record and find the column name by what the user has inputted
-                dbCmd.findColumnNameByBoardIdAndName(board.board_id,columnName).then((column) => {
+                dbCmd.findColumnModelByBoardIdAndName(board.board_id,columnName).then((column) => {
                     if(column != null){
                         // set data object attributes
                         data.updateCondition.column_id = column.column_id;

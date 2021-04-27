@@ -57,7 +57,7 @@ module.exports = {
 					let foundUser = userModel.user_id;
 					dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 						if(boardModel !== null){
-							dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {		
+							dbCmd.findAllColumnModelsByBoardId(boardModel.board_id).then((columnModels) => {		
 								let columnOrderNumberCheck = false;	
 								let columnOrderNumberIndex = 0;		
 								for (let i = 0; i < columnModels.length; i++) {

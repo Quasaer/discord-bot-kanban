@@ -55,7 +55,7 @@ module.exports = {
 				if(boardModel !== null){
 					let columnFoundCheck = false;	
 					let taskFoundCheck = false;	
-					dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {		
+					dbCmd.findAllColumnModelsByBoardId(boardModel.board_id).then((columnModels) => {		
 						for (let i = 0; i < columnModels.length; i++) {
 							if (columnModels[i].name == columnNameInput){
 								columnFoundCheck = true;

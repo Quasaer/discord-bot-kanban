@@ -62,7 +62,7 @@ module.exports = {
 			dbCmd.findBoardByName(nameInput).then((boardModel) =>{
 				if(boardModel !== null){
 					data.board.push(boardModel.board_id);
-                        dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {					
+                        dbCmd.findAllColumnModelsByBoardId(boardModel.board_id).then((columnModels) => {					
                             for (let i = 0; i < columnModels.length; i++) {
                                 data.columns.push(columnModels[i].column_id);
                                 dbCmd.findAllColumnTracksByColumnId(columnModels[i].column_id).then((columnTrackModels)=>{

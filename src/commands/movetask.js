@@ -56,7 +56,7 @@ module.exports = {
 			});
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
-                    dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, colummNameInput).then((columnModel) =>{
+                    dbCmd.findColumnModelByBoardIdAndName(boardModel.board_id, colummNameInput).then((columnModel) =>{
 						if(columnModel !== null){
 							dbCmd.findTaskByColumnIdAndName(columnModel.column_id, taskNameInput).then((taskModel) =>{ //finding task
 								if(taskModel !== undefined){

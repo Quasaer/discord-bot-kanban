@@ -153,7 +153,7 @@ module.exports = {
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				data.board['name']=boardModel.name;
 				if(boardModel !== null){
-                    dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) =>{
+                    dbCmd.findAllColumnModelsByBoardId(boardModel.board_id).then((columnModels) =>{
 						if(columnModels.length !== 0){
 							//
                             for (let i = 0; i < columnModels.length; i++) {

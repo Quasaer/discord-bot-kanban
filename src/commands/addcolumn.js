@@ -38,7 +38,7 @@ function columnConfiguration(message, boardNameInput) {
       dbCmd.findBoardByName(boardNameInput).then((val) => {
         
         dbCmd.countBoardColumns(val.board_id).then((columnCount) => {
-          dbCmd.findAllColumnNamesByBoardId(val.board_id).then((columnModels) => {					
+          dbCmd.findAllColumnModelsByBoardId(val.board_id).then((columnModels) => {					
             for (let i = 0; i < columnModels.length; i++) {
               if(columnNameInput == columnModels[i]["name"]){
                 boardColumnDuplicationCheck = true;

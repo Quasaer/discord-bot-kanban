@@ -115,7 +115,7 @@ module.exports = {
       });
       dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
         if(boardModel !== null){
-            dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, columnNameInput).then((columnModel) =>{
+            dbCmd.findColumnModelByBoardIdAndName(boardModel.board_id, columnNameInput).then((columnModel) =>{
               /*
               found board
               found column

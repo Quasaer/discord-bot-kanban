@@ -72,7 +72,7 @@ module.exports = {
 		} else {
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
-					dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {		
+					dbCmd.findAllColumnModelsByBoardId(boardModel.board_id).then((columnModels) => {		
 						let columnOrderNumberCheck = false;	
 						let columnOrderNumberIndex = 0;	
 						let columnFoundCheck = false;
