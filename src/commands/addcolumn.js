@@ -7,7 +7,7 @@ let data = {};
 function confirmation(message, boardNameInput) {
   message.reply(
     `Would you like to add a column in ${boardNameInput}?\n` +
-      "`yes` to create columns or `no` to cancel.\n" +
+      "Enter `yes` to create column or `no` to cancel.\n" +
       "You have 30 seconds or else columns will not be added.\n"
   );
 
@@ -56,7 +56,7 @@ function columnConfiguration(message, boardNameInput) {
 //boardNameInput - The name of the board to create a column in.
 function columnConfirmation(message, boardNameInput) {
   message.reply(`Would you like to create another Column in board ${boardNameInput}?\n` +
-      "Confirm with `yes` or deny with `no`.\n" +
+      "Enter `yes` to create column or `no` to cancel.\n" +
       "You have 30 seconds or else board will not be made.\n"
   );
 
@@ -64,7 +64,7 @@ function columnConfirmation(message, boardNameInput) {
       if (collected.first().content.toLowerCase() === "yes") {
         columnConfiguration(message, boardNameInput);
       } else if (collected.first().content.toLowerCase() === "no") {
-        populateDatabase(message, boardNameInput);
+        finalConfirmation(message, boardNameInput);
       } else {
         message.reply("That is not a valid response\n" + "Please retype createboard command");
       }
@@ -73,6 +73,29 @@ function columnConfirmation(message, boardNameInput) {
       message.reply("No answer after 30 seconds, operation canceled.");
     });
 }
+
+//final confirmation to add column
+function finalConfirmation(message, boardNameInput){
+	message.reply(`Changes Successfully made\n`
+			+ 'Would you like to continue with these settings?\n'
+			+ '`yes` to add column(s) with new settings or `no` to cancel changes.\n'
+			+ 'You have 30 seconds or else task will not be made.\n');
+
+	message.channel.awaitMessages(m => m.author.id == message.author.id,{max: 1, time: 30000}).then(collected => {
+		if (collected.first().content.toLowerCase() === 'yes') {
+			populateDatabase(message, boardNameInput);
+		} else if(collected.first().content.toLowerCase() === 'no') {	
+			message.reply('Your changes have been cancelled.\n' 
+						+ 'Your column(s) has not been created');
+		} else {
+			message.reply('That is not a valid response\n'
+			+ 'Please retype addcolumn command');
+		}
+	}).catch(() => {
+		message.reply('No answer after 30 seconds, operation canceled.');
+	});
+}
+
 
 //puts the column data into the database
 //the name of the board to create a column in.
