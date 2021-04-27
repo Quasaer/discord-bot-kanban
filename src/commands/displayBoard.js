@@ -11,7 +11,7 @@ const embed = {
 };
 module.exports = {
 	name: 'displayboard',
-	description: '`%displayboard <board name>\nDisplay a board/Project and all of the columns and tasks`',
+	description: '`displayboard <board name>\nDisplay a board/Project and all of the columns and tasks`',
 	execute(message, args) {
         let boardName = args[0];
         embed.title = boardName;

@@ -18,7 +18,7 @@ function editboard(message){
         } else if(collected.first().content.toLowerCase() === 'deadline') {
             editDeadlineDate(message);
         } else if (collected.first().content.toLowerCase() === 'cancel'){
-            message.reply('Tedit command has been cancelled\n');
+            message.reply('The edit command has been cancelled\n');
         } else {
             message.reply('That is not a valid response\n' 
 						+ 'Please enter one of the specified options');
@@ -136,7 +136,7 @@ function setData() {
 
 module.exports = {
 	name: 'editboard',
-	description: '`%editboard <name>\nEdit a board'+"'"+'s name, start date and deadline date.`',
+	description: '`editboard <name>\nEdit a board'+"'"+'s name, start date and deadline date.`',
 	count: 7,
 	execute(message, args) {
         let nameInput = args[0];

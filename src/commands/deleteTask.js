@@ -39,7 +39,7 @@ function setData() {
 }
 module.exports = {
 	name: 'deletetask',
-	description: '`%deletetask <board name> <column name> <task name>\nDelete a task from a column in a specified board.`',
+	description: '`deletetask <board name> <column name> <task name>\nDelete a task from a column in a specified board.`',
 	count: 7,
 	execute(message, args) {
         let boardNameInput = args[0];

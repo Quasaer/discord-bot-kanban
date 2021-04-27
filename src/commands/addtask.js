@@ -98,7 +98,7 @@ function setData() {
 
 module.exports = {
   name: "addtask",
-  description: '`%addtask <board name> <column name> <task name>\nAdd a task to a specified board and column.`',
+  description: '`addtask <board name> <column name> <task name>\nAdd a task to a specified board and column.`',
   execute(message, args) {
     let boardNameInput = args[0];
     let columnNameInput = args[1];

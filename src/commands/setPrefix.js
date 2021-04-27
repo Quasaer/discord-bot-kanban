@@ -5,7 +5,7 @@ let data = {
 };    
 module.exports = {
   name: "setprefix",
-  description: '`%setprefix <prefix>\nChange the prefix for the bot'+"'"+'s commands.`',
+  description: '`setprefix <prefix>\nChange the prefix for the bot'+"'"+'s commands.`',
   count: 2,
   execute(message, args) {
     let guildId = message.guild.id;

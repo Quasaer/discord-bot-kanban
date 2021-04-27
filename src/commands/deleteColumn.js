@@ -59,7 +59,7 @@ function setData() {
 }
 module.exports = {
 	name: 'deletecolumn',
-	description: '`%deletecolumn <board name> <column name>\nDelete a column from a specified board.`',
+	description: '`deletecolumn <board name> <column name>\nDelete a column from a specified board.`',
 	count: 7,
 	execute(message, args) {
         let boardNameInput = args[0];

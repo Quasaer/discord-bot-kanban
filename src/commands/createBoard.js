@@ -275,7 +275,7 @@ function setData(){
 
 module.exports = {
 	name: 'createboard',
-	description: '`%createboard <name>\nCreate a board for your project.`',
+	description: '`createboard <name>\nCreate a board for your project.`',
 	execute(message, args) {
         let nameInput = args[0];
 

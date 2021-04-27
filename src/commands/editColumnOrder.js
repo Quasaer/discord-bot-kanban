@@ -137,7 +137,7 @@ function setData() {
 
 module.exports = {
 	name: 'editcolumnorder',
-	description: '`%editcolumnorder <Board name>\nEdit the column order of a board'+"'"+'s columns.`',
+	description: '`editcolumnorder <Board name>\nEdit the column order of a board'+"'"+'s columns.`',
 	execute(message, args) {
         let boardNameInput = args[0];
 		setData();

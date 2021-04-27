@@ -108,7 +108,7 @@ function clearData() {
 
 module.exports = {
   name: "editcolumnname",
-  description: '`%editcolumnname <Board name> <column name>\nEdit a specified column name of a board.`',
+  description: '`editcolumnname <Board name> <column name>\nEdit a specified column name of a board.`',
   count: 8,
   execute(message, args) {
     let boardNameInput = args[0];

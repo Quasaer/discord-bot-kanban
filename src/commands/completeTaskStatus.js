@@ -39,7 +39,7 @@ function setData() {
 
 module.exports = {
 	name: 'completetaskstatus',
-	description: '`%completetaskstatus <Board name> <Column name> <Task name>\nMark the specified task as done before moving on to the next column.`',
+	description: '`completetaskstatus <Board name> <Column name> <Task name>\nMark the specified task as done before moving on to the next column.`',
 	execute(message, args) {
         let boardNameInput = args[0];
         let colummNameInput = args[1];

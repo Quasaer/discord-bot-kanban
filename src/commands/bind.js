@@ -14,7 +14,7 @@ let data = {
 };  
 module.exports = {
   name: "bind",
-  description: '`%bind\nBind the bot to the current channel.`',
+  description: '`bind\nBind the bot to the current channel.`',
   count: 3,
   execute(message, args) {
     const channelId = message.channel.id;

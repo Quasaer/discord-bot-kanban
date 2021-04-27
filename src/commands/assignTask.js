@@ -48,7 +48,7 @@ function setData() {
 
 module.exports = {
   name: "assigntask",
-  description: '`%assigntask <board name> <column name> <task name> <@user>\nAssign a user to a specified task.`',
+  description: '`assigntask <board name> <column name> <task name> <@user>\nAssign a user to a specified task.`',
   execute(message, args) {
     let boardNameInput = args[0];
     let columnNameInput = args[1];

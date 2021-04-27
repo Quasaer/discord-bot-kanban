@@ -35,8 +35,8 @@ function setData() {
 	};
 }
 module.exports = {
-	name: 'unassignuser',
-	description: '`%unassignuser <board name> <column name> <task name> <mention username>\nUnassign a user from a task.`',
+	name: 'unassigntaskuser',
+	description: '`unassigntaskuser <board name> <column name> <task name> <mention username>\nUnassign a user from a task.`',
 	count: 7,
 	execute(message, args) {
         let boardNameInput = args[0];

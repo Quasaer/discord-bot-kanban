@@ -39,7 +39,7 @@ function setData() {
 
 module.exports = {
 	name: 'movetask',
-	description: '`%movetask <Board name> <Column name> <Task name>\nMove a task from one column to the next.`',
+	description: '`movetask <Board name> <Column name> <Task name>\nMove a task from one column to the next.`',
 	execute(message, args) {
         let boardNameInput = args[0];
         let colummNameInput = args[1];

@@ -131,7 +131,7 @@ function setData() {
 
 module.exports = {
 	name: 'edittask',
-	description: '`%edittask <Board name> <Column name> <Task name>\nEdit a task'+"'"+'s name, description or deadline.`',
+	description: '`edittask <Board name> <Column name> <Task name>\nEdit a task'+"'"+'s name, description or deadline.`',
 	execute(message, args) {
         let boardNameInput = args[0];
         let colummNameInput = args[1];

@@ -170,7 +170,7 @@ function resetData() {
 
 module.exports = {
   name: "addcolumn",
-  description: '`%addcolumn <board name>\nAdd a column or columns to a specified board.`',
+  description: '`addcolumn <board name>\nAdd a column or columns to a specified board.`',
   count: 6,
   execute(message, args) {
     let boardNameInput = args[0];
