@@ -1,14 +1,6 @@
 let dbCmd  = require('../dbCommands.js');
 let data = {};
-const embed = {
-	color: 0x0099ff,
-	title: '',
-	description: 'Column names and order numbers.',
-	thumbnail: {
-		url: 'https://i.dlpng.com/static/png/6905682_preview.png',
-	},
-	fields: [],
-};
+let embed = {};
 
 function editColumnOrder(message){
     message.reply('re-order your columns:\n'
@@ -132,6 +124,16 @@ function setData() {
         columnCount: 0,
 		ColumnOrderInputArray: [],
 		updateColumns: {},
+	};
+
+	embed = {
+		color: 0x0099ff,
+		title: '',
+		description: 'Column names and order numbers.',
+		thumbnail: {
+			url: 'https://i.dlpng.com/static/png/6905682_preview.png',
+		},
+		fields: [],
 	};
 }
 
