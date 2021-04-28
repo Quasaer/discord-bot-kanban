@@ -2,7 +2,7 @@ let dbCmd  = require('../dbCommands.js');
 let embed;
 module.exports = {
 	name: 'displayboard',
-	description: 'displayboard <board name>',
+	description: '`displayboard <board name>\nDisplay a board/Project and all of the columns and tasks`',
 	execute(message, args) {
         clearEmbed()
         let boardName = args[0];

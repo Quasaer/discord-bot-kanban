@@ -5,7 +5,7 @@ const path = require("path");
 //export
 module.exports = {
   name: "help",
-  description: "Display a summary of commands!",
+  description: '`help\nDisplay a summary of commands.`',
   count: 1,
   execute(message, args) {
     //get name + description

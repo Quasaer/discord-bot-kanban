@@ -23,9 +23,8 @@ function finalConfirmation(message) {
             "Your assign task has not been created"
         );
       } else {
-        message.reply(
-          "That is not a valid response\n" + "Please retype addtask command"
-        );
+        message.reply('That is not a valid response\n' + 'Please re enter confirmation');
+        finalConfirmation(message);
       }
     })
     .catch(() => {
@@ -34,7 +33,6 @@ function finalConfirmation(message) {
 }
 
 function populateDatabase(message) {
-  // console.log(data.task)
   dbCmd.assignTask(data.taskAssignment).then(() => {
     message.reply(
       `changes have been successfully made for the task assignment`
@@ -50,67 +48,61 @@ function setData() {
 
 module.exports = {
   name: "assigntask",
-  description: "assigntask <board name> <column name> <task name> <@user>",
+  description: '`assigntask <board name> <column name> <task name> <@user>\nAssign a user to a specified task.`',
   execute(message, args) {
     let boardNameInput = args[0];
     let columnNameInput = args[1];
     let taskNameInput = args[2];
+    let userNameInput = message.mentions.users.first();
     setData();
 
-    if (!boardNameInput || !columnNameInput || !taskNameInput) {
+    if (!boardNameInput || !columnNameInput || !taskNameInput || !message.mentions.users.size) {
       return message.reply(
-        "you need to name a board!\n" +
-        "example: %assigntask <board name> <column name> <task name> <@user>"
+        'you need to name a board, column, task name and mention a user!\n' +
+        'example: %assigntask <board name> <column name> <task name> <mention user "@">'
       );
     } else {
-      const user = message.author.tag;
-      dbCmd.findUser(user).then((userModel) => {
-        data.taskAssignment["created_by_user_id"] = userModel.user_id;
-      });
-      dbCmd.findBoardByName(boardNameInput).then((boardModel) => {
-        if (boardModel !== null) {
-          dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, columnNameInput).then((columnModel) => {
-            /*
-              found task Id
-              */
-            if (columnModel !== null) {
+      dbCmd.findUser(userNameInput.tag).then((userModel) =>{
+        if(userModel === null){
+          message.channel.send(`That user doesn't exist in db DB`);
+        } else {
+          data.taskAssignment["user_id"] = userModel.user_id;
+          const user = message.author.tag;
+          dbCmd.findUser(user).then((userModel) => {
+            data.taskAssignment["created_by_user_id"] = userModel.user_id;
+          });
+          dbCmd.findBoardByName(boardNameInput).then((boardModel) => {
+            if (boardModel !== null) {
+              dbCmd.findColumnModelByBoardIdAndName(boardModel.board_id, columnNameInput).then((columnModel) => {
+                /*
+                  found task Id
+                  */
+                if (columnModel !== null) {
 
-              dbCmd.findTaskByColumnIdAndName(columnModel.column_id, taskNameInput).then((taskModel) => {
-                if(taskModel !== undefined){
-                  // console.log(taskModel);
-                  data.taskAssignment["task_id"] = taskModel.task_id;
-                  const target = message.mentions.users.first() || message.author;
-                  dbCmd.findUser(target.tag).then((userModel) =>{
-                    const user = target.tag.split('#');
-                    if (!message.mentions.users.size) {
-                      return message.reply('you need to tag a user in order to assign them!');
-                    }
-                    if(userModel !== null){
-                      data.taskAssignment["user_id"] = userModel.user_id;
-                      // console.log(data);
+                  dbCmd.findTaskByColumnIdAndName(columnModel.column_id, taskNameInput).then((taskModel) => {
+                    if(taskModel !== undefined){
+                      data.taskAssignment["task_id"] = taskModel.task_id;
                       finalConfirmation(message);
                     } else {
-                      message.channel.send(`${user[0]} doesn't exist in db DB`);
+                      return message.reply(
+                        "The Task was not found!\n" +
+                        "please check task name was correct and capital cases were in the right places."
+                      );
                     }
                   });
-                } else{
-                  return message.reply(
-                    "The Task was not found!\n" +
-                    "please check task name was corrct and capital cases were in the right palces."
+                
+                } else {
+                  message.channel.send(
+                    `The column ${columnNameInput} either doesn't exist in the DB or is case sensitive`
                   );
                 }
               });
-            
             } else {
               message.channel.send(
-                `The column ${colummNameInput} either doesn't exist in the DB or is case sensitive`
+                `${boardNameInput} doesn't exist in the DB use \`%createboard\` to create it`
               );
             }
           });
-        } else {
-          message.channel.send(
-            `${boardNameInput} doesn't exist in the DB use \`%createboard\` to create it`
-          );
         }
       });
     }

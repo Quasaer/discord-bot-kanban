@@ -6,6 +6,7 @@ function editTask(message){
                 + 'type `name` to change the name of the task.\n'
                 + 'type `description` to change the description of the task.\n'
                 + 'type `deadline` to change the deadline date of the task.\n'
+				+ 'type `cancel` to abort changes\n'
                 + 'You have 30 seconds or else task will not be made.\n');
 
     message.channel.awaitMessages(m => m.author.id == message.author.id,
@@ -16,10 +17,13 @@ function editTask(message){
             editDescription(message);
         } else if(collected.first().content.toLowerCase() === 'deadline') {
             editDeadlineDate(message);
+        } else if (collected.first().content.toLowerCase() === 'cancel'){
+            message.reply('Tedit command has been cancelled\n');
         } else {
-            message.reply('That is not a valid response\n'
-            + 'Please retype edittask command');
-        }     
+            message.reply('That is not a valid response\n' 
+						+ 'Please enter one of the specified options');
+			editTask(message);
+        }    
     }).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
     });
@@ -35,8 +39,9 @@ function editName(message){ //gets input for deadline date
 			data.task.updatedFields["name"] = newNameInput;
 			finalConfirmation(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype edittask command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please enter a name');
+			editName(message);
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -53,8 +58,9 @@ function editDescription(message){ //gets input for deadline date
 			data.task.updatedFields["description"] = newDescriptionInput;
 			finalConfirmation(message);
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype edittask command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please enter a description');
+			editDescription(message);
 		}     
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -97,8 +103,9 @@ function finalConfirmation(message){
 			message.reply('Your changes have been cancelled.\n' 
 						+ 'Your task has not been affected');
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype edittask command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+			finalConfirmation(message);
 		}
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -124,7 +131,7 @@ function setData() {
 
 module.exports = {
 	name: 'edittask',
-	description: 'edittask <Board name> <Column name> <Task name>',
+	description: '`edittask <Board name> <Column name> <Task name>\nEdit a task'+"'"+'s name, description or deadline.`',
 	execute(message, args) {
         let boardNameInput = args[0];
         let colummNameInput = args[1];
@@ -141,7 +148,7 @@ module.exports = {
 			});
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
-                    dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, colummNameInput).then((columnModel) =>{
+                    dbCmd.findColumnModelByBoardIdAndName(boardModel.board_id, colummNameInput).then((columnModel) =>{
 
 						if(columnModel !== null){
 							dbCmd.findTaskByColumnIdAndName(columnModel.column_id, taskNameInput).then((taskModel) =>{

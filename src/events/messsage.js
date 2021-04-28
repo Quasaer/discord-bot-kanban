@@ -22,8 +22,10 @@ module.exports = {
 			if(configModel.channel_bind_id != null && configModel.channel_bind_id == channelId || message.content == bindCommand){
 				launchCommands = true;
 			} else{
-				let errorMsg = sendBindErrorMessage(message, configModel.channel_bind_id);
-				message.reply(errorMsg);
+				if(configModel.channel_bind_id != null){
+					let errorMsg = sendBindErrorMessage(message, configModel.channel_bind_id);
+					message.reply(errorMsg);
+				}
 			}
 			if(launchCommands === true){
 				launchCommand(message, client, command, args);

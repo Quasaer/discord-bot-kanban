@@ -14,8 +14,9 @@ function finalConfirmation(message){
 			message.reply('Your changes have been cancelled.\n' 
 						+ 'Your task has not been affected');
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype edittask command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+			finalConfirmation(message);
 		}
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -24,11 +25,6 @@ function finalConfirmation(message){
 
 //update database
 function updateDatabase(message){
-	// data.task.push(5);
-    console.log(data);
-
-    // if(data.taskAssignmentCount !== 0){
-
 	dbCmd.deleteTaskAssignment(data.taskAssignment).then(()=>{
 		dbCmd.deleteTasks(data.task).then(()=>{
 			dbCmd.deleteColumnTrack(data.columnTrack).then(()=>{
@@ -53,7 +49,7 @@ function setData() {
 }
 module.exports = {
 	name: 'deleteboard',
-	description: 'editboard <name>',
+	description: '`delete <name>\nDelete a board/project.`',
 	count: 7,
 	execute(message, args) {
         let nameInput = args[0];
@@ -66,7 +62,7 @@ module.exports = {
 			dbCmd.findBoardByName(nameInput).then((boardModel) =>{
 				if(boardModel !== null){
 					data.board.push(boardModel.board_id);
-                        dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) => {					
+                        dbCmd.findAllColumnModelsByBoardId(boardModel.board_id).then((columnModels) => {					
                             for (let i = 0; i < columnModels.length; i++) {
                                 data.columns.push(columnModels[i].column_id);
                                 dbCmd.findAllColumnTracksByColumnId(columnModels[i].column_id).then((columnTrackModels)=>{

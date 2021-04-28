@@ -20,15 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-
-    updated_at_date_time_stamp: {
-      type: DataTypes.INTEGER,
-    },
-
-    updated_by_user_id: {
-      type: DataTypes.INTEGER,
-    },
-
+    
     created_by_user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

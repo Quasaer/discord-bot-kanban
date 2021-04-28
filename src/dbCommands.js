@@ -93,7 +93,7 @@ async function createConfig(serverId) {
 //function to update config record
 async function updateConfig(data) {
   const updatedConfig = await Config.update(data.updatedFields, {
-    where: data.conditionalFields,
+    where: data.updateCondition,
   }).catch((error) => {
     console.log(error);
   });
@@ -120,14 +120,14 @@ async function updateBoard(data) {
   );
 }
 
-async function findColumnNameByBoardIdAndName(boardId, columnName) { //function to find server id
+async function findColumnModelByBoardIdAndName(boardId, columnName) { //function to find server id
 	const columnModel = await Column.findOne({
 		where: { name: columnName, board_id: boardId }, //attempts to match server id in db to the server id of the current message
 	});
 	return columnModel;
 };
 // temp version, gonna need a more efficent way but would like to focus on the implementation first
-async function findAllColumnNamesByBoardId(boardId) {
+async function findAllColumnModelsByBoardId(boardId) {
 	const columnModel = await Column.findAll({
 		where: { board_id: boardId },
 	});
@@ -364,7 +364,7 @@ module.exports = {
   createColumnTrackRecord,
   findAllColumnStatus,
   updateBoard,
-  findColumnNameByBoardIdAndName,
+  findColumnModelByBoardIdAndName,
   updateColumn,
   getFormattedDate,
   updateConfig,
@@ -377,7 +377,7 @@ module.exports = {
   findColumnTrackByTaskTrackId,
   findMinColumnTrackId,
   findTaskId,
-  findAllColumnNamesByBoardId,
+  findAllColumnModelsByBoardId,
 	findColumnTrackIdByColumnId,
 	findTasksByColumnTrackId,
 	findAllBoardColumnsByBoardId,

@@ -10,9 +10,8 @@ function taskDescription(message){
         data.task["description"] = taskDescriptionInput;
         taskDeadlineDate(message);
       } else {
-        message.reply(
-          "That is not a valid response\n" + "Please retype addtask command"
-        );
+        message.reply('The description can not be blank\n' + 'Please enter a description');
+        taskDescription(message);
       } 
     }).catch(() => {
         message.reply('No answer after 30 seconds, operation canceled.');
@@ -34,9 +33,8 @@ function taskDeadlineDate(message) {
       } else if (collected.first().content.toLowerCase() === "no") {
         finalConfirmation(message);
       } else {
-        message.reply(
-          "That is not a valid response\n" + "Please retype addtask command"
-        );
+        message.reply('That is not a valid response\n' + 'Please re enter confirmation');
+        taskDeadlineDate(message);
       }
     })
     .catch(() => {
@@ -77,8 +75,8 @@ function finalConfirmation(message){
 			message.reply('Your changes have been cancelled.\n' 
 						+ 'Your task has not been created');
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype addtask command');
+			message.reply('That is not a valid response\n' + 'Please re enter confirmation');
+      finalConfirmation(message);
 		}
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -86,8 +84,7 @@ function finalConfirmation(message){
 }
 
 
-function populateDatabase(message) {  
-  // console.log(data.task)
+function populateDatabase(message) {
   dbCmd.createTask(data.task).then(() => {
     message.reply(`The task has been successfully created.`);
   });
@@ -101,7 +98,7 @@ function setData() {
 
 module.exports = {
   name: "addtask",
-  description: "addtask <board name> <column name> <task name>",
+  description: '`addtask <board name> <column name> <task name>\nAdd a task to a specified board and column.`',
   execute(message, args) {
     let boardNameInput = args[0];
     let columnNameInput = args[1];
@@ -118,7 +115,7 @@ module.exports = {
       });
       dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
         if(boardModel !== null){
-            dbCmd.findColumnNameByBoardIdAndName(boardModel.board_id, columnNameInput).then((columnModel) =>{
+            dbCmd.findColumnModelByBoardIdAndName(boardModel.board_id, columnNameInput).then((columnModel) =>{
               /*
               found board
               found column

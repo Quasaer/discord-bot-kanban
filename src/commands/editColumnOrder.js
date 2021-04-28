@@ -82,7 +82,7 @@ function updateColumnOrder(message){
 //final confirmation
 function finalConfirmation(message){
 	message.reply('Your columns have been re-ordered.\n'
-			+ 'Would you like to conitnue with these changes?\n'
+			+ 'Would you like to continue with these changes?\n'
 			+ 'Type `yes` to accept or `no` to cancel.\n'
 			+ 'You have 30 seconds or else task will not be made.\n');
 
@@ -95,8 +95,9 @@ function finalConfirmation(message){
 			message.reply('Your changes have been cancelled.\n' 
 						+ 'Your task has not been affected');
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please retype edittask command');
+			message.reply('That is not a valid response\n' 
+						+ 'Please re enter confirmation');
+			finalConfirmation(message);
 		}
 	}).catch(() => {
 		message.reply('No answer after 30 seconds, operation canceled.');
@@ -110,7 +111,7 @@ function updateDatabase(message){
 		dbCmd.updateColumn(data.updateColumns[i])		;
 	}
 	
-	message.reply(`changes have been successfully made to your task}`);
+	message.reply(`changes have been successfully made to your task`);
 	
 }
 
@@ -138,7 +139,7 @@ function setData() {
 
 module.exports = {
 	name: 'editcolumnorder',
-	description: 'editcolumnorder <Board name>',
+	description: '`editcolumnorder <Board name>\nEdit the column order of a board'+"'"+'s columns.`',
 	execute(message, args) {
         let boardNameInput = args[0];
 		setData();
@@ -152,9 +153,9 @@ module.exports = {
 				data.userid = userModel.user_id;
 			});
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
-				data.board['name']=boardModel.name;
 				if(boardModel !== null){
-                    dbCmd.findAllColumnNamesByBoardId(boardModel.board_id).then((columnModels) =>{
+					data.board['name']=boardModel.name;
+                    dbCmd.findAllColumnModelsByBoardId(boardModel.board_id).then((columnModels) =>{
 						if(columnModels.length !== 0){
 							//
                             for (let i = 0; i < columnModels.length; i++) {
