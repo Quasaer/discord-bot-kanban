@@ -18,6 +18,7 @@ function editColumnOrder(message){
     message.channel.awaitMessages(m => m.author.id == message.author.id,
     {max: 1, time: 30000}).then(collected => {
         let columnOrderList = collected.first().content.toLowerCase().split(/[ ,]+/);
+		console.log(columnOrderList);
 		columnCountValidation = data.columnCount - 1;
 		if(columnOrderList.length !== data.columnCount){
 			message.reply('You have not inputted the correct amount of columns order numbers.\n'
@@ -30,6 +31,7 @@ function editColumnOrder(message){
 		} else { 
 			for (let i = 0; i < columnOrderList.length; i++) {
 				let number = parseInt(columnOrderList[i]);
+				console.log(number);
 				if(Number.isInteger(number)==false){ 
 					message.reply(`${columnOrderList[i]} is not a valid column order number.\n`
 					+ 'You can only input integers for the column order apart from `,`.'
@@ -111,7 +113,7 @@ function updateDatabase(message){
 		dbCmd.updateColumn(data.updateColumns[i])		;
 	}
 	
-	message.reply(`changes have been successfully made to your task`);
+	message.reply(`The order numbers for your columns have been made.`);
 	
 }
 
