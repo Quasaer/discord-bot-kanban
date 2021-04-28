@@ -7,7 +7,7 @@ function editTask(message){
                 + 'type `description` to change the description of the task.\n'
                 + 'type `deadline` to change the deadline date of the task.\n'
 				+ 'type `cancel` to abort changes\n'
-                + 'You have 30 seconds or else task will not be made.\n');
+                + 'You have 30 seconds or else task will not be changed.\n');
 
     message.channel.awaitMessages(m => m.author.id == message.author.id,
     {max: 1, time: 30000}).then(collected => {
@@ -93,7 +93,7 @@ function finalConfirmation(message){
 	message.reply(`Changes Successfully made\n`
 			+ 'Would you like to continue with these settings?\n'
 			+ '`yes` to update task with new settings or `no` to cancel changes.\n'
-			+ 'You have 30 seconds or else task will not be made.\n');
+			+ 'You have 30 seconds or else task will not be updated.\n');
 
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {

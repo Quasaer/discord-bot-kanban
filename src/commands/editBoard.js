@@ -7,7 +7,7 @@ function editboard(message){
                 + 'type `startdate` to change the start date of the board.\n'
                 + 'type `deadline` to change the deadline date of the board.\n'
 				+ 'type `cancel` to abort changes\n'
-                + 'You have 30 seconds or else board will not be made.\n');
+                + 'You have 30 seconds or else board will not be changed.\n');
 
     message.channel.awaitMessages(m => m.author.id == message.author.id,
     {max: 1, time: 30000}).then(collected => {
@@ -95,7 +95,7 @@ function finalConfirmation(message){
 	message.reply(`Changes Successfully made\n`
 			+ 'Would you like to continue with these settings?\n'
 			+ '`yes` to update board with new settings or `no` to cancel changes.\n'
-			+ 'You have 30 seconds or else board will not be made.\n');
+			+ 'You have 30 seconds or else board will not be updated.\n');
 
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {

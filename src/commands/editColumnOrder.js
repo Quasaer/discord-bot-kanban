@@ -6,7 +6,7 @@ function editColumnOrder(message){
     message.reply('re-order your columns:\n'
 			+ '`example: 1, 3, 2, 4, ...`\n'
 			+ 'Your columns:\n'
-			+ 'You have 30 seconds or else task will not be made.\n');
+			+ 'You have 30 seconds or else column order will not be changed.\n');
             /*
 
             NEED TO CHECK IF THERE IS A BETTER WAY TO SHOW COLUMNS
@@ -84,7 +84,7 @@ function finalConfirmation(message){
 	message.reply('Your columns have been re-ordered.\n'
 			+ 'Would you like to continue with these changes?\n'
 			+ 'Type `yes` to accept or `no` to cancel.\n'
-			+ 'You have 30 seconds or else task will not be made.\n');
+			+ 'You have 30 seconds or else column order will not be updated.\n');
 
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {

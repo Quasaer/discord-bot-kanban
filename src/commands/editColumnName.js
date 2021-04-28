@@ -41,8 +41,16 @@ function editName(message) {
     .then((collected) => {
       const newNameInput = collected.first().content;
       if (newNameInput !== "") {
-        data.column.updatedFields["name"] = newNameInput;
-        finalConfirmation(message);
+        dbCmd.findColumnModelByBoardIdAndName(data.board["board_id"], newNameInput).then((columnModel)=>{
+          if(columnModel !== null){
+            message.reply('That is name already exists in the database\n' 
+						+ 'Please enter a new name for your column');
+            editColumn(message);
+          } else {
+            data.column.updatedFields["name"] = newNameInput;
+            finalConfirmation(message);
+          }
+        });
       } else {
         message.reply('That is not a valid response\n' 
 						+ 'Please enter a name');
@@ -58,9 +66,9 @@ function editName(message) {
 function finalConfirmation(message) {
   message.reply(
     `Changes Successfully made\n` +
-      "Would you like to continue with these settings?\n" +
-      "`yes` to update board with new settings or `no` to cancel changes.\n" +
-      "You have 30 seconds or else board will not be made.\n"
+      "Would you like to continue with these changes?\n" +
+      "`yes` to update column with new name or `no` to cancel changes.\n" +
+      "You have 30 seconds or else column name will not be changed.\n"
   );
 
   message.channel
@@ -98,6 +106,7 @@ function updateDatabase(message) {
 //clear data
 function clearData() {
   data = {
+    board:{},
     column: {
       name: "",
       updatedFields: {},
@@ -133,22 +142,18 @@ module.exports = {
       });
       dbCmd.findBoardByName(boardNameInput).then((boardModel) => {
         if (boardModel !== null) {
-          dbCmd.findColumnModelByBoardIdAndName(
-              boardModel.board_id,
-              colummNameInput
-            )
-            .then((ColumnModel) => {
-              if (ColumnModel !== null) {
-                data.column.name = ColumnModel.name;
-                data.column.updateCondition["column_id"] =
-                  ColumnModel.column_id;
-                editColumn(message);
-              } else {
-                message.channel.send(
-                  `${colummNameInput} either doesn't exist in the DB or is case sensitive`
-                );
-              }
-            });
+          data.board["board_id"] = boardModel.board_id;
+          dbCmd.findColumnModelByBoardIdAndName(boardModel.board_id, colummNameInput).then((ColumnModel) => {
+            if (ColumnModel !== null) {
+              data.column.name = ColumnModel.name;
+              data.column.updateCondition["column_id"] = ColumnModel.column_id;
+              editColumn(message);
+            } else {
+              message.channel.send(
+                `${colummNameInput} either doesn't exist in the DB or is case sensitive`
+              );
+            }
+          });
 
           // editboard(message);
         } else {

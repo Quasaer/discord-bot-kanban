@@ -1,10 +1,13 @@
 let dbCmd  = require('../dbCommands.js');
 let data = {};
+let columnFoundCheck = false;	
+let taskFoundCheck = false;	
+
 function finalConfirmation(message){
-	message.reply(`Changes Successfully made\n`
-			+ 'Would you like to continue with these settings?\n'
+	message.reply(`Task has been found.\n`
+			+ 'Are you sure you want to delete this task?\n'
 			+ '`yes` to update task with new settings or `no` to cancel changes.\n'
-			+ 'You have 30 seconds or else task will not be made.\n');
+			+ 'You have 30 seconds or else task will not be deleted.\n');
 
 	message.channel.awaitMessages(m => m.author.id == message.author.id,
 	{max: 1, time: 30000}).then(collected => {
@@ -14,8 +17,7 @@ function finalConfirmation(message){
 			message.reply('Your changes have been cancelled.\n' 
 						+ 'Your task has not been affected');
 		} else {
-			message.reply('That is not a valid response\n'
-			+ 'Please type `yes` or `no`.');
+			message.reply('That is not a valid response\n');
 			finalConfirmation(message);
 		}
 	}).catch(() => {
@@ -53,8 +55,6 @@ module.exports = {
 		} else {
 			dbCmd.findBoardByName(boardNameInput).then((boardModel) =>{
 				if(boardModel !== null){
-					let columnFoundCheck = false;	
-					let taskFoundCheck = false;	
 					dbCmd.findAllColumnModelsByBoardId(boardModel.board_id).then((columnModels) => {		
 						for (let i = 0; i < columnModels.length; i++) {
 							if (columnModels[i].name == columnNameInput){
