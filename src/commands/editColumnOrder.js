@@ -18,7 +18,6 @@ function editColumnOrder(message){
     message.channel.awaitMessages(m => m.author.id == message.author.id,
     {max: 1, time: 30000}).then(collected => {
         let columnOrderList = collected.first().content.toLowerCase().split(/[ ,]+/);
-		console.log(columnOrderList);
 		columnCountValidation = data.columnCount - 1;
 		if(columnOrderList.length !== data.columnCount){
 			message.reply('You have not inputted the correct amount of columns order numbers.\n'
