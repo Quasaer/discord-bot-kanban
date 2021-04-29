@@ -70,7 +70,7 @@ module.exports = {
                                     */
                                     dbCmd.findMaxColumnOrderNumber(boardModel.board_id).then((maxColumnOrderNumber)=>{
                                         dbCmd.findColumnModelByBoardIdAndColumnOrderNumber(boardModel.board_id, maxColumnOrderNumber).then((MaxColumnModel) => {; //finding the max column id for board
-                                            dbCmd.findMaxColumnTrackId(MaxColumnModel.columnid).then((MaxColumnTrackId) => {
+                                            dbCmd.findMaxColumnTrackId(MaxColumnModel).then((MaxColumnTrackId) => {
                                                 dbCmd.findColumnTrackByTaskTrackId(data.task["task_column_track_id"]).then((columnTrackModel)=>{
                                                     data.task["column_status_id"]=columnTrackModel.column_status_id;
                                                     if(data.task["task_column_track_id"] == MaxColumnTrackId){ //checks if column track is max
