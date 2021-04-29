@@ -68,29 +68,32 @@ module.exports = {
                                         find max of the column for a board
                                         then add 1 to the column track if it is not above
                                     */
-                                    dbCmd.findMaxColumnId(boardModel.board_id).then((MaxColumnId) => {; //finding the max column id for board
-                                        dbCmd.findMaxColumnTrackId(MaxColumnId).then((MaxColumnTrackId) => {
-                                            dbCmd.findColumnTrackByTaskTrackId(data.task["task_column_track_id"]).then((columnTrackModel)=>{
-                                                data.task["column_status_id"]=columnTrackModel.column_status_id;
-                                                if(data.task["task_column_track_id"] == MaxColumnTrackId){ //checks if column track is max
-                                                    message.channel.send(`You have reached the end of your board`);
-                                                } else if (data.task["column_status_id"] == 1) { //check if status is 1
-                                                    message.channel.send(`Your task: ${data.task["name"]} has not been completed`);
-                                                } else {
-                                                    dbCmd.findColumnByColumnTrackColumnId(columnTrackModel.column_id).then((columnModel)=>{
-                                                        let columnOrderNumber = columnModel.column_order_number;
-                                                        columnOrderNumber++;
-                                                        dbCmd.findColumnByBoardIdAndColumnOrderNumber(boardModel.board_id, columnOrderNumber).then((newColumnModel)=>{
-                                                            dbCmd.findMinColumnTrackId(newColumnModel.column_id).then((newColumnTrackModel)=>{
-                                                                data.task.updatedFields["column_track_id"] = newColumnTrackModel;
+                                    dbCmd.findMaxColumnOrderNumber(boardModel.board_id).then((maxColumnOrderNumber)=>{
+                                        dbCmd.findColumnModelByBoardIdAndColumnOrderNumber(boardModel.board_id, maxColumnOrderNumber).then((MaxColumnId) => {; //finding the max column id for board
+                                            dbCmd.findMaxColumnTrackId(MaxColumnId).then((MaxColumnTrackId) => {
+                                                dbCmd.findColumnTrackByTaskTrackId(data.task["task_column_track_id"]).then((columnTrackModel)=>{
+                                                    data.task["column_status_id"]=columnTrackModel.column_status_id;
+                                                    if(data.task["task_column_track_id"] == MaxColumnTrackId){ //checks if column track is max
+                                                        message.channel.send(`You have reached the end of your board`);
+                                                    } else if (data.task["column_status_id"] == 1) { //check if status is 1
+                                                        message.channel.send(`Your task: ${data.task["name"]} has not been completed`);
+                                                    } else {
+                                                        dbCmd.findColumnByColumnTrackColumnId(columnTrackModel.column_id).then((columnModel)=>{
+                                                            let columnOrderNumber = columnModel.column_order_number;
+                                                            columnOrderNumber++;
+                                                            dbCmd.findColumnByBoardIdAndColumnOrderNumber(boardModel.board_id, columnOrderNumber).then((newColumnModel)=>{
+                                                                dbCmd.findMinColumnTrackId(newColumnModel.column_id).then((newColumnTrackModel)=>{
+                                                                    data.task.updatedFields["column_track_id"] = newColumnTrackModel;
+                                                                });
                                                             });
                                                         });
-                                                    });
-                                                    updateTaskColumnTrackIdConfirmation(message);
-                                                }
-                                            })
+                                                        updateTaskColumnTrackIdConfirmation(message);
+                                                    }
+                                                })
+                                            });
                                         });
-                                    });
+                                    })
+                                    
 								} else {
 									message.channel.send(`The task ${taskNameInput} doesn't exist in the DB.`);
 								}

@@ -232,9 +232,16 @@ async function findMaxColumnTrackId(columnId){
 	return foundColumnId;
 }
 
-async function findMaxColumnId(boardId){
+async function findColumnModelByBoardIdAndColumnOrderNumber(boardId, columnOrderNumber) { //function to find server id
+	const columnModel = await Column.findOne({
+		where: { column_order_number: columnOrderNumber, board_id: boardId }, //attempts to match server id in db to the server id of the current message
+	});
+	return columnModel;
+};
+
+async function findMaxColumnOrderNumber(boardId){
 	const foundColumnId = await Column.max(
-		'column_id', 
+		'column_order_number', 
 		{where:{ board_id: boardId }}
 	)
 	return foundColumnId;
@@ -373,7 +380,7 @@ module.exports = {
   countBoardColumns,
   createTask,
   findMaxColumnTrackId,
-  findMaxColumnId,
+  findColumnModelByBoardIdAndColumnOrderNumber,
   findColumnTrackByTaskTrackId,
   findMinColumnTrackId,
   findTaskId,
@@ -392,5 +399,6 @@ module.exports = {
   assignTask,
   findTaskCountByColumnTrackId,
   findColumnByColumnTrackColumnId,
-  findColumnByBoardIdAndColumnOrderNumber
+  findColumnByBoardIdAndColumnOrderNumber,
+  findMaxColumnOrderNumber
 }; 

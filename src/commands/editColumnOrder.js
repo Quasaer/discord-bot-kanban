@@ -31,7 +31,6 @@ function editColumnOrder(message){
 		} else { 
 			for (let i = 0; i < columnOrderList.length; i++) {
 				let number = parseInt(columnOrderList[i]);
-				console.log(number);
 				if(Number.isInteger(number)==false){ 
 					message.reply(`${columnOrderList[i]} is not a valid column order number.\n`
 					+ 'You can only input integers for the column order apart from `,`.'
